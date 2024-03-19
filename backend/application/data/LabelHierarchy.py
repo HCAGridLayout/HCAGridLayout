@@ -105,18 +105,7 @@ class LabelHierarchy(object):
             dataset (str, optional): name of dataset. Defaults to 'imagenet'.
         """
         path = os.path.join(self.root_path, dataset)
-        if dataset == 'imagenet':
-            self.features = np.load(os.path.join(path, 'imagenet_features.npy'))
-            self.labels = np.load(os.path.join(path, 'imagenet_labels.npy'))
-            self.gt_labels = np.load(os.path.join(path, 'imagenet_labels.npy'))
-            self.label_hierarchy = self._load_json(os.path.join(path, 'imagenet.json'))
-        elif dataset == 'cifar':
-            self.features = np.load(os.path.join(path, 'cifar100_features.npy'))
-            self.labels = np.load(os.path.join(path, 'cifar100_labels.npy'))
-            self.gt_labels = np.load(os.path.join(path, 'cifar100_labels.npy'))
-            self.label_hierarchy = self._load_json(os.path.join(path, 'cifar.json'))
-            self.confs_hierarchy = load_pickle(os.path.join(path, 'cifar100_confs_h.pkl'))
-        elif dataset == 'cifar100':
+        if dataset == 'cifar100':
             # self.features = np.load(os.path.join(path, 'cifar100_features.npy'))
             # self.labels = np.load(os.path.join(path, 'cifar100_labels.npy'))
             # self.gt_labels = np.load(os.path.join(path, 'cifar100_labels_gt.npy'))
@@ -203,54 +192,7 @@ class LabelHierarchy(object):
             self.labels = self.full_labels[self.load_samples]
             self.gt_labels = self.full_gt_labels[self.load_samples]
             self.confs_hierarchy = {'id_map': self.full_confs_hierarchy['id_map'], 'confs': self.full_confs_hierarchy['confs'][self.load_samples]}
-        elif dataset == 'MNIST':
-            self.features = np.load(os.path.join(path, 'MNIST.npz'))['features']
-            pred_res = np.load(os.path.join(path, 'position_pred.npz'))
-            self.labels = pred_res['plabels']
-            self.tsne_total = pred_res['positions'] # precomputed tsne positions
-            label_num = np.unique(self.labels).shape[0]
-            print(np.unique(self.labels))
-            self.label_hierarchy = {
-                'label_names': [str(i) for i in range(label_num)],
-                'hierarchy': {
-                }
-            }
-            colors = None
-            if label_num in self.num_colors:
-                colors = self.num_colors[label_num]
-            else:
-                raise Exception('No color for {} labels'.format(label_num))
-            print('colors',label_num, len(colors))
-            for i, label in enumerate(self.label_hierarchy['label_names']):
-                self.label_hierarchy['hierarchy'][label] = {'id': i, 'children': {}, 'parent': None, 'rgb': colors[i]}
-        elif dataset == 'cifar2':
-            self.features = np.load(os.path.join(path, 'cifar100_features.npy'))
-            self.labels = np.load(os.path.join(path, 'cifar100_labels.npy'))
-            self.label_hierarchy = self._load_json(os.path.join(path, 'cifar.json'))
-        elif dataset in self.no_hierarchy_datasets_list:
-            self.features = np.load(os.path.join(path, '{}.npz'.format(dataset)))['features']
-        elif dataset in ['25']: # only for test
-            label_num = int(dataset)
-            self.label_hierarchy = {
-                'label_names': [str(i) for i in range(label_num)],
-                'hierarchy': {
-                }
-            }
-            colors = None
-            if label_num in self.num_colors:
-                colors = self.num_colors[label_num]
-            else:
-                raise Exception('No color for {} labels'.format(label_num))
-            print('colors',label_num, len(colors))
-            for i, label in enumerate(self.label_hierarchy['label_names']):
-                self.label_hierarchy['hierarchy'][label] = {'id': i, 'children': {}, 'parent': None, 'rgb': colors[i]}
-        else:
-            json_path = os.path.join(path, '{}.json'.format(dataset))
-            if not os.path.exists(json_path):
-                self.transform(dataset)
-            self.label_hierarchy = self._load_json(json_path)
-            self.features = np.load(os.path.join(path, '{}_features.npy'.format(dataset)))
-            self.labels = np.load(os.path.join(path, '{}_plabels.npy'.format(dataset)))  # labels or plabels
+
         self.build_hierarchy()
     
     def _load_json(self, file):

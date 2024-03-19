@@ -507,8 +507,6 @@ class GridLayout(object):
         return centers
 
     def get_label_partition_feature(self, X_feature, labels, top_labels, filter_labels, cluster_ratio=0.2, original_top_labels=None):
-        # TODO jiashu
-        # 输出label与partition的对应关系，以及每个partition对应的重心位置（顶层使用tsne计算，非顶层使用上层父亲元素的layout位置计算）
         start = time.time()
         unique_labels = np.unique(labels)
         assert np.array_equal(unique_labels, np.arange(unique_labels.shape[0])) # labels should be normalized
@@ -1884,7 +1882,7 @@ class GridLayout(object):
         # plt.clf()
         # for i in range(X_embedded.shape[0]):
         #     plt.scatter(X_embedded[i][1], X_embedded[i][0], color=plt.cm.tab20(labels[i]))
-        # plt.savefig("tsne.png")
+        # plt.savefig("embedded.png")
         # plt.show()
 
         # # -------------------------------  proximity  -----------------------------
@@ -2095,10 +2093,10 @@ class GridLayout(object):
     # true_id: [num], 元素的真实id
     # info_before: dict, 上层元素信息
     #   ["grid_asses"]: [N_before], 上一层的layout
-    #   ["X_embedded"]: [num_before X 2], 上一层元素的tsne
+    #   ["X_embedded"]: [num_before X 2], 上一层元素的embedded
     #   ["selected"]: [N_s X 2], zoom时选中的元素在当前层与上层的序号(0..num-1与0..num_before-1)
     #   ["sampled_id"]: [num_before], 上层元素的真实id
-    # tsne_total: [np.ndarray N X 2] 预处理得到的全部数据的tsne，方便全局第一步快速生成
+    # tsne_total: 弃用
     # top_labels: [num], tree cut 更高一层的 label
     # filter_labels: sample较少的label，作为散点
     def fit(self, X_feature, labels, true_id, hierarchy, info_before=None, tsne_total=None, top_labels=None, filter_labels=None, confs_hierarchy=None, scale=1/2, shres=0.8):
@@ -2108,7 +2106,6 @@ class GridLayout(object):
         time2 = time.time()
         grid_asses, grid_size, partition, partition_info, top_part, confusion = self.grid(labels, X_feature, true_id, hierarchy, top_labels, filter_labels, info_before, None, scale, confs_hierarchy=confs_hierarchy, shres=shres)
         time3 = time.time()
-        # print("tsne time: ", time2 - time1)
         print("grid time: ", time3 - time2)
 
         num = labels.shape[0]

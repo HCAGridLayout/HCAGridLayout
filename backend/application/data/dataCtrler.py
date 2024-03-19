@@ -1,6 +1,5 @@
 from .dataSampler import DataSampler
 from .LabelHierarchy import LabelHierarchy
-from application.grid.gridLayout_tsne import GridLayout as GridLayout_tsne
 from application.grid.gridLayout import GridLayout as GridLayout_qap
 from sklearn.cluster import DBSCAN, SpectralClustering
 import numpy as np
@@ -54,12 +53,12 @@ class DataCtrler(object):
 
         if "method" in info_dict and info_dict["method"] == "tsne":
             self.method = "tsne"
-            self.grider = GridLayout_tsne(self)
+            self.grider = None
         else:
             self.method = "qap"
             self.grider = GridLayout_qap(self)
             self.grider_qap = self.grider
-            self.grider_tsne = GridLayout_tsne(self)
+            self.grider_tsne = None
             info_dict["method"] = self.method
 
         self.sampler = DataSampler(default_sample_num=sample_num)

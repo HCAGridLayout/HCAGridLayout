@@ -86,7 +86,7 @@ class DataSampler(object):
             sampled_id_before: [num_before], 上一层的sample id
             sampled_addition_before: [num_before], 上一层的sample的额外信息
             layout_before: [N_before], 上一层的layout
-            embedded_before: [num_before X 2], 上一层sample的tsne
+            embedded_before: [num_before X 2], 上一层sample的embedded
             selected: [N_s], zoom时选中的元素在上层的序号(0..num_before-1)
         ''' 
         # 1. get selected samples

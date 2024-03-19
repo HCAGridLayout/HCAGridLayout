@@ -10,13 +10,11 @@ gridlayoutOpt.cpython-38-x86_64-linux-gnu.so
 test/
 cache/
 port_cache/
-scripts/*
 *.npy
 *.npz
 *.tar.gz
 *.png
 cosin_difference.bin
-static/
 save_records
 *.pyd
 lsa.cpython-38-x86_64-linux-gnu.so

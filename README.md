@@ -52,7 +52,7 @@ cd grid
 cd "c module_now"
 python setup.py build_ext --inplace    (For MSVC environment in Windows, please use setup_win.py)
 ```
-Then Move the compiled files (such as .pyd or .so) to backend/application/grid/.
+Then move the compiled files (such as .pyd or .so) to backend/application/grid/.
 
 Datasets
 ----------

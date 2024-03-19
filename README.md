@@ -69,6 +69,22 @@ For your dataset, please:
 4. Add your dataset to backend/application/data/LabelHierarchy.py, load function.
 5. Add your dataset to vis/src/components/ControlView.vue, options, options2 and DatasetModels.
 
+Run
+----------
+For backend:
+```
+cd backend
+bash run.sh    (or directly runing server.py)
+```
+
+For Frontend:
+```
+cd vis
+yarn
+yarn start
+```
+
+
 ## Contact
 If you have any problem about our code, feel free to contact
 - HCAGridlayout@gmail.com

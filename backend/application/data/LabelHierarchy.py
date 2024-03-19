@@ -109,15 +109,15 @@ class LabelHierarchy(object):
             # self.features = np.load(os.path.join(path, 'cifar100_features.npy'))
             # self.labels = np.load(os.path.join(path, 'cifar100_labels.npy'))
             # self.gt_labels = np.load(os.path.join(path, 'cifar100_labels_gt.npy'))
-            # self.label_hierarchy = self._load_json(os.path.join(path, 'cifar_2.json'))
-            # self.confs_hierarchy = load_pickle(os.path.join(path, 'cifar100_confs_h_2.pkl'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'cifar100.json'))
+            # self.confs_hierarchy = load_pickle(os.path.join(path, 'cifar100_confs_h.pkl'))
 
             self.multilevel_load = True
             self.full_features = np.load(os.path.join(path, 'cifar100_features.npy'))
             self.full_labels = np.load(os.path.join(path, 'cifar100_labels.npy'))
             self.full_gt_labels = np.load(os.path.join(path, 'cifar100_labels_gt.npy'))
-            self.label_hierarchy = self._load_json(os.path.join(path, 'cifar_2.json'))
-            self.full_confs_hierarchy = load_pickle(os.path.join(path, 'cifar100_confs_h_2.pkl'))
+            self.label_hierarchy = self._load_json(os.path.join(path, 'cifar100.json'))
+            self.full_confs_hierarchy = load_pickle(os.path.join(path, 'cifar100_confs_h.pkl'))
 
             self.multilevel_load_samples = load_pickle(os.path.join(path, 'cifar100_multilevel.pkl'))
             self.levels = len(self.multilevel_load_samples)

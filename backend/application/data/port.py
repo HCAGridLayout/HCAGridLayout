@@ -148,6 +148,10 @@ class Port(object):
                 sample_id = self.data_ctrler.load_samples[sample_id]
             if isinstance(self.images, str):
                 image_path = os.path.join(self.images, str(sample_id)+".jpeg")
+                if not os.path.exists(image_path):
+                    image_path = os.path.join(self.images, str(sample_id)+".png")
+                    if not os.path.exists(image_path):
+                        image_path = os.path.join(self.images, str(sample_id)+".jpg")
                 jpeg_data = open(image_path, "rb").read()
                 base64Imgs.append(base64.b64encode(jpeg_data).decode())
             else:

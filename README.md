@@ -58,7 +58,7 @@ Datasets
 ----------
 Please download datasets from [here](https://xxxx) and move the directory to backend/datasets/.
 
-For example, backend/datasets/imagenet1k/.
+For example, backend/datasets/imagenet1k_animals/.
 
 Then run calc_conf.py to preprocess confidence.
 
@@ -71,7 +71,9 @@ For your dataset, please:
 
 Run
 ----------
-For backend:
+For Backend:
+
+Modify the "port = Port(xxx)" and "port.load_dataset(xxx)" statements in server.py according to your requirements.
 ```
 cd backend
 bash run.sh    (or directly runing server.py)

@@ -58,7 +58,7 @@ Datasets
 ----------
 Please download datasets from [here](https://xxxx) and move the directory to backend/datasets/.
 
-For example, backend/datasets/imagenet1k_animals/.
+For example, backend/datasets/cifar100/.
 
 Then run calc_conf.py to preprocess confidence.
 

@@ -642,7 +642,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         return result, avg_score, avg_cscore
 
     if best_w is None:
-        best_w = 0.35
+        best_w = 0.15
         if confusion is not None and maxLabel > 1 and near_conf > N/10:
             best_w = 0.65
     print("best w", best_w)

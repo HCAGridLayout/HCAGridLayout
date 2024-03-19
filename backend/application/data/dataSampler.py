@@ -103,7 +103,6 @@ class DataSampler(object):
                 start -= 1
             start += 1 
             res_num = min(start * start, total_num) - len(selected)
-            # TODO: 采样不足的情况
         
         # 2. get zoom in samples
         # np.savez('zoomSampling.npz', X=X_feature[hang_items], labels=self.normalizeLabels(labels[hang_items]), ratio=min((res_num + 1) / len(hang_items), 1))

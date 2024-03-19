@@ -56,14 +56,14 @@ Then Move the compiled files (such as .pyd or .so) to backend/application/grid/.
 
 Datasets
 ----------
-Please download datasets from [here](https://xxxx) and move the directory to backend/datasets/.
+Please download datasets from [here](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) and move the directory to backend/datasets/.
 
 For example, backend/datasets/cifar100/.
 
-Then run calc_conf.py to preprocess confidence.
+Then run calc_conf.py and multiload.py to preprocess.
 
 For your dataset, please:
-1. prepare the xxx.json, xxx_features.npy, xxx_labels.npy, xxx_labels_gt.npy, xxx_predict_confs.npy and xxx_images folder, xxx can be the name of your dataset.
+1. prepare the xxx.json, xxx_features.npy, xxx_labels.npy, xxx_labels_gt.npy, xxx_predict_confs.npy and xxx_images folder, xxx can be the name of your dataset. The details of these files can be seen in README.md [here](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm). 
 2. Then run calc_conf.py to preprocess confidence like existing datasets.
 3. For large dataset, please run multiload.py to preprocess incremental loading.
 4. Add your dataset to backend/application/data/LabelHierarchy.py, load function.

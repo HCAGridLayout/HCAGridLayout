@@ -233,7 +233,6 @@ class GridLayout(object):
 
 
     def get_FD_layout_centers(self, X_feature, top_partition, labels, info_before, conf=None, alpha=0.5):
-        # TODO FD layout
         from scipy.stats import entropy
         N = len(labels)
         maxLabel = labels.max()+1
@@ -1123,7 +1122,6 @@ class GridLayout(object):
 
 
     def get_sub_partition(self, p, grid_partition, cell, X_embedded, top_partition, labels, partition_center, square_len, use_boundary=False):
-        # TODO
 
         num = labels.shape[0]
         N = square_len * square_len
@@ -1193,7 +1191,6 @@ class GridLayout(object):
         return ret_asses, cells_dict
 
     def get_sub_partition_HV(self, p, grid_partition, cell, X_embedded, top_partition, labels, partition_center, square_len, cut_ways):
-        # TODO
 
         num = labels.shape[0]
         N = square_len * square_len
@@ -1267,7 +1264,6 @@ class GridLayout(object):
         return ret_asses, cells_dict, tmp_cut
 
     def get_power_partition(self, X_embedded, labels, partition_center, square_len, use_boundary=False, reduce=None, major_coords=None):
-        # TODO
 
         num = labels.shape[0]
         N = square_len * square_len
@@ -1286,7 +1282,6 @@ class GridLayout(object):
         return row_asses, cells
 
     def get_power_partition_zoom(self, labels, zoom_partition_map, zoom_min, zoom_max, all_cells_bf, partition_center, square_len):
-        # TODO
 
         num = labels.shape[0]
         N = square_len * square_len
@@ -1310,7 +1305,6 @@ class GridLayout(object):
         return row_asses, cells
 
     def get_partition_HV(self, X_embedded, labels, partition_center, square_len, reduce=None):
-        # TODO
 
         num = labels.shape[0]
         N = square_len * square_len
@@ -1353,7 +1347,6 @@ class GridLayout(object):
         return row_asses, cells, tmp_cut
 
     def get_partition_HV_zoom(self, labels, zoom_partition_map, all_tree_bf, partition_center, square_len):
-        # TODO
 
         num = labels.shape[0]
         N = square_len * square_len

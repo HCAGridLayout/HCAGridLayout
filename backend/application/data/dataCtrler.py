@@ -156,8 +156,6 @@ class DataCtrler(object):
         return False
 
     def reduce_labels(self, labels, hierarchy, level1_range=(2, 3), level2_range=(4, 25), filter_ratio=0.01, spilit_ratio=1/6, spilit_size=200, zoom_without_expand=False):
-        # TODO jiashu
-        # 从底层label出发向上合并，减少当前展示的label数, 返回值为减少后的labels
         # 0. calculate filter boundary
         filter_num = max(1, np.ceil(filter_ratio * labels.shape[0]))
         # filter_num = max(1, np.ceil(filter_ratio * labels.shape[0])/2)
@@ -354,7 +352,6 @@ class DataCtrler(object):
             for node in label_nodes[label]:
                 level2_labels[node] = label
 
-        # TODO:对于额外点应该如何处理
         # for score, label in q.queue:
         #     if -score < 0:
         #         continue

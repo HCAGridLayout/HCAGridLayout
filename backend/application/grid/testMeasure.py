@@ -102,11 +102,13 @@ def checkXYOrder(full_grids, labels, grid_asses_bf, selected, selected_bf, if_co
     return order_score, order_cnt
 
 def checkConfusion(full_grids, labels, confusion):
+    import math
     maxLabel = labels.max() + 1
     full_D = cdist(full_grids, full_grids, "euclidean")
     N = len(full_grids)
     num = len(labels)
     square_len = round(np.sqrt(N))
+    near = np.zeros((maxLabel, maxLabel), dtype='bool')
 
     labels_idx = {}
     for i in range(maxLabel):
@@ -114,10 +116,16 @@ def checkConfusion(full_grids, labels, confusion):
         # print(labels_idx[i].sum())
         labels_idx[i] = np.arange(len(labels), dtype='int')[labels_idx[i]]
 
+    confuse_dist_max = np.zeros(maxLabel)
+    for lb in range(maxLabel):
+        idx = labels_idx[lb]
+        confuse_dist_max[lb] = full_D[np.ix_(idx, idx)].max()
+
     confuse_dist = np.zeros((maxLabel, N))
     for lb in range(maxLabel):
         confuse_dist[lb] = full_D[:, labels_idx[lb]].min(axis=1)
     confuse_dist2 = np.zeros((maxLabel, N))
+    confuse_dist3 = confuse_dist.copy()
     for lb in range(maxLabel):
         idx = labels_idx[lb]
         for lb2 in range(maxLabel):
@@ -130,16 +138,26 @@ def checkConfusion(full_grids, labels, confusion):
                 min_dist += eps
             new_id = (tmp <= min_dist + tiny)
             confuse_dist2[lb2][idx] = full_D[np.ix_(idx, idx[new_id])].min(axis=1)
+            if min_dist > eps + tiny:
+                # confuse_dist3[lb2][idx] = np.sqrt(len(labels_idx[lb])/math.pi)/square_len
+                confuse_dist3[lb2][idx] = confuse_dist_max[lb]
+            else:
+                near[lb][lb2] = True
 
     conf = confusion['conf']
     confuse_class = confusion['confuse_class']
     score = 0
+    score_near = 0
     for now_id in range(num):
         for j in range(min(3, maxLabel)):
-            # if near[labels[now_id]][confuse_class[now_id][j]]:
+            if near[labels[now_id]][confuse_class[now_id][j]]:
+                score_near += conf[now_id][confuse_class[now_id][j]] * confuse_dist3[confuse_class[now_id][j]][now_id] ** 2
             if True:
-                score += conf[now_id][confuse_class[now_id][j]] * confuse_dist2[confuse_class[now_id][j]][now_id] ** 2
+                # score += conf[now_id][confuse_class[now_id][j]] * confuse_dist[confuse_class[now_id][j]][now_id] ** 2
+                # score += conf[now_id][confuse_class[now_id][j]] * confuse_dist2[confuse_class[now_id][j]][now_id] ** 2
+                score += conf[now_id][confuse_class[now_id][j]] * confuse_dist3[confuse_class[now_id][j]][now_id] ** 2
 
+    print('score near', score_near)
     return score
 
 def checkShape(grid_asses, labels, square_len, shapes, dtype="IoU"):

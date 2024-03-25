@@ -307,14 +307,15 @@ const GridRender = function(parent) {
             .attrTween("fill", that.colorinter)
             .attr("fill", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`)
 //            .attr("stroke", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`);
-            .attr("stroke", "white");
+//            .attr("stroke", "white");
 
           that.e_grids
             .selectAll("rect.confuse0")
             .transition()
             .duration(that.fast_ani)
             .attrTween("fill", that.colorinter)
-            .attr("fill", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`)
+//            .attr("fill", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`)
+            .attr("fill", 'none')
             .attr("stroke", e => `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})`);
 
           that.e_grids
@@ -368,11 +369,19 @@ const GridRender = function(parent) {
         // console.log('over', d);
 
         //d3.select("#meta1").text(`${d.label}`);
+        let ss = `${extractString(d.label_name)}`;
+        if(d.label!=d.bottom_label) {
+          ss = ss + ` (${extractString(d.bottom_label_name)})`
+        }
         d3.select("#meta1t").text(`${extractString(d.label_name)}`)
-          .attr("title", `${extractString(d.label_name)}`);
+          .attr("title", ss);
         //d3.select("#meta2").text(`${d.gt_label}`);
+        let gt_ss = `${extractString(d.gt_label_name)}`;
+        if(d.gt_label!=d.bottom_gt_label) {
+          gt_ss = gt_ss + ` (${extractString(d.bottom_gt_label_name)})`
+        }
         d3.select("#meta2t").text(`${extractString(d.gt_label_name)}`)
-          .attr("title", `${extractString(d.gt_label_name)}`);
+          .attr("title", gt_ss);
 //        if (d.is_confused) {
 //          let tmp_s = 'yes:';
 ////          for(let i=0;i<min(3, d.confuse_labels.length);i++)tmp_s = tmp_s + `  ${d.confuse_labels[i]}-${d.confuse_label_names[i]}-${d.confuse_values[i]},`
@@ -546,7 +555,7 @@ const GridRender = function(parent) {
             .attrTween("fill", that.colorinter)
             .attr("fill", e => `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
 //            .attr("stroke", e => `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`);
-            .attr("stroke", "white");
+//            .attr("stroke", "white");
 
           that.e_grids
             .filter(e => e.pclass === d.pclass)
@@ -554,7 +563,8 @@ const GridRender = function(parent) {
             .transition()
             .duration(that.fast_ani)
             .attrTween("fill", that.colorinter)
-            .attr("fill", e => `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
+//            .attr("fill", e => `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
+            .attr("fill", 'none')
             .attr("stroke", e => `rgba(${dark_bias+e.color[0]*dark_rate},${dark_bias+e.color[1]*dark_rate},${dark_bias+e.color[2]*dark_rate})`);
 
           that.e_grids
@@ -573,7 +583,7 @@ const GridRender = function(parent) {
             .attrTween("fill", that.colorinter)
             .attr("fill", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`)
 //            .attr("stroke", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`);
-            .attr("stroke", "white");
+//            .attr("stroke", "white");
 
           that.e_grids
             .filter(e => e.pclass !== d.pclass)
@@ -581,7 +591,8 @@ const GridRender = function(parent) {
             .transition()
             .duration(that.fast_ani)
             .attrTween("fill", that.colorinter)
-            .attr("fill", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`)
+//            .attr("fill", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`)
+            .attr("fill", 'none')
             .attr("stroke", e => `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})`);
 
           that.e_grids
@@ -660,31 +671,20 @@ const GridRender = function(parent) {
       .append("rect")
       .attr("class", "confuse-1")
       .attr("opacity", d => (d.is_confused ? 1 : 0))
-      .attr("width", d => d.width * 0.9)
-      .attr("height", d => d.width * 0.9)
-      .attr("x", d => d.width * 0.05)
-      .attr("y", d => d.width * 0.05)
-      .attr("rx", d => d.width * 0.05)
-      .attr("ry", d => d.width * 0.05)
+//      .attr("width", d => d.width * 0.9)
+//      .attr("height", d => d.width * 0.9)
+//      .attr("x", d => d.width * 0.05)
+//      .attr("y", d => d.width * 0.05)
+//      .attr("rx", d => d.width * 0.05)
+//      .attr("ry", d => d.width * 0.05)
+      .attr("width", d => d.width)
+      .attr("height", d => d.width)
+      .attr("x", 0)
+      .attr("y", 0)
       .attr("fill-opacity", 1)
       .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
-      .attr("stroke", "white")
-      .attr("stroke-width", d => d.width * 0.08);
-
-    e_grid_bar
-      .append("rect")
-      .attr("class", "confuse0")
-      .attr("opacity", d => (d.is_confused ? 1 : 0))
-      .attr("width", d => d.width * 0.9)
-      .attr("height", d => d.width * 0.9)
-      .attr("x", d => d.width * 0.05)
-      .attr("y", d => d.width * 0.05)
-      .attr("rx", d => d.width * 0.05)
-      .attr("ry", d => d.width * 0.05)
-      .attr("fill-opacity", 1)
-      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
-      .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})` : `rgba(${dark_bias+e.color[0]*dark_rate},${dark_bias+e.color[1]*dark_rate},${dark_bias+e.color[2]*dark_rate})`)
-      .attr("stroke-width", d => d.width * 0.03);
+//      .attr("stroke", "white")
+//      .attr("stroke-width", d => d.width * 0.08);
 
     e_grid_bar
       .append("rect")
@@ -698,6 +698,21 @@ const GridRender = function(parent) {
       .attr("ry", d => d.width * 0.05)
       .attr("fill-opacity", 1)
       .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${e.pcolor[0]*bar_rate},${e.pcolor[1]*bar_rate},${e.pcolor[2]*bar_rate})` : `rgba(${e.color[0]*bar_rate},${e.color[1]*bar_rate},${e.color[2]*bar_rate})`);
+
+    e_grid_bar
+      .append("rect")
+      .attr("class", "confuse0")
+      .attr("opacity", d => (d.is_confused ? 1 : 0))
+      .attr("width", d => d.width * 0.9)
+      .attr("height", d => d.width * 0.9)
+      .attr("x", d => d.width * 0.05)
+      .attr("y", d => d.width * 0.05)
+      .attr("rx", d => d.width * 0.05)
+      .attr("ry", d => d.width * 0.05)
+      .attr("fill-opacity", 1)
+      .attr("fill", 'none')
+      .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})` : `rgba(${dark_bias+e.color[0]*dark_rate},${dark_bias+e.color[1]*dark_rate},${dark_bias+e.color[2]*dark_rate})`)
+      .attr("stroke-width", d => d.width * 0.03);
 
     if (that.render_image) {
       e_grid_groups
@@ -766,6 +781,21 @@ const GridRender = function(parent) {
 
     e_image_bar
       .append("rect")
+      .attr("class", "confuse1")
+      .attr("opacity", d => (d.is_confused ? 1 : 0))
+//      .attr("width", d => that.image_width*0.17)
+      .attr("width", d => that.image_width*0.2)
+      .attr("height", d => (d.confuse_values[0]) * (that.image_width*0.57))
+//      .attr("x", d => d.image_bias[0] + (d.image_bias[0]<=0 ? min(0, (d.width-that.image_width)/2)-0.055*that.image_width : d.width - min(0, (d.width-that.image_width)/2)-that.image_width*0.17+0.055*that.image_width))
+      .attr("x", d => d.image_bias[0] + (d.image_bias[0]<=0 ? min(0, (d.width-that.image_width)/2)-0.07*that.image_width : d.width - min(0, (d.width-that.image_width)/2)-that.image_width*0.2+0.07*that.image_width))
+      .attr("y", d => d.image_bias[1] + (d.width-that.image_width)/2-0.035*that.image_width + that.image_width*0.57*(1-d.confuse_values[0]))
+      .attr("rx", d => that.image_width*0.05)
+      .attr("ry", d => that.image_width*0.05)
+      .attr("fill-opacity", 1)
+      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${e.pcolor[0]*bar_rate},${e.pcolor[1]*bar_rate},${e.pcolor[2]*bar_rate})` : `rgba(${e.color[0]*bar_rate},${e.color[1]*bar_rate},${e.color[2]*bar_rate})`);
+
+    e_image_bar
+      .append("rect")
       .attr("class", "confuse0")
       .attr("opacity", d => (d.is_confused ? 1 : 0))
       .attr("width", d => that.image_width*0.2)
@@ -775,67 +805,10 @@ const GridRender = function(parent) {
       .attr("rx", d => that.image_width*0.05)
       .attr("ry", d => that.image_width*0.05)
       .attr("fill-opacity", 1)
-      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
+//      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
+      .attr("fill", 'none')
       .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})` : `rgba(${dark_bias+e.color[0]*dark_rate},${dark_bias+e.color[1]*dark_rate},${dark_bias+e.color[2]*dark_rate})`)
       .attr("stroke-width", d => that.image_width*0.03);
-
-    e_image_bar
-      .append("rect")
-      .attr("class", "confuse1")
-      .attr("opacity", d => (d.is_confused ? 1 : 0))
-      .attr("width", d => that.image_width*0.17)
-      .attr("height", d => (d.confuse_values[0]) * (that.image_width*0.57))
-      .attr("x", d => d.image_bias[0] + (d.image_bias[0]<=0 ? min(0, (d.width-that.image_width)/2)-0.055*that.image_width : d.width - min(0, (d.width-that.image_width)/2)-that.image_width*0.17+0.055*that.image_width))
-      .attr("y", d => d.image_bias[1] + (d.width-that.image_width)/2-0.035*that.image_width + that.image_width*0.57*(1-d.confuse_values[0]))
-      .attr("rx", d => that.image_width*0.05)
-      .attr("ry", d => that.image_width*0.05)
-      .attr("fill-opacity", 1)
-      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${e.pcolor[0]*bar_rate},${e.pcolor[1]*bar_rate},${e.pcolor[2]*bar_rate})` : `rgba(${e.color[0]*bar_rate},${e.color[1]*bar_rate},${e.color[2]*bar_rate})`);
-
-//    e_grid_bar
-//      .append("rect")
-//      .attr("class", "confuse-1")
-//      .attr("opacity", d => (d.is_confused ? 1 : 0))
-//      .attr("width", d => d.show_image ? that.image_width*0.2 : d.width * 0.9)
-//      .attr("height", d => d.show_image ? that.image_width*0.6 : d.width * 0.9)
-//      .attr("x", d => d.show_image ? d.image_bias[0] + min(0, (d.width-that.image_width)/2)-0.07*that.image_width : d.width * 0.05)
-//      .attr("y", d => d.show_image ? d.image_bias[1] + (d.width-that.image_width)/2-0.05*that.image_width : d.width * 0.05)
-//      .attr("rx", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("ry", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("fill-opacity", 1)
-//      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
-////      .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
-//      .attr("stroke", "white")
-//      .attr("stroke-width", d => d.show_image ? that.image_width*0.08 : d.width * 0.08);
-//
-//    e_grid_bar
-//      .append("rect")
-//      .attr("class", "confuse0")
-//      .attr("opacity", d => (d.is_confused ? 1 : 0))
-//      .attr("width", d => d.show_image ? that.image_width*0.2 : d.width * 0.9)
-//      .attr("height", d => d.show_image ? that.image_width*0.6 : d.width * 0.9)
-//      .attr("x", d => d.show_image ? d.image_bias[0] + min(0, (d.width-that.image_width)/2)-0.07*that.image_width : d.width * 0.05)
-//      .attr("y", d => d.show_image ? d.image_bias[1] + (d.width-that.image_width)/2-0.05*that.image_width : d.width * 0.05)
-//      .attr("rx", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("ry", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("fill-opacity", 1)
-//      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
-//      .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})` : `rgba(${dark_bias+e.color[0]*dark_rate},${dark_bias+e.color[1]*dark_rate},${dark_bias+e.color[2]*dark_rate})`)
-//      .attr("stroke-width", d => d.show_image ? that.image_width*0.03 : d.width * 0.03);
-//
-//    e_grid_bar
-//      .append("rect")
-//      .attr("class", "confuse1")
-//      .attr("opacity", d => (d.is_confused ? 1 : 0))
-//      .attr("width", d => d.show_image ? that.image_width*0.17 : d.width * 0.9)
-//      .attr("height", d => (d.confuse_values[0]) * (d.show_image ? that.image_width*0.57 : d.width * 0.9))
-//      .attr("x", d => d.show_image ? d.image_bias[0] + min(0, (d.width-that.image_width)/2)-0.055*that.image_width : d.width * 0.05)
-//      .attr("y", d => d.show_image ? d.image_bias[1] + (d.width-that.image_width)/2-0.035*that.image_width + that.image_width*0.57*(1-d.confuse_values[0]) : d.width*0.05 + d.width*0.9*(1-d.confuse_values[0]))
-//      .attr("rx", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("ry", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("fill-opacity", 1)
-//      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${e.pcolor[0]*bar_rate},${e.pcolor[1]*bar_rate},${e.pcolor[2]*bar_rate})` : `rgba(${e.color[0]*bar_rate},${e.color[1]*bar_rate},${e.color[2]*bar_rate})`);
-
   };
 
   that.update = function() {
@@ -919,16 +892,20 @@ const GridRender = function(parent) {
       .duration(that.update_ani)
       .delay(that.init ? 0 : that.remove_ani)
       .attr("opacity", d => (d.is_confused ? 1 : 0))
-      .attr("width", d => d.width * 0.9)
-      .attr("height", d => d.width * 0.9)
-      .attr("x", d => d.width * 0.05)
-      .attr("y", d => d.width * 0.05)
-      .attr("rx", d => d.width * 0.05)
-      .attr("ry", d => d.width * 0.05)
+//      .attr("width", d => d.width * 0.9)
+//      .attr("height", d => d.width * 0.9)
+//      .attr("x", d => d.width * 0.05)
+//      .attr("y", d => d.width * 0.05)
+//      .attr("rx", d => d.width * 0.05)
+//      .attr("ry", d => d.width * 0.05)
+      .attr("width", d => d.width)
+      .attr("height", d => d.width)
+      .attr("x", 0)
+      .attr("y", 0)
       .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
 //      .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
-      .attr("stroke", "white")
-      .attr("stroke-width", d => d.width * 0.08);
+//      .attr("stroke", "white")
+//      .attr("stroke-width", d => d.width * 0.08);
 
     e_grid_bar
       .select("rect.confuse0")
@@ -942,7 +919,7 @@ const GridRender = function(parent) {
       .attr("y", d => d.width * 0.05)
       .attr("rx", d => d.width * 0.05)
       .attr("ry", d => d.width * 0.05)
-      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
+      .attr("fill", 'none')
       .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})` : `rgba(${dark_bias+e.color[0]*dark_rate},${dark_bias+e.color[1]*dark_rate},${dark_bias+e.color[2]*dark_rate})`)
       .attr("stroke-width", d => d.width * 0.03);
 
@@ -1019,7 +996,8 @@ const GridRender = function(parent) {
       .attr("y", d => d.image_bias[1] + (d.width-that.image_width)/2-0.05*that.image_width)
       .attr("rx", d => that.image_width*0.05)
       .attr("ry", d => that.image_width*0.05)
-      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
+//      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
+      .attr("fill", 'none')
       .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})` : `rgba(${dark_bias+e.color[0]*dark_rate},${dark_bias+e.color[1]*dark_rate},${dark_bias+e.color[2]*dark_rate})`)
       .attr("stroke-width", d => that.image_width*0.03);
 
@@ -1029,9 +1007,11 @@ const GridRender = function(parent) {
       .duration(that.update_ani)
       .delay(that.init ? 0 : that.remove_ani)
       .attr("opacity", d => (d.is_confused ? 1 : 0))
-      .attr("width", d => that.image_width*0.17)
+//      .attr("width", d => that.image_width*0.17)
+      .attr("width", d => that.image_width*0.2)
       .attr("height", d => (d.confuse_values[0]) * (that.image_width*0.57))
-      .attr("x", d => d.image_bias[0] + (d.image_bias[0]<=0 ? min(0, (d.width-that.image_width)/2)-0.055*that.image_width : d.width - min(0, (d.width-that.image_width)/2)-that.image_width*0.17+0.055*that.image_width))
+//      .attr("x", d => d.image_bias[0] + (d.image_bias[0]<=0 ? min(0, (d.width-that.image_width)/2)-0.055*that.image_width : d.width - min(0, (d.width-that.image_width)/2)-that.image_width*0.17+0.055*that.image_width))
+      .attr("x", d => d.image_bias[0] + (d.image_bias[0]<=0 ? min(0, (d.width-that.image_width)/2)-0.07*that.image_width : d.width - min(0, (d.width-that.image_width)/2)-that.image_width*0.2+0.07*that.image_width))
       .attr("y", d => d.image_bias[1] + (d.width-that.image_width)/2-0.035*that.image_width + that.image_width*0.57*(1-d.confuse_values[0]))
       .attr("rx", d => that.image_width*0.05)
       .attr("ry", d => that.image_width*0.05)
@@ -1058,51 +1038,6 @@ const GridRender = function(parent) {
       .duration(that.fast_ani)
       .attr("opacity", 0)
       .style("visibility", "hidden");
-
-//    that.e_grids
-//      .select("rect.confuse-1")
-//      .transition()
-//      .duration(that.update_ani)
-//      .attr("opacity", d => (d.is_confused ? 1 : 0))
-//      .attr("width", d => d.show_image ? that.image_width*0.2 : d.width * 0.9)
-//      .attr("height", d => d.show_image ? that.image_width*0.6 : d.width * 0.9)
-//      .attr("x", d => d.show_image ? d.image_bias[0] + min(0, (d.width-that.image_width)/2)-0.07*that.image_width : d.width * 0.05)
-//      .attr("y", d => d.show_image ? d.image_bias[1] + (d.width-that.image_width)/2-0.05*that.image_width : d.width * 0.05)
-//      .attr("rx", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("ry", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
-////      .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
-//      .attr("stroke", "white")
-//      .attr("stroke-width", d => d.show_image ? that.image_width*0.08 : d.width * 0.08);
-//
-//    that.e_grids
-//      .select("rect.confuse0")
-//      .transition()
-//      .duration(that.update_ani)
-//      .attr("opacity", d => (d.is_confused ? 1 : 0))
-//      .attr("width", d => d.show_image ? that.image_width*0.2 : d.width * 0.9)
-//      .attr("height", d => d.show_image ? that.image_width*0.6 : d.width * 0.9)
-//      .attr("x", d => d.show_image ? d.image_bias[0] + min(0, (d.width-that.image_width)/2)-0.07*that.image_width : d.width * 0.05)
-//      .attr("y", d => d.show_image ? d.image_bias[1] + (d.width-that.image_width)/2-0.05*that.image_width : d.width * 0.05)
-//      .attr("rx", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("ry", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})` : `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
-//      .attr("stroke", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})` : `rgba(${dark_bias+e.color[0]*dark_rate},${dark_bias+e.color[1]*dark_rate},${dark_bias+e.color[2]*dark_rate})`)
-//      .attr("stroke-width", d => d.show_image ? that.image_width*0.03 : d.width * 0.03);
-//
-//    that.e_grids
-//      .select("rect.confuse1")
-//      .transition()
-//      .duration(that.update_ani)
-//      .attr("opacity", d => (d.is_confused ? 1 : 0))
-//      .attr("width", d => d.show_image ? that.image_width*0.17 : d.width * 0.9)
-//      .attr("height", d => (d.confuse_values[0]) * (d.show_image ? that.image_width*0.57 : d.width * 0.9))
-//      .attr("x", d => d.show_image ? d.image_bias[0] + min(0, (d.width-that.image_width)/2)-0.055*that.image_width : d.width * 0.05)
-//      .attr("y", d => d.show_image ? d.image_bias[1] + (d.width-that.image_width)/2-0.035*that.image_width + that.image_width*0.57*(1-d.confuse_values[0]) : d.width*0.05 + d.width*0.9*(1-d.confuse_values[0]))
-//      .attr("rx", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("ry", d => d.show_image ? that.image_width*0.05 : d.width * 0.05)
-//      .attr("fill-opacity", 1)
-//      .attr("fill", e => (!that.one_partition && !that.is_zoomout) ? `rgba(${e.pcolor[0]*bar_rate},${e.pcolor[1]*bar_rate},${e.pcolor[2]*bar_rate})` : `rgba(${e.color[0]*bar_rate},${e.color[1]*bar_rate},${e.color[2]*bar_rate})`);
 
     if (!(that.render_image)) {
       //      that.e_grids
@@ -1284,8 +1219,8 @@ const GridRender = function(parent) {
       .duration(that.update_ani)
       .attr("fill-opacity", 1)
       .attr("fill", e => `rgba(${e.color[0]},${e.color[1]},${e.color[2]})`)
-      .attr("width", e => e.pwidth[e.pclass])
-      .attr("height", e => e.pheight[e.pclass])
+//      .attr("width", e => e.pwidth[e.pclass])
+//      .attr("height", e => e.pheight[e.pclass])
       .attr("stroke", "white")
       .attr("stroke-width", d => d.stroke_width);
 
@@ -1295,13 +1230,14 @@ const GridRender = function(parent) {
       .duration(that.update_ani)
       .attr("fill", e => `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
 //      .attr("stroke", e => `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`);
-      .attr("stroke", "white");
+//      .attr("stroke", "white");
 
     that.e_grids
       .selectAll("rect.confuse0")
       .transition()
       .duration(that.update_ani)
-      .attr("fill", e => `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
+//      .attr("fill", e => `rgba(${light_bias+e.color[0]*light_rate},${light_bias+e.color[1]*light_rate},${light_bias+e.color[2]*light_rate})`)
+      .attr("fill", 'none')
       .attr("stroke", e => `rgba(${dark_bias+e.color[0]*dark_rate},${dark_bias+e.color[1]*dark_rate},${dark_bias+e.color[2]*dark_rate})`);
 
     that.e_grids
@@ -1310,13 +1246,13 @@ const GridRender = function(parent) {
       .duration(that.update_ani)
       .attr("fill", e => `rgba(${e.color[0]*bar_rate},${e.color[1]*bar_rate},${e.color[2]*bar_rate})`);
 
-    that.e_grids
-      .transition()
-      .duration(that.update_ani)
-      .attr(
-        "transform",
-        d => `translate(${d.px[d.pclass]}, ${d.py[d.pclass]})`
-      );
+//    that.e_grids
+//      .transition()
+//      .duration(that.update_ani)
+//      .attr(
+//        "transform",
+//        d => `translate(${d.px[d.pclass]}, ${d.py[d.pclass]})`
+//      );
   };
 
   that.hide_details = function() {
@@ -1341,13 +1277,14 @@ const GridRender = function(parent) {
       .duration(that.update_ani)
       .attr("fill", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`)
 //      .attr("stroke", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`);
-      .attr("stroke", "white");
+//      .attr("stroke", "white");
 
     that.e_grids
       .selectAll("rect.confuse0")
       .transition()
       .duration(that.update_ani)
-      .attr("fill", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`)
+//      .attr("fill", e => `rgba(${light_bias+e.pcolor[0]*light_rate},${light_bias+e.pcolor[1]*light_rate},${light_bias+e.pcolor[2]*light_rate})`)
+      .attr("fill", 'none')
       .attr("stroke", e => `rgba(${dark_bias+e.pcolor[0]*dark_rate},${dark_bias+e.pcolor[1]*dark_rate},${dark_bias+e.pcolor[2]*dark_rate})`);
 
     that.e_grids

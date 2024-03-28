@@ -76,7 +76,7 @@ class CuttleFish:
                 # if total is 360
                 self.alpha_max = 360.0 / total_part
                 self.beta_max = n * self.alpha_max
-            print("alpha_max: {}, beta_max: {}".format(self.alpha_max, self.beta_max))
+            # print("alpha_max: {}, beta_max: {}".format(self.alpha_max, self.beta_max))
 
         hue_list = hue_list[:]
         for i in range(len(hue_list)):
@@ -121,7 +121,7 @@ class CuttleFish:
             if h_res[i] < 0:
                 h_res[i] += 360
 
-        print(h_res)
+        # print(h_res)
         res = []
         def getRGB(h):
             # print(self.l_default, self.c_default, h)

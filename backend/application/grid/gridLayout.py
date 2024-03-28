@@ -74,39 +74,6 @@ class GridLayout(object):
         indices = neigh.kneighbors(X, return_distance=False).reshape(-1)
         return constrain_y[indices]
 
-    def get_knn_embedding(self, X, labels, selected, selected_embed, k=5, mode=0, target=0.8):
-        # X: features
-        # selected: selected points
-        # selected_embed: selected points' embedding
-        # k: knn
-        # mode: 0: knn in extend, 1: knn in selected
-        # target: target select points ratio
-        # return constraint_x, constraint_y, constraint_labels, extend_selected
-        dist = pairwise_distances(X, n_jobs=-1)
-        refer_selected = selected[:]
-        if k == -1:
-            k = len(selected)
-        else:
-            k = min(k, len(selected))
-        options = []
-        for i in range(X.shape[0]):
-            if i not in selected:
-                options.append(i)
-        res = selected[:]
-        res_embed = selected_embed.copy()
-        while len(res) < target * X.shape[0]:
-            choice = random.choice(options)
-            options.remove(choice)
-            knns = np.argsort(dist[choice, refer_selected])[:k]
-            # Weighted by distance
-            weights = 1 / dist[choice, refer_selected][knns] ** 2
-            weights = weights / np.sum(weights)
-            res_embed = np.vstack([res_embed, np.sum(res_embed[knns] * weights.reshape(-1, 1), axis=0)])
-            res.append(choice)
-            if mode == 0:
-                refer_selected.append(choice)
-        return X[res], res_embed, labels[res], res
-
     def get_centers(self, X_embedded, labels):
         maxLabel = labels.max()+1
         centers = np.zeros((maxLabel, 2))
@@ -136,19 +103,12 @@ class GridLayout(object):
                 #     break
             else:
                 edge_cnt += 1
-        print("planer edge", edge_cnt)
+        # print("planer edge", edge_cnt)
         return G
 
     def get_FD_layout_centers_stability(self, f_dict, old_pos, keep, goal=2, planer_G=None):
 
         maxLabel = len(old_pos)
-
-        # import matplotlib.pyplot as plt
-        # plt.switch_backend('agg')
-        # for i in range(maxLabel):
-        #     plt.scatter(old_pos[i][1], old_pos[i][0], color=plt.cm.tab20(i))
-        # plt.savefig("ft0.png")
-        # plt.clf()
 
         stability = {"old_pos": old_pos, "keep": keep}
         G_full = nx.complete_graph(maxLabel)
@@ -167,18 +127,10 @@ class GridLayout(object):
         # old_scale = (old_pos.max(axis=0)-old_pos.min(axis=0)).sum()
         kk_scale = kk_pos.std(axis=0).sum()
         old_scale = old_pos.std(axis=0).sum()
-        print("scale", old_scale, kk_scale)
+        # print("scale", old_scale, kk_scale)
         if old_scale > 0 and kk_scale > 0:
             old_pos = old_pos*kk_scale/old_scale      # scale normalize
             stability["old_pos"] = old_pos
-
-
-        # import matplotlib.pyplot as plt
-        # plt.switch_backend('agg')
-        # for i in range(maxLabel):
-        #     plt.scatter(kk_pos[i][1], kk_pos[i][0], color=plt.cm.tab20(i))
-        # plt.savefig("ft_kk.png")
-        # plt.clf()
 
         best_kk, worst_sta = get_kamada_kawai_costfn_stability(G_full, dist=f_dict, pos=kk_pos, old_pos=old_pos, keep=keep)
         worst_kk, best_sta = get_kamada_kawai_costfn_stability(G_full, dist=f_dict, pos=old_pos, old_pos=old_pos, keep=keep)
@@ -220,14 +172,7 @@ class GridLayout(object):
                 best_d = abs(goal * d1 - d2) / (d1 + d2)
                 best_pos = new_pos.copy()
 
-            print("FD multitask", mid, d1, d2)
-
-        # import matplotlib.pyplot as plt
-        # plt.switch_backend('agg')
-        # for i in range(maxLabel):
-        #     plt.scatter(best_pos[i][1], best_pos[i][0], color=plt.cm.tab20(i))
-        # plt.savefig("ft1.png")
-        # plt.clf()
+            # print("FD multitask", mid, d1, d2)
 
         return best_pos
 
@@ -318,13 +263,6 @@ class GridLayout(object):
 
             np.random.seed(0)
             if len(caled_list)>0:
-                # neigh = NearestNeighbors(n_neighbors=min(len(caled_list), 2))
-                # neigh.fit(feature_mean[caled_list])
-                # for p in range(maxLabel):
-                #     idx = (labels[info_before['selected']]==p)
-                #     if idx.sum()==0:
-                #         indices = neigh.kneighbors(feature_mean[p].reshape(1, -1), return_distance=False).reshape(-1)
-                #         centers[p] = (centers[caled_list[indices[0]]]+centers[caled_list[indices[1]]])/2
                 dist_matrix = cdist(feature_mean, feature_mean[caled_list])
                 for p in range(maxLabel):
                     if not caled[p]:
@@ -357,58 +295,12 @@ class GridLayout(object):
             # pos = None
             pos = nx.kamada_kawai_layout(G)
         else:
-            # pos = {}
-            # for i in range(maxLabel):
-            #     pos[i] = init[i]-0.5
-            # print("pos", pos)
-            # import matplotlib.pyplot as plt
-            # plt.switch_backend('agg')
-            # for i in range(maxLabel):
-            #     plt.scatter(init[i][1], init[i][0], color=plt.cm.tab20(i))
-            # plt.savefig("ft0.png")
-            # plt.clf()
-
-            # o_dist = cdist(init, init, "euclidean")
-            # o_dist /= o_dist.max()
-            #
-            # for p in range(top_partition.max()+1):
-            #     l_id = (top_partition == p)
-            #     if f_dist[np.ix_(l_id, l_id)].max() > 0:
-            #         f_dist[np.ix_(l_id, l_id)] /= f_dist[np.ix_(l_id, l_id)].max()
-            #
-            # G = nx.empty_graph(maxLabel)
-            # for i in range(maxLabel):
-            #     for j in range(i+1, maxLabel):
-            #         if top_partition[i] == top_partition[j]:
-            #             # G.add_edge(i, j, weight=f_dist[i][j])
-            #             # G.add_edge(i, j, weight=f_dist[i][j]*np.sqrt(top_count[top_partition[i]]/N))
-            #             if caled[i] and caled[j]:
-            #                 G.add_edge(i, j, weight=(f_dist[i][j]*np.sqrt(top_count[top_partition[i]]/N)+o_dist[i][j])/2)
-            #             else:
-            #                 G.add_edge(i, j, weight=f_dist[i][j]*np.sqrt(top_count[top_partition[i]]/N))
-            #         # else:
-            #         #     # G.add_edge(i, j, weight=f_dist[i][j]*2)
-            #         #     G.add_edge(i, j, weight=f_dist[i][j])
-            # # pos = nx.kamada_kawai_layout(G, pos=pos)
-            # pos = kamada_kawai_layout(G, pos=pos, options={"maxiter": 20})
-            # result = np.zeros((maxLabel, 2))
-            # for i in range(maxLabel):
-            #     result[i] = np.array(pos[i])
-
             result = self.get_FD_layout_centers_stability(f_dict, init-init.mean(axis=0), caled, planer_G=G)
 
             result -= result.min(axis=0)
             result /= result.max(axis=0)
-            # import matplotlib.pyplot as plt
-            # plt.switch_backend('agg')
-            # for i in range(maxLabel):
-            #     plt.scatter(result[i][1], result[i][0], color=plt.cm.tab20(i))
-            # plt.savefig("ft1.png")
-            # plt.clf()
+
             return result, edge_matrix
-
-
-        # np.savez("KD.npz", f_dist=f_dist, init=init)
 
         G_full = nx.complete_graph(maxLabel)
         pos = nx.kamada_kawai_layout(G_full, pos=pos, dist=f_dict)
@@ -435,12 +327,6 @@ class GridLayout(object):
 
         result -= result.min(axis=0)
         result /= result.max(axis=0)
-        # import matplotlib.pyplot as plt
-        # plt.switch_backend('agg')
-        # for i in range(maxLabel):
-        #     plt.scatter(result[i][1], result[i][0], color=plt.cm.tab20(i))
-        # plt.savefig("ft1.png")
-        # plt.clf()
 
         return result, edge_matrix
 
@@ -495,13 +381,6 @@ class GridLayout(object):
             tmp_centers = partition_centers[tmp_idx]
             tmp_count = count[tmp_idx].reshape((1, -1))
             centers[p] = (tmp_count@tmp_centers)/tmp_count.sum()
-
-        # import matplotlib.pyplot as plt
-        # plt.switch_backend('agg')
-        # for i in range(maxTop):
-        #     plt.scatter(centers[i][1], centers[i][0], color=plt.cm.tab20(i))
-        # plt.savefig("ft2.png")
-        # plt.clf()
 
         return centers
 
@@ -565,11 +444,11 @@ class GridLayout(object):
         top_partition = np.array(top_partition)
 
         from collections import Counter
-        print(top_partition)
-        print(Counter(labels))
+        # print(top_partition)
+        # print(Counter(labels))
 
-        print("time label partition 1", time.time()-start)
-        print(filtered_labels)
+        # print("time label partition 1", time.time()-start)
+        # print(filtered_labels)
 
         for label in filtered_labels:
             partitions[label] = -1
@@ -600,10 +479,6 @@ class GridLayout(object):
                         original_label_lists[original_top_labels[i]].append(labels[i])
 
         if len(filtered_labels) > 0:
-            # set filter labels to nearest partition
-
-            # neigh = NearestNeighbors(n_neighbors=1)
-            # neigh.fit(partition_centers)
 
             filtered_center = []
             for label in filtered_labels:
@@ -621,15 +496,9 @@ class GridLayout(object):
                     nn = label_partition[tmp_list][dist_matrix[order][label_partition[tmp_list]].argsort()[0]]
                     label_partition[label] = nn
                 elif tlabel not in filter_labels[0] and (len(label_lists[tlabel]) > 0):
-                    # neigh2 = NearestNeighbors(n_neighbors=1)
-                    # neigh2.fit(partition_centers[label_partition[label_lists[tlabel]]])
-                    # indices = neigh2.kneighbors(label_center.reshape(1, -1), return_distance=False).reshape(-1)
-                    # label_partition[label] = label_partition[label_lists[tlabel]][indices[0]]
                     nn = label_partition[label_lists[tlabel]][dist_matrix[order][label_partition[label_lists[tlabel]]].argsort()[0]]
                     label_partition[label] = nn
                 else:
-                    # indices = neigh.kneighbors(label_center.reshape(1, -1), return_distance=False).reshape(-1)
-                    # label_partition[label] = indices[0]
                     nn = dist_matrix[order].argsort()[0]
                     label_partition[label] = nn
                 order += 1
@@ -638,7 +507,7 @@ class GridLayout(object):
             partition_centers[i] = (X_feature[(label_partition[labels] == i)]).sum(axis=0)/(X_feature[(label_partition[labels] == i)]).shape[0]
         partition_labels = np.array(list(map(lambda x: label_partition[x], labels)))
 
-        print("time label partition 2", time.time()-start)
+        # print("time label partition 2", time.time()-start)
 
         # from IPython import embed; embed()
         return label_partition, partition_labels, top_partition
@@ -661,21 +530,14 @@ class GridLayout(object):
         # k = max(min(label_num, round(sample_num / csize) - 1), 1)
 
         start = time.time()
-        print("cluster", k, avg_embed.shape[0])
+        # print("cluster", k, avg_embed.shape[0])
         clusters = KMeans(n_clusters=k, random_state=8).fit_predict(avg_embed)
-        print("time cluster", time.time()-start)
+        # print("time cluster", time.time()-start)
 
         partition = {}
         for i in range(label_num):
             partition[label_list[i]] = clusters[i] + cur_idx
-        # from IPython import embed; embed()
 
-        # import matplotlib.pyplot as plt
-        # plt.switch_backend('agg')
-        # plt.scatter(avg_embed[:, 1], -avg_embed[:, 0], c=clusters)
-        # plt.legend()
-        # plt.savefig("tmp.png")
-        # from IPython import embed; embed()
         info = {}
         return partition, k, info
 
@@ -732,9 +594,6 @@ class GridLayout(object):
             return new_item2
 
     def _tree_partition2(self, label_list, label_embeds, cur_idx=0, csize=40, tcnt=1, score_standard=1, tot_num=-1):
-        # partition tree by enum grid division
-        # score_standard: 0 Difference in length and width of rects
-        #                 1 Intersect areas of partitions rects
         sample_num = 0
         label_num = 0
         avg_embed = []
@@ -752,22 +611,6 @@ class GridLayout(object):
             avg_dists.append(np.mean(cdist(np.array(label_embeds[label]), avg_embed[i].reshape((1, 2)))))
             avg_dists_xy.append(np.mean(np.abs(np.array(label_embeds[label]) - avg_embed[i].reshape((1, 2))), axis=0))
         avg_dists_xy = np.array(avg_dists_xy) * 2
-
-        # import matplotlib.pyplot as plt
-        # plt.switch_backend('agg')
-        # plt.figure(figsize=(6, 6))
-        # plt.clf()
-        # for i in range(len(label_list)):
-        #     x = [avg_embed[i][0] - avg_dists_xy[i][0], avg_embed[i][0] - avg_dists_xy[i][0],
-        #         avg_embed[i][0] + avg_dists_xy[i][0], avg_embed[i][0] + avg_dists_xy[i][0],
-        #         avg_embed[i][0] - avg_dists_xy[i][0]]
-        #     y = [avg_embed[i][1] - avg_dists_xy[i][1], avg_embed[i][1] + avg_dists_xy[i][1],
-        #         avg_embed[i][1] + avg_dists_xy[i][1], avg_embed[i][1] - avg_dists_xy[i][1],
-        #         avg_embed[i][1] - avg_dists_xy[i][1]]
-        #     plt.plot(y, x, color=plt.cm.tab20(i))
-        #     plt.scatter(avg_embed[i][1], avg_embed[i][0], color=plt.cm.tab20(i))
-        # plt.show()
-        # plt.savefig("1.png")
 
         nums_label = np.array(nums_label)
 
@@ -805,15 +648,6 @@ class GridLayout(object):
             return left - right
 
         def part_two(now_labels, tot_num, now_range=None):
-            # plt.figure(figsize=(6, 6))
-            # plt.clf()
-            # for ii in range(len(now_labels)):
-            #     i = now_labels[ii]
-            #     x = [avg_embed[i][0] - avg_dists_xy[i][0], avg_embed[i][0] - avg_dists_xy[i][0], avg_embed[i][0] + avg_dists_xy[i][0], avg_embed[i][0] + avg_dists_xy[i][0], avg_embed[i][0] - avg_dists_xy[i][0]]
-            #     y = [avg_embed[i][1] - avg_dists_xy[i][1], avg_embed[i][1] + avg_dists_xy[i][1], avg_embed[i][1] + avg_dists_xy[i][1], avg_embed[i][1] - avg_dists_xy[i][1], avg_embed[i][1] - avg_dists_xy[i][1]]
-            #     plt.plot(y, x, color=plt.cm.tab20(i))
-            # plt.show()
-            # plt.savefig("1.png")
             now_k = max(min(len(now_labels), round(tot_num / csize)), 1)
             divides = [[1 / max(2, min(now_k, 4)), 1 - 1 / max(2, min(now_k, 4))]]
             # divides = [[1/3, 2/3]]
@@ -998,23 +832,11 @@ class GridLayout(object):
         rank_y = np.arange(len(avg_embed))
         rank_x[sort_x] = np.arange(len(avg_embed))
         rank_y[sort_y] = np.arange(len(avg_embed))
-        # for i in avg_embed:
-        #     print("tmp_xy = {", i[0], ",", i[1], "};")
-        #     print("xy.push_back(tmp_xy);")
-        # for i in avg_dists_xy:
-        #     print("tmp_xy = {", i[0]/2, ",", i[1]/2, "};")
-        #     print("sxy.push_back(tmp_xy);")
-        # for i in rank_x:
-        #     print("rank_x.push_back(", i, ");")
-        # for i in rank_y:
-        #     print("rank_y.push_back(", i, ");")
-        # for i in nums_label:
-        #     print("weight.push_back(", i, ");")
 
         start = time.time()
-        print("treemap size", len(avg_embed))
+        # print("treemap size", len(avg_embed))
         tree = gridlayoutOpt.SearchForTree(avg_embed, avg_dists_xy/2, rank_x, rank_y, nums_label)
-        print("c search time", time.time()-start)
+        # print("c search time", time.time()-start)
 
         nums_label = np.array(nums_label)
 
@@ -1037,15 +859,6 @@ class GridLayout(object):
             return partition, k, info
 
         def part_two(now_labels, tree_cut):
-            # plt.figure(figsize=(6, 6))
-            # plt.clf()
-            # for ii in range(len(now_labels)):
-            #     i = now_labels[ii]
-            #     x = [avg_embed[i][0] - avg_dists_xy[i][0], avg_embed[i][0] - avg_dists_xy[i][0], avg_embed[i][0] + avg_dists_xy[i][0], avg_embed[i][0] + avg_dists_xy[i][0], avg_embed[i][0] - avg_dists_xy[i][0]]
-            #     y = [avg_embed[i][1] - avg_dists_xy[i][1], avg_embed[i][1] + avg_dists_xy[i][1], avg_embed[i][1] + avg_dists_xy[i][1], avg_embed[i][1] - avg_dists_xy[i][1], avg_embed[i][1] - avg_dists_xy[i][1]]
-            #     plt.plot(y, x, color=plt.cm.tab20(i))
-            # plt.show()
-            # plt.savefig("1.png")
 
             i = tree_cut[0]
             if i == 0:
@@ -1174,7 +987,7 @@ class GridLayout(object):
             new_centers = CentersAdjust(tmp_embedded, tmp_labels, tmp_center, now_hull=cell)
             for i in range(tmp_center.shape[0]):
                 tmp_center[i] = np.array(new_centers[i])
-            print("time adjust", time.time() - start)
+            # print("time adjust", time.time() - start)
         try:
             row_asses, cells = getPowerDiagramGrids(tmp_labels, tmp_center, square_len, now_hull=cell, now_grids=now_grids)
         except:
@@ -1187,7 +1000,6 @@ class GridLayout(object):
         for lb in label_list:
             cells_dict[lb] = cells[labelmap[lb]]
 
-        # 输出grid与partition的对应关系
         return ret_asses, cells_dict
 
     def get_sub_partition_HV(self, p, grid_partition, cell, X_embedded, top_partition, labels, partition_center, square_len, cut_ways):
@@ -1260,7 +1072,6 @@ class GridLayout(object):
                 if item['child'] is None:
                     item['part_id'] = label_list[item['part_id']]
 
-        # 输出grid与partition的对应关系
         return ret_asses, cells_dict, tmp_cut
 
     def get_power_partition(self, X_embedded, labels, partition_center, square_len, use_boundary=False, reduce=None, major_coords=None):
@@ -1275,10 +1086,9 @@ class GridLayout(object):
             new_centers = CentersAdjust(X_embedded, labels, partition_center, reduce, major_coords)
             for i in range(partition_center.shape[0]):
                 partition_center[i] = np.array(new_centers[i])
-            print("time adjust", time.time() - start)
+            # print("time adjust", time.time() - start)
         row_asses, cells = getPowerDiagramGrids(labels, partition_center, square_len)
 
-        # 输出grid与partition的对应关系
         return row_asses, cells
 
     def get_power_partition_zoom(self, labels, zoom_partition_map, zoom_min, zoom_max, all_cells_bf, partition_center, square_len):
@@ -1297,11 +1107,10 @@ class GridLayout(object):
         new_centers = CentersAdjustZoom(zoom_partition_map, zoom_min, zoom_max, all_cells_bf, partition_center)
         for i in range(partition_center.shape[0]):
             partition_center[i] = np.array(new_centers[i])
-        print("time adjust", time.time() - start)
+        # print("time adjust", time.time() - start)
 
         row_asses, cells = getPowerDiagramGrids(labels, partition_center, square_len, compact=False)
 
-        # 输出grid与partition的对应关系
         return row_asses, cells
 
     def get_partition_HV(self, X_embedded, labels, partition_center, square_len, reduce=None):
@@ -1343,7 +1152,6 @@ class GridLayout(object):
             if item['child'] is None:
                 item['part_id'] = str(item['part_id'])+"-top"
 
-        # 输出grid与partition的对应关系
         return row_asses, cells, tmp_cut
 
     def get_partition_HV_zoom(self, labels, zoom_partition_map, all_tree_bf, partition_center, square_len):
@@ -1381,7 +1189,6 @@ class GridLayout(object):
             if item['child'] is None:
                 item['part_id'] = str(item['part_id'])+"-top"
 
-        # 输出grid与partition的对应关系
         return row_asses, cells, tmp_cut
 
     def get_foldline_partition(self, x_bf, y_bf, grid_bf, label_bf, labels, partition_center, square_len):
@@ -1396,7 +1203,6 @@ class GridLayout(object):
             grid_label[x][y] = label_bf[i]
         row_asses, cells = getFoldlineGrids(x_bf, y_bf, grid_label, labels, partition_center, square_len)
 
-        # 输出grid与partition的对应关系
         return row_asses, cells
 
     def grid(self, labels, X_feature, true_id, hierarchy, top_labels, filter_labels=None, info_before=None, P=None, scale=1/2, confs_hierarchy=None, shres=0.8):
@@ -1425,11 +1231,6 @@ class GridLayout(object):
         original_top_labels = top_labels.copy()
         original_labels = labels.copy()
         original_filter = copy.deepcopy(filter_labels)
-
-        # from collections import Counter
-        # print("top labels: ", Counter(top_labels))
-        # print("filter labels: ", filter_labels[0])
-        # print("labels: ", Counter(labels))
 
         #----------------------------------将top_label更改为上层分块----------------------------------------
 
@@ -1485,13 +1286,6 @@ class GridLayout(object):
                 for i in range(cnt2):
                     map_bf[top_id2[i]] = top_dist[i].argsort()[0]
 
-            # for i in range(num):
-            #     if top_labels[i] not in map_bf:
-            #         if labels[i] not in filter_labels[1]:
-            #             print("???", filter_labels[1], (labels==labels[i]).sum(), labels[i], top_labels[i])
-            #         map_bf[top_labels[i]] = cnt
-            #         cnt += 1
-
             top_labels = np.array(list(map(lambda x: map_bf[x], top_labels))).astype(np.int32)
 
         #----------------------------------START LABEL PARTITION----------------------------------------
@@ -1518,7 +1312,7 @@ class GridLayout(object):
         tlabelmap = norm_labels(top_partition)
         top_partition = np.array(list(map(lambda x: tlabelmap[x], top_partition))).astype(np.int32)
 
-        print("time label partition", time.time()-start)
+        # print("time label partition", time.time()-start)
 
         # print(filter_labels)
         # print(label_partition)
@@ -1543,7 +1337,7 @@ class GridLayout(object):
                 if o_label not in original_filter[1]:
                     if o_label not in conf_label_list[p_label]:
                         conf_label_list[p_label].append(o_label)
-            print("origin label", conf_label_list)
+            # print("origin label", conf_label_list)
             for p_label in conf_label_list:
                 conf_label_list[p_label] = np.array(list(map(lambda x: confs_hierarchy['id_map'][x], conf_label_list[p_label])))
             conf_labels = np.array(list(map(lambda x: confs_hierarchy['id_map'][x], original_labels)))
@@ -1565,7 +1359,7 @@ class GridLayout(object):
 
         #----------------------------------START CENTER CALCULATE----------------------------------------
 
-        print("time start FD layout", time.time()-start)
+        # print("time start FD layout", time.time()-start)
 
         partition_center, edge_matrix = self.get_FD_layout_centers(X_feature, top_partition, label_partition[labels], info_before, now_conf)
         partition_center = self.adjust_FD_layout_centers(top_partition, label_partition[labels], partition_center, original_top_labels)
@@ -1573,7 +1367,7 @@ class GridLayout(object):
 
         # print("top center", top_center)
 
-        print("time FD layout", time.time()-start)
+        # print("time FD layout", time.time()-start)
         time_dec = time.time()-start
 
         # print(label_partition, partition_center)
@@ -1656,7 +1450,7 @@ class GridLayout(object):
             top_center2 = top_center.copy()
             selected_e = None
 
-        print("time partition pre", time.time()-start)
+        # print("time partition pre", time.time()-start)
 
         if use_HV:
             if grid_zoom_flag:
@@ -1671,9 +1465,7 @@ class GridLayout(object):
             else:
                 grid_partition, cells = self.get_power_partition(tmp_embedded, top_partition[label_partition[tmp_labels]], top_center2, square_len, False)
 
-        print("time partition top grid", time.time()-start)
-
-        # self.optimizer.show_grid(grid_partition, top_partition[label_partition[labels]], square_len, 'partition_top.png', just_save=True)
+        # print("time partition top grid", time.time()-start)
 
         tmp_embedded = partition_center[label_partition[labels]].copy()
 
@@ -1721,46 +1513,7 @@ class GridLayout(object):
                         all_cells[key] = cells[p]
 
 
-        print("time partition grid", time.time()-start)
-
-        # self.optimizer.show_grid(grid_partition, label_partition[labels], square_len, 'partition_sub.png', just_save=True)
-
-        # plt.figure(figsize=(6, 6))
-        # for i in range(X_embedded.shape[0]):
-        #     plt.scatter(X_embedded[i][1], X_embedded[i][0], color=plt.cm.tab20(labels[i]))
-        # plt.savefig("tmp_old.png")
-        # plt.show()
-
-        # start0 = time.time()
-        # grid_asses_ori, _, _, _, _ = self.optimizer.grid(X_embedded, labels, type='Triple', maxit=5, maxit2=0,
-        #                                                  use_global=False,
-        #                                                  use_local=False, only_compact=False, swap_cnt=2147483647,
-        #                                                  pred_labels=labels, swap_op_order=False,
-        #                                                  choose_k=1)
-        # time_ori = time.time()-start0
-        # time_dec += time_ori
-        # print("ori done", time.time()-start0)
-
-        # start0 = time.time()
-        # grid_asses_g, _, _, _, _ = self.optimizer.grid(X_embedded, labels, type='PerimeterRatio', maxit=0, maxit2=5,
-        #                                                  use_global=True,
-        #                                                  use_local=False, only_compact=False, swap_cnt=2147483647,
-        #                                                  pred_labels=labels, swap_op_order=False,
-        #                                                  choose_k=1)
-        # print("global done", time.time()-start0)
-
-        # start0 = time.time()
-        # # np.savez("whole.npz", X=X_embedded, labels=labels)
-        # grid_asses_old, _, _, _, _ = self.optimizer.grid(X_embedded, labels, type='PerimeterRatio', maxit=0, maxit2=8,
-        #                                                  use_global=True,
-        #                                                  use_local=True, only_compact=False, swap_cnt=2147483647,
-        #                                                  pred_labels=labels, swap_op_order=False,
-        #                                                  choose_k=1)
-        # print("whole done", time.time()-start0)
-        # time_old = time.time()-start0
-        # time_dec += time_old
-
-        # print("time partition rotate", time.time()-start)
+        # print("time partition grid", time.time()-start)
 
         #----------------------------------END GRID PARTITION----------------------------------------
 
@@ -1774,7 +1527,7 @@ class GridLayout(object):
         _partition = label_partition_full[labels_full[grid_partition]]
 
         end = time.time()
-        print("time partition finish", end-start)
+        # print("time partition finish", end-start)
 
         grid_asses = grid_partition.copy()
 
@@ -1789,7 +1542,7 @@ class GridLayout(object):
             sheld = shres
             if_confuse = conf_max<sheld
             confuse_idx = np.arange(len(labels))[if_confuse]
-            print(if_confuse.sum())
+            # print(if_confuse.sum())
             confuse_class = np.argsort(-conf, axis=1)
             confusion = {"confuse_class": confuse_class, "if_confuse": if_confuse, "conf": now_conf, "conf_vis": conf_vis}
 
@@ -1797,52 +1550,15 @@ class GridLayout(object):
         scale = max(square_len*alpha, 0)
 
         if info_before is not None:
-            # save_pickle({"grid_asses": grid_asses, "labels": label_partition[labels], "info_before": info_before, "scale": scale}, "stability2.pkl")
             grid_asses, grid_new = AssignQAP(grid_asses, label_partition[labels], P, scale, grid_asses_bf=info_before['grid_asses'], selected=info_before['selected'], selected_bf=info_before['selected_bf'], feature=X_feature, confusion=confusion, small_labels=labels, use_HV=use_HV)
         else:
-            # save_pickle({"grid_asses": grid_asses, "labels": label_partition[labels], "feature": X_feature}, "top.pkl")
             grid_asses, grid_new = AssignQAP(grid_asses, label_partition[labels], P, scale, feature=X_feature, confusion=confusion, small_labels=labels, use_HV=use_HV)
-
-
-        # for i in confuse_idx:
-        #     print(true_id[i], now_conf[i])
-
-        # embedded = np.array(get_layout_embedded(grid_asses, square_len))[:len(labels)]
-        # fig = plt.figure(figsize=(6, 6))
-        # plt.clf()
-        # for i in range(label_partition[labels].max()+1):
-        #     print(i)
-        #     plt.scatter(embedded[label_partition[labels]==i, 1], embedded[label_partition[labels]==i, 0], color=plt.cm.tab20(i))
-        # plt.scatter(embedded[confuse_idx, 1], embedded[confuse_idx, 0], color='black')
-        # plt.savefig("tmp_conf.png")
-        # plt.clf()
-        # plt.scatter(embedded[confuse_idx, 1], embedded[confuse_idx, 0], color=plt.cm.tab20(confuse_class[confuse_idx, 0]))
-        # plt.savefig("tmp_conf1.png")
-        # plt.clf()
-        # plt.scatter(embedded[confuse_idx, 1], embedded[confuse_idx, 0], color=plt.cm.tab20(confuse_class[confuse_idx, 1]))
-        # plt.savefig("tmp_conf2.png")
-        # plt.clf()
-        # plt.scatter(embedded[confuse_idx, 1], embedded[confuse_idx, 0], color=plt.cm.tab20(confuse_class[confuse_idx, 2]))
-        # plt.savefig("tmp_conf3.png")
-        # plt.clf()
-
-        # tmp_confs = confs_hierarchy['confs'][true_id]
-        # tmp_confs2 = np.zeros((num, 398))
-        # for i in range(398):
-        #     tmp_confs2[:, i] = tmp_confs[:, confs_hierarchy['id_map'][i]]
-        # print(tmp_confs2.sum())
-        # plt.clf()
-        # for i in range(label_partition[labels].max()+1):
-        #     plt.scatter(embedded[label_partition[labels]==i, 1], embedded[label_partition[labels]==i, 0], color=plt.cm.tab20(i))
-        # tmp_idx = (tmp_confs2.max(axis=1)<0.8)
-        # plt.scatter(embedded[tmp_idx, 1], embedded[tmp_idx, 0], color='black')
-        # plt.savefig("tmp_conf0.png")
 
         end = time.time()
         time_ours = end-start-time_dec
 
-        print('done')
-        print("time", end-start)
+        # print('done')
+        # print("time", end-start)
         # ----------------------------------END GRID ASSIGN----------------------------------------
 
         partition_info = {}
@@ -1856,228 +1572,6 @@ class GridLayout(object):
                     # print(child1['size'], child2['size'])
                     item['size'] = child1['size'] + child2['size']
             partition_info['part_way'] = all_tree
-
-        # -------------------------------  draw grid  -----------------------------
-
-        # otlabelmap = norm_labels(original_top_labels)
-        # tmp_partition = np.array(list(map(lambda x: otlabelmap[x], original_top_labels))).astype(np.int32)
-        # self.optimizer.show_grid(grid_asses, tmp_partition, square_len, 'partition_old.png', just_save=True)
-        #
-        # # self.optimizer.show_grid(grid_asses, labels_full, square_len, 'final0.png', showNum=True, scatter=X_embedded_a)
-        # if info_before is not None:
-        #     self.optimizer.show_grid(grid_asses, labels, square_len, 'final1.png', just_save=True)
-        # else:
-        #     self.optimizer.show_grid(grid_asses, labels, square_len, 'final0.png', just_save=True)
-        # self.optimizer.show_grid(grid_asses_ori, labels, square_len, 'final2.png')
-        # self.optimizer.show_grid(grid_asses_old, labels, square_len, 'final3.png')
-        # self.optimizer.show_grid(grid_asses_g, labels, square_len, 'final4.png')
-        #
-        # plt.clf()
-        # for i in range(X_embedded.shape[0]):
-        #     plt.scatter(X_embedded[i][1], X_embedded[i][0], color=plt.cm.tab20(labels[i]))
-        # plt.savefig("embedded.png")
-        # plt.show()
-
-        # # -------------------------------  proximity  -----------------------------
-
-        # def testNeighbor(a, b, maxk=50, labels=None, type='all'):
-        #     start = time.time()
-        #     order = np.arange(a.shape[0], dtype='int')
-        #     np.random.seed(5)
-        #     np.random.shuffle(order)
-        #     dist_a = cdist(a, a[order], "euclidean")
-        #     dist_b = cdist(b, b[order], "euclidean")
-        #     arg_a = order[np.argsort(dist_a, axis=1)]
-        #     arg_b = order[np.argsort(dist_b, axis=1)]
-
-        #     # print("dist time", time.time()-start)
-        #     nn = len(a)
-        #     p1 = np.zeros(maxk)
-        #     p2 = np.zeros(maxk)
-        #     if type == 'cross':
-        #         for k in range(maxk):
-        #             for i in range(nn):
-        #                 diff = labels[arg_a[i]] != labels[i]
-        #                 diff2 = labels[arg_b[i]] != labels[i]
-        #                 # p1[k] += len(set(arg_a[i][diff][:k+1]).intersection(set(arg_b[i][diff2][:k+1])))
-        #                 p1[k] += (labels[np.array(list(set(arg_a[i][:k + 2]).intersection(set(arg_b[i][:k + 2]))))] !=
-        #                           labels[i]).sum()
-        #                 p2[k] += 1
-        #     else:
-        #         for k in range(maxk):
-        #             for i in range(nn):
-        #                 p1[k] += len(set(arg_a[i][:k + 2]).intersection(set(arg_b[i][:k + 2]))) - 1
-        #                 p2[k] += 1
-        #     ret = p1 / p2
-
-        #     if labels is not None:
-        #         cnt = 0
-        #         for i in range(nn):
-        #             cnt += (labels[arg_a[i][:maxk]] == labels[i]).sum()
-        #         print(cnt, maxk * nn - cnt)
-
-        #     return ret
-
-        # def AUC(y):
-        #     cnt = 0
-        #     a_20 = 0
-        #     a_full = 0
-        #     for i in range(len(y)):
-        #         cnt += y[i]
-        #         if i == 19:
-        #             a_20 = cnt
-        #     a_full = cnt
-        #     return a_full, a_20
-
-        # grid_new = get_layout_embedded(grid_asses, square_len)
-        # avg_knnp3 = 0
-        # for label in range(labels.max() + 1):
-        #     idx = np.arange(len(labels))[labels == label]
-        #     grids3 = grid_new[idx]
-        #     knnp3 = testNeighbor(X_feature[idx], grids3)
-        #     avg_knnp3 += knnp3 * len(idx)
-        # avg_knnp3 /= len(labels)
-
-        # x = (np.arange(avg_knnp3.shape[0], dtype='int') + 1)
-        # plt.clf()
-        # auc50, auc20 = AUC(avg_knnp3)
-        # print("auc20", auc20, "auc50", auc50)
-        # # plt.plot(x, avg_knnp3, label='qap' + ", auc20=%d" % auc20 + ", auc50=%d" % auc50, linewidth=0.5)
-        # # plt.legend()
-        # # plt.ylim(0, 40)
-        # # if info_before is None:
-        # #     plt.savefig("qap_knn_top.png", dpi=300)
-        # # else:
-        # #     plt.savefig("qap_knn_zoom.png", dpi=300)
-        # # np.save("qap_knnp_"+str(alpha), avg_knnp3)
-
-        # # -------------------------------  stability  -----------------------------
-
-        # if info_before is not None:
-
-        #     N2 = info_before['grid_asses'].shape[0]
-        #     tmp_embedded2 = get_layout_embedded(info_before['grid_asses'], round(np.sqrt(N2)))
-        #     square_len2 = round(np.sqrt(N2))
-
-        #     tmp_min = tmp_embedded2[info_before['selected_bf']].min(axis=0)
-        #     tmp_max = tmp_embedded2[info_before['selected_bf']].max(axis=0) + 1 / np.sqrt(N2)
-        #     tmp_labels2 = np.ones(N2, dtype='int') * (-1)
-        #     tmp_labels2[info_before['selected_bf']] = top_partition[label_partition[labels[info_before['selected']]]]
-        #     is_selected = np.zeros(N2, dtype='bool')
-        #     is_selected[info_before['selected_bf']] = True
-
-        #     tmp_min = np.array([1, 1])
-        #     tmp_max = np.array([0, 0])
-        #     major_coords = gridlayoutOpt.getConnectShape(info_before['grid_asses'], tmp_labels2, is_selected)
-        #     for i in range(len(major_coords)):
-        #         for j in range(len(major_coords[i])):
-        #             tmp_min = np.minimum(tmp_min, np.array(major_coords[i][j]).min(axis=0))
-        #             tmp_max = np.maximum(tmp_max, np.array(major_coords[i][j]).max(axis=0))
-        #     for i in range(len(major_coords)):
-        #         for j in range(len(major_coords[i])):
-        #             major_coords[i][j] = (np.array(major_coords[i][j]) - tmp_min) / (tmp_max - tmp_min)
-
-        #     zoom_partition_map = {}
-        #     for p in top_partition:
-        #         idx = (top_partition[label_partition[labels[info_before['selected']]]]==p)
-        #         if idx.sum() > 0:
-        #             count = Counter(partition_labels_bf[np.array(info_before['selected_bf'])[idx]])
-        #             zoom_partition_map[p] = max(count, key=lambda x:count[x])
-        #     tmp_min2 = np.array([square_len2, square_len2])
-        #     tmp_max2 = np.array([0, 0])
-        #     major_points = {}
-        #     for i in range(len(info_before['grid_asses'])):
-        #         id = info_before['grid_asses'][i]
-        #         if is_selected[id]:
-        #             lb = tmp_labels2[id]
-        #             if zoom_partition_map[lb] != partition_labels_bf[id]:
-        #                 continue
-        #             if lb not in major_points:
-        #                 major_points[lb] = []
-        #             tmp_min2 = np.minimum(tmp_min2, [i // square_len2, i % square_len2])
-        #             tmp_max2 = np.maximum(tmp_max2, [i // square_len2 + 0.5, i % square_len2 + 0.5])
-        #             major_points[lb].append([i // square_len2, i % square_len2])
-        #             major_points[lb].append([i // square_len2, i % square_len2 + 0.5])
-        #             major_points[lb].append([i // square_len2 + 0.5, i % square_len2])
-        #             major_points[lb].append([i // square_len2 + 0.5, i % square_len2 + 0.5])
-        #     for lb in major_points:
-        #         major_points[lb] = (np.array(major_points[lb]) - tmp_min2) / (tmp_max2 - tmp_min2)
-
-        #     from .PowerDiagram import get_graph_from_coords
-        #     from .testMeasure import checkShape, checkShapeAndPosition
-        #     if use_HV and self.Ctrler.scenario == "ans":
-        #         shapes = get_graph_from_coords(major_coords, graph_type="origin")
-        #     else:
-        #         shapes = get_graph_from_coords(major_coords, graph_type="hull", major_points=major_points)
-
-        #     IoU_ours, relative = checkShapeAndPosition(grid_asses, top_partition[label_partition[labels]], square_len, shapes)
-        #     print("IoU", IoU_ours)
-        #     print('relative', relative)
-        #     # dist_ours = checkShape(grid_asses, top_partition[label_partition[labels]], square_len, shapes, "dist")
-        #     # print("dist", dist_ours)
-
-        #     from.testMeasure import checkXYOrder
-        #     order_score, order_cnt = checkXYOrder(get_layout_embedded(grid_asses, square_len), labels, grid_asses_bf=info_before['grid_asses'], selected=info_before['selected'], selected_bf=info_before['selected_bf'], if_confuse=if_confuse)
-        #     print("order score", order_score, order_score/order_cnt)
-
-        # # -------------------------------  ambiguity  -----------------------------
-
-        # if confusion is not None:
-        #     from .testMeasure import checkConfusion
-        #     confusion_score = checkConfusion(get_layout_embedded(grid_asses, square_len), label_partition[labels], confusion)
-        #     print("confusion score", confusion_score)
-
-        # # -------------------------------  compactness convexity  -----------------------------
-
-        # consider = np.zeros(grid_asses.shape[0], dtype='bool')
-        # for i in range(len(grid_asses)):
-        #     if grid_asses[i] < len(labels):
-        #         consider[i] = True
-        # if use_HV:
-        #     cost = self.optimizer.check_cost_type(np.zeros((len(grid_asses), 2)), grid_asses, label_partition[labels], "PerimeterRatio", consider)
-        # else:
-        #     cost = self.optimizer.check_cost_type(np.zeros((len(grid_asses), 2)), grid_asses, label_partition[labels], "Triple", consider)
-        # compactness = np.exp(-cost[1]/len(grid_asses))
-        # convexity = 1-cost[2]/len(grid_asses)
-        # print('comp', compactness, 'conv', convexity)
-
-        # # -------------------------------  all measures  -----------------------------
-
-        # score_dict = {'auc20': auc20, 'auc50': auc50}
-
-        # score_dict.update({'comp': compactness, 'conv': convexity})
-
-        # if info_before is not None:
-        #     score_dict.update({'IoU': IoU_ours, 'relative': relative, 'order_score': order_score, 'order_ratio': order_score/order_cnt})
-        # if confusion is not None:
-        #     score_dict.update({'conf_score': confusion_score})
-
-        # name = "qap" + "_" + self.Ctrler.scenario + "_" + self.Ctrler.dataset
-        # if self.Ctrler.scenario == "ans":
-        #     name = name + "_" + str(self.Ctrler.sample_num)
-        # if self.Ctrler.select_method != "square":
-        #     name = name + "_" + self.Ctrler.select_method
-        # if use_HV:
-        #     name = name + "_HV"
-
-        # if self.Ctrler.scenario == "dendroans":
-        #     name = name + "_" + str(self.Ctrler.px)+"px.pkl"
-        # else:
-        #     name = name + "_0.pkl"
-
-        # if self.Ctrler.scenario == "ans":
-        #     name = str(self.Ctrler.sample_num) + "/" + name
-
-        # if os.path.exists(name):
-        #     ans = load_pickle(name)
-        # else:
-        #     ans = {'top': [], 'zoom': []}
-        # if info_before is None:
-        #     ans['top'].append(score_dict)
-        # else:
-        #     ans['zoom'].append(score_dict)
-        # save_pickle(ans, name)
-        # print("save", name)
 
         return grid_asses, square_len, partition_labels, partition_info, top_partition, confusion
 

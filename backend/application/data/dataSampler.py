@@ -41,7 +41,7 @@ class DataSampler(object):
         rs_args = {'sampling_rate': min(self.max_sample_num / X_feature.shape[0], 1)}
         self.sampler.set_sampling_method(RandomSampling, **rs_args)
         all_sampled_ids = self.sampler.get_samples_idx()
-        print('all_sampled_ids', all_sampled_ids.shape, time.time() - start)
+        # print('all_sampled_ids', all_sampled_ids.shape, time.time() - start)
 
         # 2. sample top samples
         start = time.time()
@@ -53,7 +53,7 @@ class DataSampler(object):
         sampled_ids = all_sampled_ids[sampled_ids]
         if self.test_without_sample:
             sampled_ids = list(range(num))
-        print('sampled_ids', sampled_ids.shape, time.time() - start)
+        # print('sampled_ids', sampled_ids.shape, time.time() - start)
 
         # 3. get additions: nearest items
         start = time.time()
@@ -61,7 +61,7 @@ class DataSampler(object):
         hang_index = np.setdiff1d(all_sampled_ids, sampled_ids)
         # sample_addition = self.getNearestHangIndex(X_feature, sampled_ids, hang_index)
         sample_addition = hang_index
-        print('sample_addition', len(sample_addition), time.time() - start)
+        # print('sample_addition', len(sample_addition), time.time() - start)
         # from IPython import embed; embed();
 
         # 4. save cache
@@ -105,7 +105,6 @@ class DataSampler(object):
             res_num = min(start * start, total_num) - len(selected)
         
         # 2. get zoom in samples
-        # np.savez('zoomSampling.npz', X=X_feature[hang_items], labels=self.normalizeLabels(labels[hang_items]), ratio=min((res_num + 1) / len(hang_items), 1))
         if len(hang_items) == 0:
             other_sample_ids = []
         else:
@@ -115,7 +114,7 @@ class DataSampler(object):
             # from IPython import embed; embed()
             time1 = time.time()
             other_sample_ids = self.sampler.get_samples_idx()[:res_num]
-            print('zoomSampling', X_feature[hang_items].shape, rs_args, res_num, time.time() - time1)
+            # print('zoomSampling', X_feature[hang_items].shape, rs_args, res_num, time.time() - time1)
 
         other_sample_ids = np.array(hang_items)[other_sample_ids]
         if self.test_without_sample:

@@ -219,7 +219,7 @@ class MyColorMap(object):
             for elabels in self.extend['labels']:
                 items_num.append(len(elabels))
             palette = self.ramp.extend_color(self.extend['colors'], items_num)
-            print(len(palette))
+            # print(len(palette))
             idx0 = 0
             idx1 = 0
             for label in self.extend['plabels']:
@@ -281,7 +281,7 @@ class MyColorMap(object):
                     # print(np.round(grid_info['similarity'],3))
                     end_time = time.time()
                     time_saves.append(end_time - start_time)
-                    print("find_palette_global", end_time - start_time)
+                    # print("find_palette_global", end_time - start_time)
                     # rt_scores.append(palettes[-1])
 
 
@@ -403,7 +403,7 @@ class MyColorMap(object):
                                  grid_info['grid'].tolist(), grid_info['labels'].tolist(), self.seed)
             palettes = result['colors']
             run_time = result['time']
-            print("palettailor", run_time)
+            # print("palettailor", run_time)
             idx0 = 0
             idx1 = 0
             for label in self.extend['plabels']:
@@ -434,7 +434,7 @@ class MyColorMap(object):
                 palette = self.cuttle.fit(hue_list, items_num)
                 run_time = time.time() - start_time
 
-            print("CuttleFish", run_time)
+            # print("CuttleFish", run_time)
             idx0 = 0
             idx1 = 0
             for label in self.extend['plabels']:

@@ -36,8 +36,8 @@ def palettailor(colors, inside_labels, grid_size, grid, labels, seed):
    
     os.remove(tmp_path)
     os.remove(output_path)
-    print(output['hues'])
-    print(output['hue_deltas'])
+    # print(output['hues'])
+    # print(output['hue_deltas'])
     return output
 
 

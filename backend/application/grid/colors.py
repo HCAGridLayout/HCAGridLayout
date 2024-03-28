@@ -46,7 +46,7 @@ class ColorScatter(object):
         # label: [num]
         plt.cla()
         ulabel = np.unique(label)
-        print(ulabel)
+        # print(ulabel)
         for i in ulabel:
             plt.scatter(X[label == i, 1], -X[label == i, 0], color=plt.cm.tab20(i))
         plt.legend(ulabel)

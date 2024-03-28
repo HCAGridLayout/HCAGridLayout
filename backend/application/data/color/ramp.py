@@ -72,7 +72,7 @@ def resample_ramp_range(ramp, num_points, center_id, hue_range, l_range = -1):
         if delta > hue_range or (l_range < 0 or delta_l < l_range):
             urt = (u[rt - 1] + urt) / 2
             break
-    print(hue_range, ulf, urt)
+    # print(hue_range, ulf, urt)
     interpolated_points = splev(np.linspace(ulf, urt, num_points), tck)
     interpolated_xs = interpolated_points[0]
     interpolated_ys = interpolated_points[1]
@@ -199,7 +199,7 @@ class RampGenerator:
             template_id = random.randint(0, len(self.lab_libs) - 1)
             ramp_colors = self.getRamp(color, template_id, min_range, item_nums[i], min_lumin)
             res_colors += ramp_colors
-            print(len(ramp_colors), item_nums[i])
+            # print(len(ramp_colors), item_nums[i])
 
         end_time = time.time()
         self.total_time += end_time - start_time

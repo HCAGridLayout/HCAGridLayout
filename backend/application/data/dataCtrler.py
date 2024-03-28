@@ -266,7 +266,7 @@ class DataCtrler(object):
             for node in label_nodes[label]:
                 level1_labels[node] = label
         # from IPython import embed; embed();
-        print("p1")
+        # print("p1")
         
         # 4. reduce labels level 2
         q2 = PriorityQueue()
@@ -325,8 +325,7 @@ class DataCtrler(object):
                 q2.put((score, label))
                 q2_cluster_num += getClusterScore(label)
                 break
-        # print("???",q2_cluster_num, level2_range[0], level2_range[1])
-        print("p2", filter_list)
+        # print("p2", filter_list)
         # from IPython import embed; embed()
 
         # if len(self.label_stack) > 0 and np.load("application/data/use_case.npy")[0]:

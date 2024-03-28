@@ -12,7 +12,7 @@ port.load_dataset('imagenet1k_animals') #'MNIST''cifar'
 @app.route("/api/metadata", methods=["POST"])
 def get_metadata():
     dataset = request.json["dataset"]
-    print("Load {}.".format(dataset))
+    # print("Load {}.".format(dataset))
     ret = {}
     ret["msg"] = "Success"
     return jsonify(ret)
@@ -56,6 +56,8 @@ def gridlayout():
                             gridlayout[key][key2][key3] = gridlayout[key][key2][key3].tolist()
     if "info_before" in gridlayout:
         del gridlayout["info_before"]
+    if "feature" in gridlayout:
+        del gridlayout["feature"]
 
     ret = {}
     ret["msg"] = "Success"
@@ -99,7 +101,7 @@ def reset_gridlayout():
 
     mode = request.json["mode"]
     value = request.json["value"]
-    print(mode, value)
+    # print(mode, value)
 
     if mode == 0:
         dataset_name = value[0]
@@ -127,6 +129,8 @@ def reset_gridlayout():
                             gridlayout[key][key2][key3] = gridlayout[key][key2][key3].tolist()
     if "info_before" in gridlayout:
         del gridlayout["info_before"]
+    if "feature" in gridlayout:
+        del gridlayout["feature"]
 
     ret = {}
     ret["msg"] = "Success"

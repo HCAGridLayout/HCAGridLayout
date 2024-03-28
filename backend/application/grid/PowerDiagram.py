@@ -697,26 +697,6 @@ def check_merge_coords(coords_list):
             for ce in area_list[fa0]['list']:
                 new_coords_list.append(coords_list[ce])
             return True, new_coords_list
-    # cm = MyColorMap()
-    # plt.figure(figsize=(6, 6))
-    # for i in range(len(coords_list)):
-    #     # print(a)
-    #     # print(a.exterior)
-    #     x, y = coords_list[i][:, 0], coords_list[i][:, 1]
-    #     plt.plot(y, x)
-    # plt.savefig("wrong.png")
-    # plt.show()
-    # print("wrong area", tot_area)
-    # for fa0 in area_list:
-    #     print(area_list[fa0]['area'])
-    #     plt.clf()
-    #     for ce in area_list[fa0]['list']:
-    #         # print(a)
-    #         # print(a.exterior)
-    #         x, y = coords_list[ce][:, 0], coords_list[ce][:, 1]
-    #         print("wrong", fa0, coords_list[ce])
-    #         plt.plot(y, x)
-    #     plt.savefig("wrong"+str(fa0)+".png")
 
     return False, None
 
@@ -757,26 +737,10 @@ def get_convexhull_from_coords(major_coords, major_points):
         points = MultiPoint([Point(x, y) for x, y in point_array])
         label_coords[lb] = points.convex_hull
 
-    # plt.clf()
-    # for lb in range(max_label):
-    #     coords = np.array(label_coords[lb].exterior.coords)
-    #     x, y = coords[:, 0], coords[:, 1]
-    #     plt.plot(y, x, color=plt.cm.tab20(lb))
-    # plt.savefig("power1.png")
-
     return label_coords
 
 def get_graph_from_coords(major_coords, major_points=None, graph_type="origin"):
     max_label = len(major_coords)
-
-    # plt.clf()
-    # for lb in range(max_label):
-    #     for ce in range(len(major_coords[lb])):
-    #         coords = major_coords[lb][ce]
-    #         x, y = coords[:, 0], coords[:, 1]
-    #         plt.plot(y, x, color=plt.cm.tab20(lb))
-    # plt.savefig("power0.png")
-    # # plt.show()
 
     if graph_type == "hull":
         return get_convexhull_from_coords(major_coords, major_points)
@@ -789,23 +753,9 @@ def get_graph_from_coords(major_coords, major_points=None, graph_type="origin"):
 
     # print(label_coords)
 
-    # plt.clf()
-    # for lb in range(max_label):
-    #     x, y = label_coords[lb][:, 0], label_coords[lb][:, 1]
-    #     plt.plot(y, x, color=plt.cm.tab20(lb))
-    # plt.savefig("power1.png")
-    # # plt.show()
-
     skeleton = get_skeleton(label_coords, hull=None)
 
     # print(skeleton)
-
-    # plt.clf()
-    # for lb in range(max_label):
-    #     x, y = skeleton[lb][:, 0], skeleton[lb][:, 1]
-    #     plt.plot(y, x, color=plt.cm.tab20(lb))
-    # plt.savefig("power2.png")
-    # # plt.show()
 
     if graph_type=="origin":
         for lb in label_coords:
@@ -912,13 +862,7 @@ def get_graph_edges(X_embedded, partitions, reduce=None, major_coords=None, use_
             alpha_hull2 = Polygon(coords)
             break
 
-    # plt.figure(figsize=(6, 6))
-    # plt.scatter(datas2[:, 1], datas2[:, 0])
-    # x, y = alpha_hull.exterior.xy
-    # plt.plot(y, x)
-    # plt.show()
-
-    print("graph time", time.time()-start)
+    # print("graph time", time.time()-start)
 
     if major_coords is None:
         it_cnt = 1
@@ -930,26 +874,12 @@ def get_graph_edges(X_embedded, partitions, reduce=None, major_coords=None, use_
             hull = Polygon([[0, 0], [1, 0], [1, 1], [0, 1]])
             if use_hull:
                 hull = alpha_hull2
-            print("nodes number", nodes.shape[0])
+            # print("nodes number", nodes.shape[0])
             cells, edges = computePowerDiagramByCGAL(positions=nodes, weights=np.zeros(nodes.shape[0]), hull=hull, withEdge=True)
-            print("cell time", time.time()-start0)
-
-            # cm = MyColorMap()
-            # plt.figure(figsize=(6, 6))
-            # for lb in range(max_label):
-            #     plt.scatter(label_nodes[lb][:, 1], label_nodes[lb][:, 0], color=cm.color(lb))
-            # # ax.add_patch(PolygonPatch(alpha_shape, alpha=0.2))
-            # for a in cells:
-            #     # print(a)
-            #     # print(a.exterior)
-            #     x, y = a.exterior.xy
-            #     plt.plot(y, x)
-            # plt.savefig("testpower"+str(it_cnt)+".png")
-            # it_cnt += 1
-            # plt.show()
+            # print("cell time", time.time()-start0)
 
             result, major_coords = checkMerge(cells, label_nodes, max_label)
-            print("check merge time", time.time()-start0)
+            # print("check merge time", time.time()-start0)
             if result:
                 break
             cnt = 0
@@ -960,29 +890,9 @@ def get_graph_edges(X_embedded, partitions, reduce=None, major_coords=None, use_
                 cnt += lb_size
 
         # print(cells)
-        print("graph time", time.time()-start)
+        # print("graph time", time.time()-start)
 
         cm = MyColorMap()
-
-        # plt.figure(figsize=(6, 6))
-        # for lb in range(max_label):
-        #     plt.scatter(label_nodes[lb][:, 1], label_nodes[lb][:, 0], color=cm.color(lb))
-        # # ax.add_patch(PolygonPatch(alpha_shape, alpha=0.2))
-        # for a in cells:
-        #     # print(a)
-        #     # print(a.exterior)
-        #     x, y = a.exterior.xy
-        #     plt.plot(y, x)
-        # plt.savefig("power0.png")
-        # plt.show()
-
-    # for lb in range(max_label):
-    #     plt.clf()
-    #     for i in range(len(major_coords[lb])):
-    #         x, y = major_coords[lb][i][:, 0], major_coords[lb][i][:, 1]
-    #         plt.plot(y, x, color=plt.cm.tab20(lb))
-    #     plt.savefig("major"+str(lb)+".png")
-    #     plt.show()
 
     cnt = 0
     label_coords = {}
@@ -999,40 +909,15 @@ def get_graph_edges(X_embedded, partitions, reduce=None, major_coords=None, use_
         new_coords = merge_coords(coords_list)
         label_coords.update({lb: new_coords})
         cnt += lb_size
-        # plt.clf()
-        # plt.plot(new_coords[:, 1], new_coords[:, 0])
-        # plt.savefig("coords"+str(lb)+".png")
-        # plt.show()
 
-    # plt.clf()
-    # for lb in range(max_label):
-    #     plt.scatter(label_nodes[lb][:, 1], label_nodes[lb][:, 0], color=plt.cm.tab20(lb))
-    #     x, y = label_coords[lb][:, 0], label_coords[lb][:, 1]
-    #     plt.plot(y, x, color=plt.cm.tab20(lb))
-    # plt.savefig("power1.png")
-    # plt.show()
-
-    print("graph time", time.time()-start)
+    # print("graph time", time.time()-start)
 
 
     skeleton, edges = get_skeleton(label_coords, hull=None, withEdges=True)
 
-    # plt.clf()
-    # for lb in range(max_label):
-    #     if use_hull:
-    #         # plt.scatter(label_nodes[lb][:, 1], label_nodes[lb][:, 0], color=plt.cm.tab20(lb))
-    #         plt.scatter(label_datas[lb][:, 1], label_datas[lb][:, 0], color=plt.cm.tab20(lb))
-    #     x, y = skeleton[lb][:, 0], skeleton[lb][:, 1]
-    #     plt.plot(y, x, color=plt.cm.tab20(lb))
-    # if not use_hull:
-    #     plt.savefig("power2.png")
-    # else:
-    #     plt.savefig("power2_"+str(len(X_embedded))+".png")
-    # plt.show()
-
     # print(edges)
 
-    print("graph time", time.time()-start)
+    # print("graph time", time.time()-start)
 
     return edges
 
@@ -1239,12 +1124,6 @@ def CentersAdjustWithConsTest(ori_centers, cons, old_cells, use_HV=False):
 
             lamda = max(0.001, lamda * 0.9)
             # print("item adjust", it, time.time()-start)
-            # if it%10 == 0:
-            #     plt.figure(figsize=(6, 6))
-            #     for lb in range(len(centers)):
-            #         plt.scatter(centers[lb][1], centers[lb][0], color=plt.cm.tab20(lb))
-            #     plt.savefig("adjust0"+str(it)+".png")
-            #     # plt.show()
 
     if use_HV:
         lamda = 0.01
@@ -1342,71 +1221,33 @@ def CentersAdjustWithConsTest(ori_centers, cons, old_cells, use_HV=False):
                 skeleton, edges = get_skeleton(label_coords, hull=None, withEdges=True)
                 cons = edges
                 # print(cons)
-                # plt.figure(figsize=(6, 6))
-                # for lb in range(len(centers)):
-                #     plt.scatter(centers[lb][1], centers[lb][0], color=plt.cm.tab20(lb))
-                # plt.savefig("adjust"+str(it)+".png")
-                # plt.show()
         
     # print("new_centers", centers)
     return centers
 
 
 def CentersAdjust(X_embedded, partitions, centers, reduce=None, major_coords=None, now_hull=None):
-    # np.savez("x_p.npz", X_embedded=X_embedded, partitions=partitions)
 
-    print("old_centers", centers)
+    # print("old_centers", centers)
     N = centers.shape[0]
     hull = Polygon([[0, 0], [1, 0], [1, 1], [0, 1]])
     if now_hull is not None:
         hull = now_hull
     old_cells, edges = computePowerDiagramByCGAL(positions=centers, weights=np.zeros(N), hull=hull, withEdge=True)
 
-    # dict = {}
-    # cons = []
-    # cm = MyColorMap()
-    # plt.figure(figsize=(6, 6))
-    # for i in range(X_embedded.shape[0]):
-    #     plt.scatter(X_embedded[i, 1], X_embedded[i, 0], color=cm.color(partitions[i]))
-    # for u, v in edges:
-    #     if u not in dict:
-    #         dict.update({u: X_embedded[(partitions == u)]})
-    #     if v not in dict:
-    #         dict.update({v: X_embedded[(partitions == v)]})
-    #     x = np.concatenate([dict[u], dict[v]], axis=0)
-    #     y = np.concatenate([np.zeros(dict[u].shape[0], dtype='int'), np.ones(dict[v].shape[0], dtype='int')], axis=0)
-    #     lr = LogisticRegression(penalty="l2", solver="saga")
-    #     lr.fit(x, y)
-    #     w = lr.coef_[0]
-    #     b = lr.intercept_
-    #     left = max(min(-b/w[1], -b/w[1]-w[0]/w[1]), 0)
-    #     right = min(max(-b/w[1], -b/w[1]-w[0]/w[1]), 1)
-    #     plt.plot([left, right], [-b/w[0]-left*w[1]/w[0], -b/w[0]-right*w[1]/w[0]])
-    #     x = -w[1]
-    #     y = w[0]
-    #     z = np.sqrt(x*x + y*y)
-    #     x /= z
-    #     y /= z
-    #     cons.append((u, v, x, y, 1))
-    #     print(u, v, x, y)
-    # plt.savefig("partition.png")
-    # plt.show()
-
     if now_hull is None:
         cons = get_graph_edges(X_embedded, partitions, reduce, major_coords)
     else:
         cons = get_graph_edges(X_embedded, partitions, reduce, major_coords, use_hull=True)
-    # cons = [(0, 1, 0, 1, 1), (0, 2, 0, 1, 1), (1, 2, 1, 0, 1)]
 
     return CentersAdjustWithConsTest(centers, cons, old_cells)
 
 
 def CentersAdjustZoom(zoom_partition_map, zoom_min, zoom_max, all_cells_bf, centers):
-    # np.savez("x_p.npz", X_embedded=X_embedded, partitions=partitions)
 
     start = time.time()
 
-    print("old_centers", centers)
+    # print("old_centers", centers)
     N = centers.shape[0]
     hull = Polygon([[0, 0], [1, 0], [1, 1], [0, 1]])
     old_cells, edges = computePowerDiagramByCGAL(positions=centers, weights=np.zeros(N), hull=hull, withEdge=True)
@@ -1423,10 +1264,6 @@ def CentersAdjustZoom(zoom_partition_map, zoom_min, zoom_max, all_cells_bf, cent
                 break
             new_coords = (np.array(cell.exterior.coords)-zoom_min)/(zoom_max-zoom_min)
             label_coords.update({lb: new_coords})
-            # plt.clf()
-            # plt.plot(new_coords[:, 1], new_coords[:, 0])
-            # plt.savefig("coords"+str(lb)+".png")
-            # plt.show()
         if flag:
             break
         else:
@@ -1436,14 +1273,6 @@ def CentersAdjustZoom(zoom_partition_map, zoom_min, zoom_max, all_cells_bf, cent
             zoom_min[1] = max(0.0, zoom_min[1]-width/6)
             zoom_max[0] = min(1, zoom_max[0]+height/6)
             zoom_max[1] = min(1, zoom_max[1]+width/6)
-
-    # plt.clf()
-    # for lb in range(max_label):
-    #     x, y = label_coords[lb][:, 0], label_coords[lb][:, 1]
-    #     plt.plot(y, x, color=plt.cm.tab20(lb))
-    #     plt.scatter(centers[lb][1], centers[lb][0], color=plt.cm.tab20(lb))
-    # plt.savefig("power1.png")
-    # # plt.show()
     
     _, cons = get_skeleton(label_coords, hull=None, withEdges=True)
 
@@ -1471,7 +1300,7 @@ def CentersAdjustZoom(zoom_partition_map, zoom_min, zoom_max, all_cells_bf, cent
                         ei = i
                 cons2.append((lb1, lb2, common_edge[ei][0]-common_edge[ei+1][0], common_edge[ei][1]-common_edge[ei+1][1], 1))
 
-    print("time adjust cons", time.time()-start)
+    # print("time adjust cons", time.time()-start)
 
     return CentersAdjustWithConsTest(centers, cons2, old_cells)
 
@@ -1617,14 +1446,6 @@ def getPowerDiagramGrids(labels, centers, square_len, now_hull=None, now_grids=N
         hull = now_hull
     if maxLabel > 1:
         # print("get cells", cluster_centers, np.zeros(len(cluster_centers)), capacity*hull.area, hull)
-        # plt.clf()
-        # x, y = hull.exterior.xy
-        # plt.plot(y, x)
-        # plt.scatter(cluster_centers[:, 1], cluster_centers[:, 0])
-        # plt.savefig("power_test.png")
-        # plt.show()
-        # from application.utils.pickle import save_pickle
-        # save_pickle({"positions": cluster_centers, "weights": np.zeros(len(cluster_centers)), "hull": hull, "cap": capacity*hull.area}, "power.pkl")
 
         last_centers = centers.copy()
         last_cells = None
@@ -1645,12 +1466,6 @@ def getPowerDiagramGrids(labels, centers, square_len, now_hull=None, now_grids=N
                 cal_cnt += 1
                 w = find_W(now_centers, w, capacity*hull.area, hull)
                 cells = computePowerDiagramByCGAL(positions=now_centers, weights=w, hull=hull)
-
-                # plt.clf()
-                # for lb in range(len(cells)):
-                #     x, y = cells[lb].exterior.xy
-                #     plt.plot(y, x, color=plt.cm.tab20(lb))
-                # plt.show()
 
                 label_coords = {}
                 for i in range(maxLabel):
@@ -1720,17 +1535,6 @@ def getPowerDiagramGrids(labels, centers, square_len, now_hull=None, now_grids=N
                     else:
                         now_centers = (last_centers + next_centers) / 2
 
-            # plt.clf()
-            # for lb in range(len(cells)):
-            #     # plt.scatter(centers[lb][1], centers[lb][0], color=plt.cm.tab20(lb))
-            #     x, y = cells[lb].exterior.xy
-            #     plt.plot(y, x, color=plt.cm.tab20(lb))
-            # if now_grids is None:
-            #     plt.savefig("power_c.png")
-            # else:
-            #     plt.savefig("power_c"+str(now_grids.sum())+".png")
-            # plt.show()
-
         cells = last_cells
         centers = last_centers
     else:
@@ -1739,19 +1543,6 @@ def getPowerDiagramGrids(labels, centers, square_len, now_hull=None, now_grids=N
     bounds = []
     for i in range(len(cells)):
         bounds.append(cells[i].bounds)
-
-    # plt.clf()
-    # for lb in range(len(cells)):
-    #     # plt.scatter(centers[lb][1], centers[lb][0], color=plt.cm.tab20(lb))
-    #     x, y = cells[lb].exterior.xy
-    #     plt.plot(y, x, color=plt.cm.tab20(lb))
-    # if now_grids is None:
-    #     plt.savefig("power_c.png")
-    #     plt.savefig("power_new.png")
-    # else:
-    #     plt.savefig("power_c"+str(now_grids.sum())+".png")
-    #     plt.savefig("power_new.png")
-    # plt.show()
 
     # print("time", time.time() - start)
 
@@ -1906,11 +1697,11 @@ def getPowerDiagramGrids(labels, centers, square_len, now_hull=None, now_grids=N
             cost_matrix = np.concatenate((original_cost_matrix, dummy_vertices), axis=1)
             cost_matrix = np.power(cost_matrix, 2)
 
-            print("time", time.time() - start)
+            # print("time", time.time() - start)
 
             opt = gridlayoutOpt.Optimizer(0)
             # opt = tmpKMSolver()
-            print(cost_matrix.shape)
+            # print(cost_matrix.shape)
 
             # row_asses2 = np.array(opt.solveKM(cost_matrix))
 
@@ -1938,14 +1729,13 @@ def getPowerDiagramGrids(labels, centers, square_len, now_hull=None, now_grids=N
             for i in range(len(row_asses2)):
                 row_asses[unfilled[i]] = unused[row_asses2[i]]
                 if (unused[row_asses2[i]]<num)and(dist_label[unfilled[i]][labels[unused[row_asses2[i]]]]>999):
-                    print("fail", unfilled[i])
-                    # np.savez("fail.npz", dist_label=dist_label, labels=labels, unused=unused, unfilled=unfilled, row_asses2=row_asses2, cost_matrix=cost_matrix)
+                    # print("fail", unfilled[i])
                     flag = True
                     
             # print("time", time.time() - start) 
             
             if flag:
-                print('fail')
+                # print('fail')
                 neighbor += 1
                 
                 # if neighbor == 2:
@@ -1975,7 +1765,6 @@ def getPowerDiagramGrids(labels, centers, square_len, now_hull=None, now_grids=N
 
 def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
 
-    # np.savez("tmp.npz", x_bf=x_bf, y_bf=y_bf, grid_label=grid_label, labels=labels, centers=centers, square_len=square_len)
     import math
     start = time.time()
 
@@ -1986,7 +1775,7 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
     for i in range(maxLabel):
         capacity[i] = (labels == i).sum() / num
 
-    print("time 1", time.time() - start)
+    # print("time 1", time.time() - start)
 
     big_x = x_bf
     big_y = y_bf
@@ -2038,30 +1827,8 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
     tmp_embedded[:, 0] = tmp_embedded[:, 1]
     tmp_embedded[:, 1] = tmp
 
-    # plt.clf()
-    # for i in range(x_bf):
-    #     for j in range(y_bf):
-    #         color=(1, 1, 1)
-    #         if grid_label[i][j]>=0:
-    #             color=plt.cm.tab20(grid_label[i][j])
-    #         plt.scatter(j, i, color=color)
-    # plt.savefig("grid_label.png")
-    # plt.show()
+    # print("time 2", time.time() - start)
 
-    # plt.clf()
-    # for i in range(big_x):
-    #     for j in range(big_y):
-    #         color=(1, 1, 1)
-    #         if big_grid_label[i][j]>=0:
-    #             color=plt.cm.tab20(big_grid_label[i][j])
-    #         plt.scatter(j, i, color=color)
-    # plt.savefig("big_grid_label0.png")
-    # plt.show()
-
-    print("time 2", time.time() - start)
-
-
-    # np.savez("big.npz", partition=tmp_partition, embedded=tmp_embedded, asses=tmp_asses, labels=tmp_labels)
     old_asses = tmp_asses
     tmp_asses = np.array(gridlayoutOpt.grid_op_partition(1, tmp_partition,
                                                         tmp_embedded, tmp_embedded, tmp_asses, tmp_labels, True, False,
@@ -2072,17 +1839,7 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
             if big_grid_label[i][j]>=0:
                 big_grid_label[i][j] = tmp_labels[tmp_asses[i*tmp_len+j]]
 
-    # plt.clf()
-    # for i in range(big_x):
-    #     for j in range(big_y):
-    #         color=(1, 1, 1)
-    #         if big_grid_label[i][j]>=0:
-    #             color=plt.cm.tab20(big_grid_label[i][j])
-    #         plt.scatter(j, i, color=color)
-    # plt.savefig("big_grid_label.png")
-    # plt.show()
-
-    print("time 3", time.time() - start)
+    # print("time 3", time.time() - start)
 
     tmp_asses = np.array(gridlayoutOpt.grid_op_partition(1, tmp_partition,
                                                         tmp_embedded, tmp_embedded, tmp_asses, tmp_labels, False, True,
@@ -2104,17 +1861,7 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
             if big_grid_label[i][j]>=0:
                 big_grid_label[i][j] = tmp_labels[tmp_asses[i*tmp_len+j]]
 
-    # plt.clf()
-    # for i in range(big_x):
-    #     for j in range(big_y):
-    #         color=(1, 1, 1)
-    #         if big_grid_label[i][j]>=0:
-    #             color=plt.cm.tab20(big_grid_label[i][j])
-    #         plt.scatter(j, i, color=color)
-    # plt.savefig("big_grid_label2.png")
-    # plt.show()
-
-    print("time 4", time.time() - start)
+    # print("time 4", time.time() - start)
 
     tmp_labels = np.array(gridlayoutOpt.changeLabelsForConvexity(tmp_asses, tmp_labels, tmp_change,
                                                         "PerimeterRatio", tmp_change))
@@ -2124,17 +1871,7 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
             if big_grid_label[i][j]>=0:
                 big_grid_label[i][j] = tmp_labels[tmp_asses[i*tmp_len+j]]
 
-    # plt.clf()
-    # for i in range(big_x):
-    #     for j in range(big_y):
-    #         color=(1, 1, 1)
-    #         if big_grid_label[i][j]>=0:
-    #             color=plt.cm.tab20(big_grid_label[i][j])
-    #         plt.scatter(j, i, color=color)
-    # plt.savefig("big_grid_label3.png")
-    # plt.show()
-
-    print("time 5", time.time() - start)
+    # print("time 5", time.time() - start)
 
     cornel_size = 0
     while cornel_size * (cornel_size + 1) * 2 < N - num:
@@ -2167,7 +1904,7 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
                     now_y += 1
                 now_x += 1
 
-    print("time 6", time.time() - start)
+    # print("time 6", time.time() - start)
 
     again_cnt = 0
     while again_cnt < 3:
@@ -2187,7 +1924,6 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
         tmp_grids = np.arange(N, dtype='int')
         consider = np.ones(N, dtype='bool')
         consider = np.logical_and(consider, (belong >= 0))
-        # np.savez("conn.npz", asses=tmp_grids, belong=belong, consider=consider)
         reduce = np.array(gridlayoutOpt.getMainConnectGrids(tmp_grids, belong, consider))
         belong[np.logical_and(reduce==False, belong >= 0)] = -1
 
@@ -2202,7 +1938,7 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
             if belong[gid] >= 0:
                 dist_label[gid][belong[gid]] = -1000
 
-        print("time", time.time() - start)
+        # print("time", time.time() - start)
 
         neighbor = 1
         while True:
@@ -2259,7 +1995,7 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
                 neighbor += 1
                 continue
 
-            print('try to assign')
+            # print('try to assign')
 
             unfilled = np.array(unfilled)
             if unfilled.shape[0]>0:
@@ -2292,14 +2028,14 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
                         break
                     row_asses[unfilled[i]] = unused[row_asses2[i]]
                 if flag:
-                    print('fail')
+                    # print('fail')
                     neighbor += 1
                     continue
 
-            print('success')
+            # print('success')
             break
 
-        print("time", time.time() - start)
+        # print("time", time.time() - start)
 
         # labels2 = labels.copy()*2
         # for i in range(len(row_asses2)):
@@ -2329,7 +2065,7 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
             break
         else:
             again_cnt += 1
-            print("again !!!", again_cnt)
+            # print("again !!!", again_cnt)
 
     major_coords = gridlayoutOpt.getConnectShape(row_asses, labels, [True]*num)
     for i in range(len(major_coords)):
@@ -2341,20 +2077,17 @@ def getFoldlineGrids(x_bf, y_bf, grid_label, labels, centers, square_len):
         new_coords = merge_coords(coords_list)
         cells.append(Polygon(new_coords))
 
-    print("time", time.time() - start)
+    # print("time", time.time() - start)
 
     return row_asses, cells
 
 
 def getCutGrids(labels, centers, square_len, cut_ways, now_hull=None, now_grids=None):
 
-    # from application.utils.pickle import save_pickle
-    # save_pickle({'labels': labels, 'centers': centers, 'square_len': square_len, 'cut_ways': cut_ways, 'now_hull': now_hull, 'now_grids': now_grids}, 'cut.pkl')
-
     start = time.time()
 
     N = square_len * square_len
-    print('Cut N', N)
+    # print('Cut N', N)
     num = labels.shape[0]
     maxLabel = centers.shape[0]
     capacity = np.zeros(maxLabel)
@@ -2381,27 +2114,12 @@ def getCutGrids(labels, centers, square_len, cut_ways, now_hull=None, now_grids=
     for i in range(len(cells)):
         bounds.append(cells[i].bounds)
 
-    # plt.clf()
-    # for i in range(maxLabel):
-    #     a = cells[i]
-    #     # print(a)
-    #     # print(a.exterior)
-    #     lb = i
-    #     x, y = a.exterior.xy
-    #     plt.plot(y, x, color=plt.cm.tab20(lb))
-    # if now_grids is None:
-    #     plt.savefig("cut.png")
-    # else:
-    #     plt.savefig("cut"+str(now_grids.sum())+".png")
-
-    # plt.show()
-
     if now_grids is None:
         text = ""
     else:
         text = str(now_grids.sum())
 
-    print("time", time.time() - start)
+    # print("time", time.time() - start)
 
     cornel_size = 0
     while cornel_size * (cornel_size + 1) * 2 < now_N - num:
@@ -2441,7 +2159,7 @@ def getCutGrids(labels, centers, square_len, cut_ways, now_hull=None, now_grids=
 
     centers = centers + np.random.normal(0, 1e-4, (len(centers), 2))
 
-    print("time", time.time() - start)
+    # print("time", time.time() - start)
 
     again_cnt = 0
     while again_cnt < 1:
@@ -2488,11 +2206,11 @@ def getCutGrids(labels, centers, square_len, cut_ways, now_hull=None, now_grids=
             if belong[gid]>=0:
                 dist_label[gid][belong[gid]] = -1000
 
-        print("time", time.time() - start)
+        # print("time", time.time() - start)
 
         neighbor = 1
         while True:
-            print("neighbor", neighbor)
+            # print("neighbor", neighbor)
             fine = True
             unfilled = []
             row_asses = np.zeros(N, dtype='int')
@@ -2549,7 +2267,7 @@ def getCutGrids(labels, centers, square_len, cut_ways, now_hull=None, now_grids=
                 neighbor += 1
                 continue
 
-            print('try to assign')
+            # print('try to assign')
 
             unfilled = np.array(unfilled)
             if unfilled.shape[0]>0:
@@ -2591,11 +2309,11 @@ def getCutGrids(labels, centers, square_len, cut_ways, now_hull=None, now_grids=
                         break
                     row_asses[unfilled[i]] = unused[row_asses2[i]]
                 if flag:
-                    print('fail')
+                    # print('fail')
                     neighbor += 1
                     continue
 
-            print('success')
+            # print('success')
             break
 
         # labels2 = labels.copy()*2
@@ -2624,7 +2342,7 @@ def getCutGrids(labels, centers, square_len, cut_ways, now_hull=None, now_grids=
             if (row_asses[i]<num):
                 belong[i] = labels[row_asses[i]]
 
-        print("time", time.time() - start)
+        # print("time", time.time() - start)
 
         tmp_grids = np.arange(N, dtype='int')
         consider = np.ones(N, dtype='bool')
@@ -2636,11 +2354,11 @@ def getCutGrids(labels, centers, square_len, cut_ways, now_hull=None, now_grids=
             break
         else:
             again_cnt += 1
-            print("again !!!", again_cnt)
+            # print("again !!!", again_cnt)
 
     # show_grid_tmp(row_asses, labels, square_len, "HV.png")
 
-    print("time", time.time() - start)
+    # print("time", time.time() - start)
 
     return row_asses, cells
 
@@ -2685,7 +2403,7 @@ def rotateEmbedded(X_embedded, labels, grid_centers):
         ori_centers[lb] = X_embedded[labels==lb].mean(axis=0)
     centers = ori_centers.copy()
 
-    print("time rotate 1", time.time()-start)
+    # print("time rotate 1", time.time()-start)
 
     best_theta = 0
     best_cost = -1
@@ -2713,7 +2431,7 @@ def rotateEmbedded(X_embedded, labels, grid_centers):
             best_cost = cost
     # print('rotate theta', best_theta)
 
-    print("time rotate 2", time.time()-start)
+    # print("time rotate 2", time.time()-start)
 
     new_X_embedded = X_embedded.copy()
     for i in range(X_embedded.shape[0]):
@@ -2721,12 +2439,5 @@ def rotateEmbedded(X_embedded, labels, grid_centers):
         tmp_y = X_embedded[i][1] - 0.5
         new_X_embedded[i][0] = tmp_x*math.cos(best_theta) - tmp_y*math.sin(best_theta) + 0.5
         new_X_embedded[i][1] = tmp_x*math.sin(best_theta) + tmp_y*math.cos(best_theta) + 0.5
-    print("time rotate 3", time.time()-start)
+    # print("time rotate 3", time.time()-start)
     return new_X_embedded
-
-
-if __name__ == '__main__':
-    labels = np.array([1] * 761 + [0] * 761)
-    row_asses = getPowerDiagram(labels, np.array([[1/4, 1/4], [3/4, 3/4]]), 40)
-    labels = np.concatenate((labels, np.ones(40*40-labels.shape[0], dtype='int')*-1), axis=0)
-    show_grid_tmp(row_asses, labels, 40)

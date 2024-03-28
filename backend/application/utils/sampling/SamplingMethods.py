@@ -76,7 +76,7 @@ class DensityBiasedSampling(SamplingBase):
         if k + 1 > n:
             k = int((n - 1) / 2)
         neighbor, dist = Knn(X, n, d, k + 1, 1, 1, n)
-        print(dist)
+        # print(dist)
         radius_of_k_neighbor = dist[:, -1]
         for i in range(len(radius_of_k_neighbor)):
             radius_of_k_neighbor[i] = math.sqrt(radius_of_k_neighbor[i])
@@ -337,9 +337,9 @@ class MultiViewZOrderSampling(SamplingBase):
             try_list.append(to_sample)
             sets = self._construct_sets(z_lists, sr)
             selected_indexes = self._solve_set_cover(sets, n)
-            print(sr, to_sample, selected_indexes.shape[0])
+            # print(sr, to_sample, selected_indexes.shape[0])
             if selected_indexes.shape[0] == m:
-                print(selected_indexes.shape[0])
+                # print(selected_indexes.shape[0])
                 return selected_indexes
             else:
                 if last != selected_indexes.shape[0]:

@@ -1427,7 +1427,7 @@ def getCutDiagram(hull, capacity, cut_ways):
     return ret
 
 
-def getPowerDiagramGrids(labels, centers, square_len, now_hull=None, now_grids=None, edge_matrix=None, compact=False):
+def getPowerDiagramGrids(labels, centers, square_len, now_hull=None, now_grids=None, edge_matrix=None, compact=True):
     start = time.time()
 
     N = square_len * square_len

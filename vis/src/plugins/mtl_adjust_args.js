@@ -46,7 +46,7 @@ class MTLAdjustArgs {
                 min = w;
             }
         });
-        if (show) console.log('adjust', weight1, this);
+        // if (show) console.log('adjust', weight1, this);
         return minIndex;
     }
 }

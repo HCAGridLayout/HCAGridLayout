@@ -33,7 +33,7 @@ class Palettailor {
         this.label_to_class[d.label] = count++;
     }
     this.classNumber = Object.keys(this.label_to_class).length;
-    console.log("palettailor", this.classNumber);
+    // console.log("palettailor", this.classNumber);
   }
 
   calc(hue_scope = [0, 360]) {

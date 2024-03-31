@@ -1,8 +1,8 @@
 /* eslint-disable */
 import * as d3 from "d3";
 
-const Animation = 1000;
-const QuickAnimation = 500;
+const Animation = 500;
+const QuickAnimation = 400;
 const logic_height = 1080;
 const logic_width = 1920;
 
@@ -63,7 +63,7 @@ function begin_loading() {
 
 function end_loading(delay) {
     delay = delay || 1;
-    console.log("delay", delay);
+    // console.log("delay", delay);
     d3.select(".loading")
         .transition()
         .duration(1)

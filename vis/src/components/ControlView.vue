@@ -181,7 +181,7 @@ export default {
         'ImageNet1k Animals': {'VITb': "imagenet1k_animals"}
       },
       use_HV: false,
-      layout_type : "Voronoi Layout",
+      layout_type : "Power Diagram Layout",
       sliderValue: 8,
       //alphaValue: 1/2
       // slider_values_alpha: [2, 1, 1/2, 1/4, 1/6, 1/8, 1/12, 1/16, 1/24, 1/32],
@@ -204,7 +204,7 @@ export default {
             this.selectedOption = key1;
             this.updateOptions2(key1);
             this.selectedOption2 = key2;
-            console.log("key1", key1, "key2", key2);
+            // console.log("key1", key1, "key2", key2);
             break;
           }
         }
@@ -217,7 +217,7 @@ export default {
     }
   },
   mounted() {
-    console.log('control mounted');
+    // console.log('control mounted');
     document.getElementById('loading-background-setting').style.visibility = 'hidden';
     document.getElementById('loading-svg-setting').style.visibility = 'hidden';
   },
@@ -296,7 +296,7 @@ export default {
       }
 
       // console.log(label_data);
-      console.log(tree_data, positions);
+      // console.log(tree_data, positions);
 
       let tree_svg = this.class_svg.select('g');
       let update = tree_svg.selectAll(".node")
@@ -313,7 +313,7 @@ export default {
           .attr("fill", d => `rgba(${d.color[0]*255},${d.color[1]*255},${d.color[2]*255})`)
           .style("opacity", 0)
           .transition()
-          .duration(1000)
+          .duration(500)
           .style("opacity", 1);
 
         let text_group = group.append("text")
@@ -342,24 +342,24 @@ export default {
         text_group.append("title")
           .text(d => d.name);
         text_group.transition()
-          .duration(1000)
+          .duration(500)
           .style("opacity", 1);
-      }, 2000);
+      }, 1000);
 
       update.exit()
         .transition()
-        .duration(1000)
+        .duration(500)
         .style("opacity", 0)
         .remove();
 
       update.transition()
-        .duration(1000)
-        .delay(1000)
+        .duration(500)
+        .delay(500)
         .attr("transform", d => `translate(${d.x}, ${d.y})`)
       update.select("rect")
         .transition()
-        .duration(1000)
-        .delay(1000)
+        .duration(500)
+        .delay(500)
         .attr("width", rect_width)
         .attr("height", rect_height)
         .attr("fill", d => `rgba(${d.color[0]*255},${d.color[1]*255},${d.color[2]*255})`);
@@ -381,8 +381,8 @@ export default {
 
       update.select("text")
         .transition()
-        .duration(1000)
-        .delay(1000)
+        .duration(500)
+        .delay(500)
         .attr("x", d => d.tx)
         .attr("y", rect_height/2)
         .attr("text-anchor", d => d.ta)
@@ -395,7 +395,7 @@ export default {
 
       tree_svg.selectAll("path.link")
         .transition()
-        .duration(1000)
+        .duration(500)
         .style("opacity", 0);
 
       setTimeout(function() {
@@ -415,7 +415,7 @@ export default {
           .attr("fill", "none")
           .style("opacity", 0)
           .transition()
-          .duration(1000)
+          .duration(500)
           .style("opacity", 1);
 
         update2.attr("d", d => {
@@ -427,9 +427,9 @@ export default {
           .attr("fill", "none")
           .style("opacity", 0)
           .transition()
-          .duration(1000)
+          .duration(500)
           .style("opacity", 1);
-      }, 2000);
+      }, 1000);
     },
     updateOptions2() {
       this.options2 = Object.keys(this.DatasetModels[this.selectedOption]) || [];
@@ -437,24 +437,21 @@ export default {
       if(this.options2.length>0)this.selectedOption2 = this.options2[0];
     },
     changeSwitch() {
-      console.log("switch", this.use_HV);
-      this.layout_type = this.use_HV ? "Treemap Layout" : "Voronoi Layout";
+      // console.log("switch", this.use_HV);
+      this.layout_type = this.use_HV ? "Treemap Layout" : "Power Diagram Layout";
       // this.addOnLoadingFlag();
     },
     loadButtonClicked() {
-      console.log(this.selectedOption, this.selectedOption2, this.DatasetModels[this.selectedOption][this.selectedOption2]);
+      // console.log(this.selectedOption, this.selectedOption2, this.DatasetModels[this.selectedOption][this.selectedOption2]);
       let data_name = this.DatasetModels[this.selectedOption][this.selectedOption2];
       let update_info = {"use_HV": this.use_HV};
-      // TODO 重新载入data_name
       this.resetGridLayout([0, [data_name, update_info]]);
     },
     layoutButtonClicked() {
-      console.log(this.thresholdValue);
-      // TODO 重新使用this.thresholdValue载入layout
+      // console.log(this.thresholdValue);
       this.resetGridLayout([1, this.thresholdValue]);
     },
     handleSliderChange(value) {
-      console.log('当前值：' + value);
       this.setThresholdValue([this.slider_values_threshold[value]]);
       // document.getElementById("threshold-value-text").innerHTML = this.slider_values_threshold_str[value];
     }

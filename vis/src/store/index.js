@@ -24,7 +24,7 @@ export default new Vuex.Store({
     setGridLayout(state, gridlayout) {
       state.gridlayout = gridlayout.data;
       state.cur_node = gridlayout.data.index;
-      console.log("set grid layout", gridlayout.data);
+      // console.log("set grid layout", gridlayout.data);
     },
     setEvaluations(state, evaluations) {
       state.evaluations = evaluations;
@@ -91,11 +91,11 @@ export default new Vuex.Store({
     },
     addGridLoadingFlag({ commit, state }) {
       commit("mutAddGridLoadingFlag");
-      console.log("add", state.grid_loading_flag);
+      // console.log("add", state.grid_loading_flag);
     },
     decGridLoadingFlag({ commit, state }) {
       commit("mutDecGridLoadingFlag");
-      console.log("dec", state.grid_loading_flag);
+      // console.log("dec", state.grid_loading_flag);
     },
     addSettingLoadingFlag({ commit, state }) {
       commit("mutAddSettingLoadingFlag");
@@ -143,7 +143,7 @@ export default new Vuex.Store({
     async fetchZoomOutGridLayout({dispatch, commit, state }) {
       dispatch('addOnLoadingFlag');
       dispatch('addGridLoadingFlag');
-      console.log("zoom out fetch");
+      // console.log("zoom out fetch");
       let key = {
         node_id: state.cur_node,
         samples: -1
@@ -158,7 +158,7 @@ export default new Vuex.Store({
           }
         }
       );
-      console.log("zoom out fetch done");
+      // console.log("zoom out fetch done");
       commit("setGridLayout", gridlayout);
       commit("stackPop");
       dispatch('decOnLoadingFlag');
@@ -240,7 +240,7 @@ export default new Vuex.Store({
       dispatch('addOnLoadingFlag');
       dispatch('addGridLoadingFlag');
       dispatch('addSettingLoadingFlag');
-      console.log("try", mode, value)
+      // console.log("try", mode, value)
       let key = {
         node_id: state.cur_node,
         mode: mode,

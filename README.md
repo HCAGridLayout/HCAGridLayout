@@ -3,7 +3,7 @@ Hierarchical Cluster-Aware Grid Layout Algorithm
 
 =======================================
 
-Codes for grid layout algorithm described in our paper ["Hierarchical Cluster-Aware Grid Layout"](https://xxxx) (xxxx).
+Codes for grid layout algorithm described in our paper ["Hierarchical Cluster-Aware Grid Layout for Large-Scale Data"](https://xxxx) (xxxx).
 
 Note
 ----------
@@ -53,6 +53,8 @@ cd "c module_now"
 python setup.py build_ext --inplace    (For MSVC environment in Windows, please use setup_win.py)
 ```
 Then move the compiled files (such as .pyd or .so) to backend/application/grid/.
+
+If you encounter issues while compiling, please try adjusting the line endings to LF or CRLF according to your system environment.
 
 Datasets
 ----------

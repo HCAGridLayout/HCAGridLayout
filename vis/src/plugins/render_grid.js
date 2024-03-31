@@ -38,7 +38,7 @@ const GridRender = function(parent) {
     that.create_ani = that.parent.create_ani;
     that.update_ani = that.parent.update_ani;
     that.remove_ani = that.parent.remove_ani;
-    that.fast_ani = 750;
+    that.fast_ani = 400;
     that.colorinter = d3.interpolateHcl;
     that.svg_width = that.parent.svg_width;
     that.svg_height = that.parent.svg_height;
@@ -54,7 +54,7 @@ const GridRender = function(parent) {
   that.render = function(grid_info, color_set = null, two_stage = false) {
     that.parent.addOnLoadingFlag();
     that.parent.addGridLoadingFlag();
-    console.log("+1");
+//    console.log("+1");
     if (two_stage && color_set !== null) {
       that.grids = that.layout.update_color(that.grids, color_set);
     } else {
@@ -65,7 +65,7 @@ const GridRender = function(parent) {
       let [meta, grids] = that.layout.update_layout(grid_info, color_set);
       that.meta = meta;
       that.grids = grids;
-      console.log("render_", that.meta.max_pid);
+//      console.log("render_", that.meta.max_pid);
       if (two_stage) return [meta, grids];
     }
     that.grid_width = that.layout.cell - 2 * that.layout.stroke_width
@@ -75,7 +75,7 @@ const GridRender = function(parent) {
     if(that.grid_width-2*that.image_border<that.image_width*0.9)that.image_has_stroke=true;
     else that.image_has_stroke=false;
 
-    console.log("render", that.meta);
+//    console.log("render", that.meta);
     if (that.meta.max_pid === 1) {
       that.one_partition = true;
       that.parent.allow_details = false;
@@ -103,7 +103,7 @@ const GridRender = function(parent) {
     that.update();
     that.remove();
     if (that.init) that.init = false;
-    console.log("render_image", that.render_image, that.grids.length);
+//    console.log("render_image", that.render_image, that.grids.length);
     if (that.render_image) {
       let chosen_names = [];
       let chosen_ids = [];
@@ -120,7 +120,7 @@ const GridRender = function(parent) {
     setTimeout(function() {
       that.parent.decOnLoadingFlag();
       that.parent.decGridLoadingFlag();
-      console.log("-1");
+//      console.log("-1");
     }, (that.init ? that.create_ani : that.remove_ani + that.update_ani + that.create_ani) + 100);
   };
 
@@ -633,6 +633,8 @@ const GridRender = function(parent) {
         that.in_update = false;
       });
 
+//    console.log("ani time", that.create_ani);
+
     if (!that.one_partition && !that.is_zoomout) {
       e_grid_groups
         .append("rect")
@@ -1101,8 +1103,7 @@ const GridRender = function(parent) {
   };
 
   that.show_images = function() {
-    // todo
-    console.log("show", that.parent.show_images);
+//    console.log("show", that.parent.show_images);
 
     that.e_grids = that.grid_group
       .selectAll(".grid-cell")
@@ -1152,8 +1153,7 @@ const GridRender = function(parent) {
   }
 
   that.hide_images = function() {
-    // todo
-    console.log("hide", that.parent.show_images);
+//    console.log("hide", that.parent.show_images);
 
     that.e_grids = that.grid_group
       .selectAll(".grid-cell")

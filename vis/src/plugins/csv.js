@@ -95,7 +95,7 @@ function saveColorResult(func_get_result, start, end, time) {
   std["time"] = time[4][1];
   result.push(getLine(4, avg, std));
 
-  console.log(result);
+  // console.log(result);
 
   let csvContent = convertToCSV(result);
   downloadCSV(csvContent, "color_result.csv");
@@ -133,7 +133,7 @@ function saveColorResultZoom(func_get_result, parts, times) {
     });
   });
 
-  console.log(result);
+  // console.log(result);
 
   let csvContent = convertToCSV(result);
   downloadCSV(csvContent, "zoom_result.csv");

@@ -358,8 +358,8 @@ function static_result(last_num) {
     avg[key] = d3.mean(data);
     std[key] = d3.deviation(data);
   });
-  console.log("Avg", avg);
-  console.log("Std", std);
+  // console.log("Avg", avg);
+  // console.log("Std", std);
   return [avg, std];
 }
 
@@ -392,10 +392,10 @@ function static_result2(start, end) {
       }
     }
   });
-  console.log("Avg", avg);
-  console.log("Std", std);
+  // console.log("Avg", avg);
+  // console.log("Std", std);
   if (std["pp_score"] === undefined) {
-    console.log(start, end, cur, avg, std);
+    // console.log(start, end, cur, avg, std);
   }
   return [avg, std];
 }

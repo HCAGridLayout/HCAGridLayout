@@ -9,7 +9,7 @@ export {
 import ColorScope from './color_scope.js';
 var glo_scope = new ColorScope();
 var harmony_judger_matsuda = new matsuda_templates();
-var harmony_judger_geo_hue = new geometric_hue_templates(); 
+var harmony_judger_geo_hue = new geometric_hue_templates();
 var harmony_mode = 'matsuda'; // 'matsuda';
 var harmony_judger = null;
 if (harmony_mode === 'matsuda') {
@@ -67,10 +67,10 @@ var cross_args = [1, 1]; // times and num [2, 2]
 var data_driven_score = null;
 var neighbor_num = 8; // 4 or 8
 var similarity_type = 0; // 0: in class, 1: in neighbor class
-function initDataDriven(data, labels) { 
+function initDataDriven(data, labels) {
     // console.log(data, labels);
     // console.log("init data driven");
-    data_driven_info = {};  
+    data_driven_info = {};
     if (data == null || labels == null || score_importance_weight[0] === 0) {
         data_driven_info['use'] = false;
         shift_p = 1;
@@ -103,20 +103,20 @@ function initDataDriven(data, labels) {
                 sum[1] += grid.y;
                 return sum;
             }, [0, 0]);
-            return [label_sum[0] / label_grids.length + label_grids[0].width / 2, 
+            return [label_sum[0] / label_grids.length + label_grids[0].width / 2,
                 label_sum[1] / label_grids.length + label_grids[0].height / 2];
         });
         data_driven_info['center'] = [data_driven_info['label_centers'].reduce((sum, center) => sum + center[0], 0) / data_driven_info['label_centers'].length,
             data_driven_info['label_centers'].reduce((sum, center) => sum + center[1], 0) / data_driven_info['label_centers'].length];
-        
+
         if (similarity_type === 0) {
             data_driven_score = data_driven_similarity;
         } else {
-            data_driven_info['args'] = init_neigh_similar(data_driven_info['data'], labels, data_driven_info['label_map'], 
+            data_driven_info['args'] = init_neigh_similar(data_driven_info['data'], labels, data_driven_info['label_map'],
                 data_driven_info['label_map2dist'], label_set, data_driven_info['label_dists']);
             data_driven_score = data_driven_similarity2;
         }
-    } 
+    }
 }
 
 function init_discri(grids, labels, label_map, label_set) {
@@ -198,7 +198,7 @@ function data_driven_similarity(palette, func = g) {
     let dis = 0;
     for (let i = 0;i < palette.length; i++) {
         for (let j = i + 1; j < palette.length; j++) {
-            let color_dist = d3_ciede2000(d3mlab(palette[i]), d3mlab(palette[j])); // Math.abs(palette[i].h - palette[j].h); 
+            let color_dist = d3_ciede2000(d3mlab(palette[i]), d3mlab(palette[j])); // Math.abs(palette[i].h - palette[j].h);
             let label_dist = matrix[label_map[labels[i]]][label_map[labels[j]]];
             // dis += (1 - label_dist) / color_dist;
             dis += func(1 - label_dist) * color_dist;
@@ -279,7 +279,7 @@ function data_driven_similarity2(palette) {
 
 
 /**
- * calculating the Color Saliency 
+ * calculating the Color Saliency
  * reference to "Color Naming Models for Color Selection, Image Editing and Palette Design"
  */
 
@@ -358,7 +358,7 @@ function evaluatePalette(palette) {
 
     // calcualte data driven score
     let data_driven_value = use_data_driven_sa? data_driven_score(palette): 0;
-    
+
     // calcualte color distance of given palette
     let name_difference = 0,
         color_discrimination_constraint = 100000;
@@ -367,7 +367,7 @@ function evaluatePalette(palette) {
         for (let j = i + 1; j < palette.length; j++) {
             dis = d3_ciede2000(d3mlab(palette[i]), d3mlab(palette[j]));
             let nd = getNameDifference(palette[i], palette[j]);
-            name_difference += nd;   
+            name_difference += nd;
             color_discrimination_constraint = (color_discrimination_constraint > dis) ? dis : color_discrimination_constraint;
         }
         // dis = d3_ciede2000(d3mlab(palette[i]), d3mlab(d3.rgb(bgcolor)));
@@ -381,7 +381,7 @@ function evaluatePalette(palette) {
     // console.log("harmony_value", harmony_value);
     // harmony_value = 0;
 
-    let value = score_importance_weight[0] * data_driven_value + 
+    let value = score_importance_weight[0] * data_driven_value +
                 score_importance_weight[1] * name_difference +
                 score_importance_weight[2] * color_discrimination_constraint +
                 score_importance_weight[3] * harmony_value;
@@ -419,10 +419,10 @@ function genColorScope(color_hex, use_base_color = false) {
 
 /**
  * using simulated annealing to find the best palette of given data
- * @param {*} palette_size 
- * @param {*} evaluateFunc 
+ * @param {*} palette_size
+ * @param {*} evaluateFunc
  * @param {*} colors_scope: hue range, lightness range, saturation range
- * @param {*} flag 
+ * @param {*} flag
  */
 function simulatedAnnealing2FindBestPalette(color_hex, palette_size, exclude_colors, colors_scope = { 'hue_scope': [0, 360], 'chroma_scope': [20, 100], 'lumi_scope': [15, 85] },
         data = null, labels = null) {
@@ -447,7 +447,7 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, exclude_col
             }
         });
         best_color_dis = Math.max((min_dist - exclude_margin) / 2, min_best_color_dis);
-        console.log('best_color_dis', best_color_dis);
+        // console.log('best_color_dis', best_color_dis);
     }
 
     // if color number is few, use less max count
@@ -463,11 +463,11 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, exclude_col
     // if (max_count < 40) colors_scope = genColorScope(color_hex, true);
     // else colors_scope = genColorScope(color_hex);
 
-    // data driven 
+    // data driven
     initDataDriven(data, labels);
     // console.log("ddi", data_driven_info)
     const evaluateFunc = evaluatePalette;
-    
+
 
     let iterate_times = 0;
     //default parameters
@@ -491,7 +491,7 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, exclude_col
     while (cur_temper > end_temper) {
         for (let i = 0; i < 1; i++) {//disturb at each temperature
             iterate_times++;
-            color_palette = o.id.slice();  
+            color_palette = o.id.slice();
             color_palette = disturbColors(color_palette);
             let color_palette_2 = normRGB(color_palette.slice());
             let o2 = {
@@ -499,7 +499,7 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, exclude_col
                 score: evaluateFunc(color_palette_2)
             };
             // console.log('score', o2.score)
-            
+
             // if (use_cross_opt) {
             //     o2.id = post_shift_palette(o2.id, colors_scope, cross_args[0], cross_args[1]);
             //     o2.score = evaluateFunc(o2.id);
@@ -512,7 +512,7 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, exclude_col
                     preferredObj = o;
                 }
             }
-            if (iterate_times > max_iteration_times) { 
+            if (iterate_times > max_iteration_times) {
                 break;
             }
         }
@@ -526,11 +526,11 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, exclude_col
     if (data_driven_info['use'] && use_post) {
         preferredObj.id = post_shift_palette(preferredObj.id, 150 * palette_size, 20, true);
         preferredObj.score = evaluateFunc(preferredObj.id);
-    } 
+    }
 
     // judge_harmony
     let res = judgeHarmonious(preferredObj.id);
-    console.log('harmony', res);
+    // console.log('harmony', res);
 
     let dists = [];
     console.log('final score', preferredObj.score);
@@ -593,7 +593,7 @@ function post_shift_palette(palette, times=4000, limit_start=20, print=false) {
                 id: color_palette.slice(),
                 score: data_driven_score(color_palette)
             };
-    
+
             if (oi.score < o2.score) {
                 oi = o2;
             }
@@ -602,7 +602,7 @@ function post_shift_palette(palette, times=4000, limit_start=20, print=false) {
             o = oi;
         }
     })
-    
+
     shift_p = cur_shift_p;
     if (print) console.log('final score part 2', o.score);
     return o.id;
@@ -660,7 +660,7 @@ function randomDisturbColors(palette) {
     let idx = getRandomIntInclusive(0, palette.length - 1),
         color = glo_scope.disturbColor(palette[idx], getRandomIntInclusive, [disturb_step, disturb_step, disturb_step]);
     color = d3.rgb(color);
-    
+
     palette[idx] = d3.rgb(norm255(color.r), norm255(color.g), norm255(color.b));
     let count = 0, sign;
     while (true) {
@@ -696,7 +696,7 @@ function isDiscriminative(palette) {
     for (let i = 0; i < palette.length; i++) {
         for (let j = i + 1; j < palette.length; j++) {
             let color_dis = d3_ciede2000(d3mlab(palette[i]), d3mlab(palette[j]));
-            if (color_dis < global_color_dis) { 
+            if (color_dis < global_color_dis) {
                 return j;
             }
         }
@@ -705,7 +705,7 @@ function isDiscriminative(palette) {
 }
 
 function disturbPositionRandom(palette) {
-    // randomly shuffle two colors of the palette 
+    // randomly shuffle two colors of the palette
     let idx_0 = getRandomIntInclusive(0, palette.length - 1),
     idx_1 = getRandomIntInclusive(0, palette.length - 1);
     while (idx_0 === idx_1) {
@@ -719,7 +719,7 @@ function disturbPositionRandom(palette) {
 
 /**
  * only use color discrimination
- * @param {} palette 
+ * @param {} palette
  */
 function disturbColors(palette) {
     if (random() < shift_p) {

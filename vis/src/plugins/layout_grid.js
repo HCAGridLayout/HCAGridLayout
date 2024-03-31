@@ -81,7 +81,7 @@ const GridLayout = function(parent) {
     if (color_set && color_set["time"]) {
       summary_res["time"] = color_set["time"];
     }
-    console.log("global_palette", palette_all, summary_res);
+//    console.log("global_palette", palette_all, summary_res);
     save_result(summary_res);
   };
 
@@ -165,7 +165,7 @@ const GridLayout = function(parent) {
     let conf_argsort = argsort(max_conf);
     //let sheld = min(0.8, max_conf[conf_argsort[Math.floor(max_conf.length*3/4)]]);
     let sheld = that.parent.parent.thresholdValue;
-    console.log("show thresholdValue", sheld);
+//    console.log("show thresholdValue", sheld);
     let if_confuse = [];
     for(let i=0;i<max_conf.length;i++)if_confuse.push(max_conf[i]<sheld ? true : false);
 
@@ -255,8 +255,8 @@ const GridLayout = function(parent) {
       }
       if(show_images.length*that.parent.min_image_size2*that.parent.min_image_size2>conf_argsort.length*that.cell*that.cell*0.25)break;
     }
-    console.log("show images num", show_images.length)
-    console.log("show images", show_images);
+//    console.log("show images num", show_images.length)
+//    console.log("show images", show_images);
     for(let i=0;i<conf_argsort.length;i++)if_show_images.push(that.parent.min_image_size <= grid_width-2*image_border);
     for(let i=0;i<show_images.length;i++)if_show_images[show_images[i]] = true;
 
@@ -280,7 +280,7 @@ const GridLayout = function(parent) {
       grid.label = grid_info.labels[d];
       grid.color_id = grid_info.color_ids[grid.label];
       if (grid.label === undefined) {
-        console.log("null grid");
+//        console.log("null grid");
         that.id_map.push(-1);
         y = (y + 1) % that.size[1];
         if (y === 0) x++;
@@ -333,7 +333,7 @@ const GridLayout = function(parent) {
       y = (y + 1) % that.size[1];
       if (y === 0) x++;
     });
-    console.log(">>>", pclasses);
+//    console.log(">>>", pclasses);
     grids.forEach(grid => {
       let pos_t = grid.pos_t;
       grid.left = matrix_t.get(pos_t[0] - 1, pos_t[1]);

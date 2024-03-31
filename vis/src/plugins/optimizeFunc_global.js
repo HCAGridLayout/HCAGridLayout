@@ -233,7 +233,7 @@ function init_discri(grids, labels, label_map, label_set) {
       sum += args[i][j] * 2;
     }
   }
-  console.log(args, num_sum, sum);
+  // console.log(args, num_sum, sum);
   return args;
 }
 
@@ -358,7 +358,7 @@ function init_neigh_similar(
       sum += args[i][j] * 2;
     }
   }
-  console.log(args, sum);
+  // console.log(args, sum);
   return args;
 }
 
@@ -450,7 +450,7 @@ function judgeColorsInRange(palette) {
       let dis = d3_ciede2000(d3mlab(palette[i]), info.obj);
       if (dis > info.range) {
         count += 1;
-        console.log("out of range", dis, info.range, i);
+        // console.log("out of range", dis, info.range, i);
       }
     }
   });
@@ -638,7 +638,7 @@ function findBestPaletteGlobal(
       idx2info[i] = idx;
     }
   });
-  console.log("basic_info", basic_info);
+  // console.log("basic_info", basic_info);
   // data driven
   // initDataDriven(data, labels);
   shift_p = 1;
@@ -664,7 +664,7 @@ function findBestPaletteGlobal(
     basic_info.map(info => info.range)
   );
   init_deltac = basic_info.map(info => info.range);
-  console.log("init_deltac", init_deltac);
+  // console.log("init_deltac", init_deltac);
   let mtl_adjustor = new MTLAdjustArgs(loss1, loss2);
 
   // 2. init simulated annealing parameters

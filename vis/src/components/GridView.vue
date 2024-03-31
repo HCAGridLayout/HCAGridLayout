@@ -110,9 +110,9 @@ export default {
       show_images: true,
       svg_width: 1920,
       svg_height: 1080,
-      create_ani: 1000,
-      update_ani: 1000,
-      remove_ani: 1000,
+      create_ani: 500,
+      update_ani: 500,
+      remove_ani: 500,
       mode: 'scan', // 'zoom'
       sample_area: { x1: 0, y1: 0, x2: 0, y2: 0 },
       sample_nodes: [],
@@ -153,16 +153,16 @@ export default {
     },
     grid_loading_flag: function (grid_loading_flag) {
       if (grid_loading_flag > 0) {
-        console.log('show');
+        // console.log('show');
         document.getElementById('loading-background').style.visibility = 'visible';
         document.getElementById('loading-svg').style.visibility = 'visible';
         // document.getElementById('loading-svg').style.opacity = '0.7';
-        console.log('show end', d3.select('#loading-background-grid').style('display'));
+        // console.log('show end', d3.select('#loading-background-grid').style('display'));
       } else {
-        console.log('hide');
+        // console.log('hide');
         document.getElementById('loading-background').style.visibility = 'hidden';
         document.getElementById('loading-svg').style.visibility = 'hidden';
-        console.log('hide end', d3.select('#loading-background-grid').style('display'));
+        // console.log('hide end', d3.select('#loading-background-grid').style('display'));
       }
     },
     setting_loading_flag: function (setting_loading_flag) {
@@ -185,7 +185,7 @@ export default {
     evaluations: function (evaluations) {
       if (this.eval_mode === 'top') {
         clear_result();
-        console.log('evaluations', evaluations);
+        // console.log('evaluations', evaluations);
         let colorsets = [];
         for (let i = 0; i < evaluations.colors.length; i++) {
           let color = evaluations.colors[i];
@@ -220,7 +220,7 @@ export default {
         // });
         saveColorResult(static_result2, 0, 32, evaluations.times);
       } else {
-        console.log('evaluations', evaluations);
+        // console.log('evaluations', evaluations);
 
         let colorsets = [];
         let cur_grid_id = 0;
@@ -310,7 +310,7 @@ export default {
             localStorage.setItem('refresh_times', 1);
           } else {
             refresh_times = parseInt(refresh_times);
-            console.log('refresh_times', refresh_times);
+            // console.log('refresh_times', refresh_times);
             if (refresh_times >= 10) {
               localStorage.setItem('refresh_times', 0);
             } else {
@@ -353,7 +353,7 @@ export default {
     }
   },
   mounted() {
-    console.log('grid mounted');
+    // console.log('grid mounted');
     document.getElementById('loading-background-grid').style.visibility = 'hidden';
     document.getElementById('loading-svg-grid').style.visibility = 'hidden';
     window.static_result = static_result;
@@ -504,7 +504,7 @@ export default {
     },
     filterSamples: function () {
       this.sample_nodes = this.grid_render.filter_grids(this.sample_area);
-      console.log('zoom in', this.sample_nodes);
+      // console.log('zoom in', this.sample_nodes);
     },
 
     // buttons click apis
@@ -524,7 +524,6 @@ export default {
       this.onCropClick();
     },
     onZoomInClick: function () {
-      // TODO: 根据 zoom_without_expand 是 true/false 调整 fetch_grid_layout的参数即可
       this.filterSamples();
       this.grid_render.in_update = true;
       let args = {

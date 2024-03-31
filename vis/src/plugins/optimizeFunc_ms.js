@@ -42,7 +42,7 @@ function random() {
 }
 
 /**
- * calculating the Color Saliency 
+ * calculating the Color Saliency
  * reference to "Color Naming Models for Color Selection, Image Editing and Palette Design"
  */
 
@@ -66,7 +66,7 @@ function getNameDifference(x1, x2) {
 
 /**
  * alpha-Shape graph Implementation
- * using Philippe Rivière’s bl.ocks.org/1b7ddbcd71454d685d1259781968aefc 
+ * using Philippe Rivière’s bl.ocks.org/1b7ddbcd71454d685d1259781968aefc
  * voronoi.find(x,y) finds the nearest cell to the point (x,y).
  * extent is like: [[30, 30], [width - 30, height - 30]]
  */
@@ -229,7 +229,7 @@ function evaluatePalette(palette) {
             // if (class_distance.get([i, j]) != undefined)
             //     class_discriminability += class_distance.get([i, j]) * dis;
             let nd = getNameDifference(palette[i], palette[j]);
-            name_difference += nd;   
+            name_difference += nd;
             color_discrimination_constraint = (color_discrimination_constraint > dis) ? dis : color_discrimination_constraint;
         }
         // dis = d3_ciede2000(d3mlab(palette[i]), d3mlab(d3.rgb(bgcolor)));
@@ -270,10 +270,10 @@ function genColorScope(color_hex) {
 
 /**
  * using simulated annealing to find the best palette of given data
- * @param {*} palette_size 
- * @param {*} evaluateFunc 
+ * @param {*} palette_size
+ * @param {*} evaluateFunc
  * @param {*} colors_scope: hue range, lightness range, saturation range
- * @param {*} flag 
+ * @param {*} flag
  */
 function simulatedAnnealing2FindBestPalette(color_hex, palette_size, evaluateFunc, colors_scope = { "hue_scope": [0, 360], "lumi_scope": [25, 85] }, exclude_colors = null) {
     base_rgb = d3.rgb(color_hex);
@@ -283,14 +283,14 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, evaluateFun
     // }
     // return result;
 
-    console.log(color_hex, d3.hcl(color_hex));
+    // console.log(color_hex, d3.hcl(color_hex));
     colors_scope = genColorScope(color_hex);
     let c = getColorNameIndex(d3.rgb(color_hex)), t = c3.color.relatedTerms(c, 1);
     color_names_checked = [c3.terms[t[0].index]];
     best_color_obj = d3mlab(d3.rgb(color_hex));
     best_color_names = {};
     best_color_names[c3.terms[t[0].index]] = d3.color(c3.terms[t[0].index]);
-    console.log(best_color_names);
+    // console.log(best_color_names);
     if (exclude_colors != null) {
         exclude_color_objs = exclude_colors.map(d => d3mlab(d3.color(d)));
         exclude_color_names = [];
@@ -299,7 +299,7 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, evaluateFun
             exclude_color_names.push([c3.terms[te[0].index]]);
         });
     }
-    console.log(color_names_checked, exclude_color_names);
+    // console.log(color_names_checked, exclude_color_names);
 
     let iterate_times = 0;
     //default parameters
@@ -323,7 +323,7 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, evaluateFun
     while (cur_temper > end_temper) {
         for (let i = 0; i < 1; i++) {//disturb at each temperature
             iterate_times++;
-            color_palette = o.id.slice();  
+            color_palette = o.id.slice();
             disturbColors(color_palette, colors_scope);
             let color_palette_2 = color_palette.slice();
             let o2 = {
@@ -339,7 +339,7 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, evaluateFun
                     preferredObj = o;
                 }
             }
-            if (iterate_times > max_iteration_times) { 
+            if (iterate_times > max_iteration_times) {
                 break;
             }
         }
@@ -357,17 +357,17 @@ function simulatedAnnealing2FindBestPalette(color_hex, palette_size, evaluateFun
             }
         }
     }
-    console.log('unharmonious_ids', unharmonious_ids);
+    // console.log('unharmonious_ids', unharmonious_ids);
 
     let dists = [];
-    console.log('final score', preferredObj.score);
+    // console.log('final score', preferredObj.score);
     for(let color of preferredObj.id) {
         dists.push(d3_ciede2000(d3mlab(color), best_color_obj));
         color.r = norm255(color.r);
         color.g = norm255(color.g);
         color.b = norm255(color.b);
     }
-    console.log(dists);
+    // console.log(dists);
     return preferredObj;
 }
 
@@ -390,7 +390,7 @@ function getColorPaletteRandom(palette_size, base_color = null) {
 function randomDisturbColors(palette, colors_scope) {
     let disturb_step = 30;
     // random disturb one color
-    let idx = getRandomIntInclusive(0, palette.length - 1),  
+    let idx = getRandomIntInclusive(0, palette.length - 1),
         rgb = d3.rgb(palette[idx]),
         color = d3.rgb(norm255(rgb.r + getRandomIntInclusive(-disturb_step, disturb_step)), norm255(rgb.g + getRandomIntInclusive(-disturb_step, disturb_step)), norm255(rgb.b + getRandomIntInclusive(-disturb_step, disturb_step))),
         hcl = d3.hcl(color);
@@ -440,7 +440,7 @@ function randomDisturbColors(palette, colors_scope) {
         //         }
         //     }
         // }
-        
+
         if (satisfy_color_name || count >= max_count) {
             break;
         }
@@ -457,7 +457,7 @@ function isDiscriminative(palette) {
     for (let i = 0; i < palette.length; i++) {
         for (let j = i + 1; j < palette.length; j++) {
             let color_dis = d3_ciede2000(d3mlab(palette[i]), d3mlab(palette[j]));
-            if (color_dis < global_color_dis) { 
+            if (color_dis < global_color_dis) {
                 return j;
             }
         }
@@ -467,14 +467,14 @@ function isDiscriminative(palette) {
 
 /**
  * only use color discrimination
- * @param {} palette 
- * @param {*} colors_scope 
+ * @param {} palette
+ * @param {*} colors_scope
  */
 function disturbColors(palette, colors_scope) {
     if (random() < 1) {
         randomDisturbColors(palette, colors_scope);
     } else {
-        // randomly shuffle two colors of the palette 
+        // randomly shuffle two colors of the palette
         let idx_0 = getRandomIntInclusive(0, palette.length - 1),
             idx_1 = getRandomIntInclusive(0, palette.length - 1);
         while (idx_0 === idx_1) {

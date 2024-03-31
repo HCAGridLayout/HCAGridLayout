@@ -65,7 +65,7 @@ const ColorGenerater = function(parent) {
       delta -= 1;
     }
     if (delta === 0) {
-      console.log("load color successfully");
+      // console.log("load color successfully");
       return that.parent.colorstack[that.parent.colorstack.length - 1];
     }
 
@@ -191,7 +191,7 @@ const ColorGenerater = function(parent) {
         ).id;
         let end_time2 = new Date().getTime();
         let use_time2 = end_time2 - start_time2;
-        console.log("generate palette time:", use_time + use_time2);
+        // console.log("generate palette time:", use_time + use_time2);
         let start_idx = 0;
         let all_palettes = [];
         parent_colors_info.forEach(info => {
@@ -246,7 +246,7 @@ const ColorGenerater = function(parent) {
         let total_dist = judge_color_dist(total_Colors);
         summary_res["total_min_dist"] = total_dist.min_perception_difference;
         summary_res["total_name_dist"] = total_dist.min_name_difference;
-        console.log("global_palette", total_Colors, summary_res);
+        // console.log("global_palette", total_Colors, summary_res);
         save_result(summary_res);
       }
     } else {

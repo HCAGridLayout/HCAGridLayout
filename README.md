@@ -1,6 +1,8 @@
 Hierarchical Cluster-Aware Grid Layout Algorithm
 ===========================
 
+https://github.com/HCAGridLayout/HCAGridLayout/assets/163884706/9a4ec629-9300-4113-9082-3a3b9168e2f8
+
 =======================================
 
 Codes for grid layout algorithm described in our paper ["Hierarchical Cluster-Aware Grid Layout for Large-Scale Data"](https://xxxx) (xxxx).

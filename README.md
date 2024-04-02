@@ -1,7 +1,7 @@
 Hierarchical Cluster-Aware Grid Layout Algorithm
 ===========================
 
-https://github.com/HCAGridLayout/HCAGridLayout/assets/163884706/9a4ec629-9300-4113-9082-3a3b9168e2f8
+https://github.com/HCAGridLayout/HCAGridLayout/assets/163884706/7cc3d650-5704-4337-8f38-1f137cbe62ef
 
 =======================================
 

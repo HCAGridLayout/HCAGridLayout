@@ -9,7 +9,6 @@ from collections import Counter
 from shapely.geometry import Polygon, MultiPolygon
 from shapely.geometry import Point
 
-from .gridOptimizer_clean import gridOptimizer
 import application.grid.gridlayoutOpt as gridlayoutOpt
 from .PowerDiagram import getPowerDiagramGrids
 from .PowerDiagram import CentersAdjust
@@ -55,7 +54,6 @@ def get_layout_embedded(grid_asses, square_len):
 class GridLayout(object):
     def __init__(self, Ctrler=None):
         super().__init__()
-        self.optimizer = gridOptimizer()
         self.cache_root = './cache'
         if not os.path.exists(self.cache_root):
             os.makedirs(self.cache_root)
@@ -1190,20 +1188,6 @@ class GridLayout(object):
                 item['part_id'] = str(item['part_id'])+"-top"
 
         return row_asses, cells, tmp_cut
-
-    def get_foldline_partition(self, x_bf, y_bf, grid_bf, label_bf, labels, partition_center, square_len):
-
-        num = labels.shape[0]
-        N = square_len * square_len
-        from .PowerDiagram import getFoldlineGrids
-        grid_label = np.full((x_bf, y_bf), fill_value=-1, dtype='int')
-        for i in range(grid_bf.shape[0]):
-            x = round(x_bf*grid_bf[i][0]-1/2)
-            y = round(y_bf*grid_bf[i][1]-1/2)
-            grid_label[x][y] = label_bf[i]
-        row_asses, cells = getFoldlineGrids(x_bf, y_bf, grid_label, labels, partition_center, square_len)
-
-        return row_asses, cells
 
     def grid(self, labels, X_feature, true_id, hierarchy, top_labels, filter_labels=None, info_before=None, P=None, scale=1/2, confs_hierarchy=None, shres=0.8):
         random.seed(42)

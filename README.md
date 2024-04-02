@@ -68,8 +68,8 @@ For your dataset, please:
 1. prepare the xxx.json, xxx_features.npy, xxx_labels.npy, xxx_labels_gt.npy, xxx_predict_confs.npy and xxx_images folder, xxx can be the name of your dataset. The details of these files can be seen in README.md [here](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm). 
 2. Then run calc_conf.py to preprocess confidence like existing datasets.
 3. For large dataset, please run multiload.py to preprocess incremental loading.
-4. Add your dataset to backend/application/data/LabelHierarchy.py, load function.
-5. Add your dataset to vis/src/components/ControlView.vue, options, options2 and DatasetModels.
+4. Add your dataset to function "load" of LabelHierarchy in backend/application/data/LabelHierarchy.py.
+5. Add your dataset to data "options", "options2" and "DatasetModels" in vis/src/components/ControlView.vue.
 
 Run
 ----------

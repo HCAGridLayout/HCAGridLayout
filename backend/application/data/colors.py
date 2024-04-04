@@ -5,7 +5,7 @@ from .color.palettailor import palettailor
 from colormath.color_diff import delta_e_cie2000
 from colormath.color_objects import LabColor, sRGBColor, LCHabColor
 from colormath.color_conversions import convert_color
-from application.data.color.colorlib import find_palette_global, find_palette_global_grid
+from application.data.color.dynamic_color import findPaletteForGrid
 import time
 from copy import deepcopy
 from .color.cuttlefish import CuttleFish, getHueList
@@ -275,9 +275,9 @@ class MyColorMap(object):
                     # with open('color_input.pkl', 'wb') as f:
                     #     pickle.dump(inputs, f)
                     # from IPython import embed; embed()
-                    palettes = find_palette_global_grid(start_colors, self.extend['numbers'], 
+                    palettes = findPaletteForGrid(start_colors, self.extend['numbers'],
                                                             driven_data['size'], driven_data['size'], driven_data['grid'], driven_data['labels'], 
-                                                            driven_data['label_list'], driven_data['similarity'], [0,360], 0, 48, 0.99, 12, 2)
+                                                            driven_data['label_list'], driven_data['similarity'], [0,360], 1, 1.0, 48, 0.99, 12)
                     # print(np.round(grid_info['similarity'],3))
                     end_time = time.time()
                     time_saves.append(end_time - start_time)

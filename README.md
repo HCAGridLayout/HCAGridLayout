@@ -5,7 +5,7 @@ https://github.com/HCAGridLayout/HCAGridLayout/assets/163884706/7cc3d650-5704-43
 
 =======================================
 
-Codes for grid layout algorithm described in our paper ["Hierarchical Cluster-Aware Grid Layout for Large-Scale Data"](https://xxxx) (xxxx).
+Codes for grid layout algorithm described in our paper ["Hierarchical Cluster-Aware Grid Layout for Large-Scale Data"](https://github.com/Dynamic-Color/Dynamic-Color) (xxxx).
 
 Note
 ----------

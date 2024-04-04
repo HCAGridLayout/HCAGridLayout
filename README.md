@@ -5,7 +5,7 @@ https://github.com/HCAGridLayout/HCAGridLayout/assets/163884706/7cc3d650-5704-43
 
 =======================================
 
-Codes for grid layout algorithm described in our paper ["Hierarchical Cluster-Aware Grid Layout for Large-Scale Data"](https://github.com/Dynamic-Color/Dynamic-Color) (xxxx).
+Codes for grid layout algorithm described in our paper ["Hierarchical Cluster-Aware Grid Layout for Large-Scale Data"](https://xxxx) (xxxx).
 
 Note
 ----------
@@ -31,7 +31,7 @@ There are several packages that need to be compiled or installed manually.
 \
 Color Package:
 
-Please come to [this repository](https://xxxx) to download and compile color packages.
+Please come to [this repository](https://github.com/Dynamic-Color/Dynamic-Color) to download and compile color packages.
 
 Then move the compiled files (such as .pyd or .so) to backend/application/data/color/.
 

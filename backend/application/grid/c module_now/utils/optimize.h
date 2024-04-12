@@ -411,7 +411,7 @@ std::vector<int> _other_label) {
             }
         }
 
-        printf("optimize %d time: %.2lf\n", pi, (clock()-start)/CLOCKS_PER_SEC);
+        // printf("optimize %d time: %.2lf\n", pi, (clock()-start)/CLOCKS_PER_SEC);
         
         delete[] label_cnt;
     }

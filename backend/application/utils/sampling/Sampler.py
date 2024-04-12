@@ -20,8 +20,8 @@ class Sampler(object):
         self.sampling_method = method(**kwargs)
 
     def get_samples_idx(self):
-        # np.random.seed(20)
-        np.random.seed(int(time.time()))
+        np.random.seed(40)
+        # np.random.seed(int(time.time()))
 
         if self.data is None:
             raise ValueError("Sampler.py: data not exist")

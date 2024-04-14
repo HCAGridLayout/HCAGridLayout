@@ -65,7 +65,7 @@ def gridlayout():
     ret["dataset_name"] = port.data_set
     ret["ambiguity_threshold"] = port.data_ctrler.ambiguity_threshold
     ret["info_dict"] = port.info_dict
-    print("backend time", time.time()-start)
+    print("full backend time: ", time.time()-start)
     return jsonify(ret)
 
 @app.route('/api/instances', methods=["POST"])
@@ -138,7 +138,7 @@ def reset_gridlayout():
     ret["dataset_name"] = port.data_set
     ret["ambiguity_threshold"] = port.data_ctrler.ambiguity_threshold
     ret["info_dict"] = port.info_dict
-    print("backend time", time.time()-start)
+    print("full backend time: ", time.time()-start)
     return jsonify(ret)
 
 @app.route("/api/get-setting", methods=["POST"])

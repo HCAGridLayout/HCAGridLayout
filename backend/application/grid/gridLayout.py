@@ -1577,7 +1577,7 @@ class GridLayout(object):
         time2 = time.time()
         grid_asses, grid_size, partition, partition_info, top_part, confusion = self.grid(labels, X_feature, true_id, hierarchy, top_labels, filter_labels, info_before, None, scale, confs_hierarchy=confs_hierarchy, shres=shres)
         time3 = time.time()
-        print("grid time: ", time3 - time2)
+        print("grid layout time: ", time3 - time2)
 
         num = labels.shape[0]
         square_len = math.ceil(np.sqrt(num))

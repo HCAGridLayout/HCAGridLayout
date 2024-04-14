@@ -7,6 +7,7 @@ import random, os, math
 from .dataCtrler import DataCtrler
 from copy import deepcopy
 from application.utils.pickle import *
+import time
 
 class Port(object):
     def __init__(self, sample_num=-1, info_dict=None) -> None:
@@ -90,6 +91,7 @@ class Port(object):
         return gridlayout
 
     def get_color(self, labels, top_labels, part_labels, zoomout=False, grid_info=None) -> list:
+        start = time.time()
         # return np.unique(labels).tolist(), self.color_map.colorSet(list(range(np.max(labels)+1)))
         if zoomout:
             records = self.color_stack[-1]
@@ -128,6 +130,7 @@ class Port(object):
                 colorids[label] = records[label]['color_id']
                 if label in records['single'] and not all_single:
                     colorids[label] = records[label]['color_id'] + '-0'
+        print('color assignment time: ', time.time()-start)
         return self.label_hierarchy.label_hierarchy['id2label'], colormap, pcolormap, colorids
 
     def solve_gray_img(self, img):

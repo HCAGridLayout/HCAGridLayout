@@ -427,6 +427,7 @@ class DataCtrler(object):
         return grid_asses, labels, top_labels, partition, sampled_id, similarity_info
 
     def getTopLayout(self, pre_sampled_id=None):
+        time1 = time.time()
         self.clean_stacks()
 
         if self.label_hierarchy.multilevel_load:
@@ -441,12 +442,17 @@ class DataCtrler(object):
             self.load_stack.append(new_load)
 
         data, labels, sampled_id = self.processTopSampling(pre_sampled_id=pre_sampled_id)
+        time2 = time.time()
+        print("top sampling time: ", time2 - time1)
         top_labels, labels, filter_labels = self.reduce_labels(labels, self.hierarchy)
         gt_labels = self.reduce_now_labels(self.gt_labels[sampled_id])
 
         old_sampled_id = self.sample_stack[-1][0]
         old_hang_id = self.sample_stack[-1][1]
         self.sample_stack[-1][1] = self.sampler.getNearestHangIndex(self.features, old_sampled_id, old_hang_id, getNowlabels=self.get_now_labels)
+
+        time3 = time.time()
+        print("dataset process time: ", time3 - time2)
 
         self.grider_input_stack.append([data.copy(), labels.copy(), sampled_id.copy(), None, None, top_labels.copy(), [filter_labels[0].copy(), filter_labels[1].copy()], self.confs_hierarchy])
         X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
@@ -534,6 +540,9 @@ class DataCtrler(object):
         # if self.method == "qap" and hasattr(self, 'grider_tsne') and np.load("application/data/use_case.npy")[1]:
         #     self.grider = self.grider_tsne
 
+        time3 = time.time()
+        print("dataset process time: ", time3 - time2)
+
         self.grider_input_stack.append([data.copy(), labels.copy(), sampled_id.copy(), None, info_before, top_labels.copy(), [filter_labels[0].copy(), filter_labels[1].copy()], self.confs_hierarchy])
         X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, info_before, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
 
@@ -542,6 +551,7 @@ class DataCtrler(object):
         
         similarity_info = self.get_label_similar(data, labels)
         self.grid_stack.append([X_embedded, grid_asses, partition, similarity_info, part_info, data, top_part, info_before, confusion])
+
         return grid_asses, labels, top_labels, gt_labels, partition, sampled_id, similarity_info, data, top_part, info_before, confusion
 
     def gridZoomOut(self):

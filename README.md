@@ -77,13 +77,14 @@ Run
 ----------
 For Backend:
 
-Modify the "port = Port(xxx)" and "port.load_dataset(xxx)" statements in server.py according to your requirements.
+Modify the "port = Port(xxx)" and "port.load_dataset(xxx)" statements in \backend\server.py according to your requirements.
 ```
 cd backend
 bash run.sh    (or directly runing server.py)
 ```
 
 For Frontend:
+Modify the "BACKEND_BASE_URL" to localhost or your ip and port in \vis\build\webpack.base.conf.js according to your requirements.
 ```
 cd vis
 yarn

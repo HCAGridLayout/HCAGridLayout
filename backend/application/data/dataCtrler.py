@@ -509,7 +509,7 @@ class DataCtrler(object):
                         'labels': self.load_stack[-1]['labels'], 'gt_labels': self.load_stack[-1]['gt_labels'], 'confs': self.load_stack[-1]['confs'],
                         'level': self.load_stack[-1]['level']}
             sample_range = self.sampler.getSampleRange(self.sample_stack[-1][0], self.sample_stack[-1][1], selected)
-            while len(sample_range) < min(self.sample_num*2, 10000) and new_load['level'] < self.label_hierarchy.levels-1:
+            while len(sample_range) < max(self.sample_num, min(self.sample_num*2, 10000)) and new_load['level'] < self.label_hierarchy.levels-1:
                 new_load, new_range = self.label_hierarchy.extendLoad(new_load, sample_range)
                 sample_range = new_range
             self.features = new_load['features']

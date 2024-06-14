@@ -155,9 +155,14 @@ class DataCtrler(object):
                 return True
         return False
 
-    def reduce_labels(self, labels, hierarchy, level1_range=(2, 3), level2_range=(4, 25), filter_ratio=0.01, spilit_ratio=1/6, spilit_size=200, zoom_without_expand=False):
+    def reduce_labels(self, labels, hierarchy, level1_range=(2, 3), level2_range=(4, 40), filter_ratio=0.01, spilit_ratio=1/6, spilit_size=200, zoom_without_expand=False):
+
+        ori_spilit_size = spilit_size
+        spilit_size = min(max(spilit_size, spilit_ratio * labels.shape[0]), spilit_ratio * labels.shape[0] * 2)
+        spilit_size = min(spilit_size, ori_spilit_size*2)
+
         # 0. calculate filter boundary
-        filter_num = max(1, np.ceil(filter_ratio * labels.shape[0]))
+        filter_num = min(0.1*spilit_size, max(1, np.ceil(filter_ratio * labels.shape[0])))
         # filter_num = max(1, np.ceil(filter_ratio * labels.shape[0])/2)
         filter_list = [set(), set()]
 
@@ -290,7 +295,6 @@ class DataCtrler(object):
             #     q2.put(item)
             # q2_cluster_num += append_num
 
-        spilit_size = min(max(spilit_size, spilit_ratio * labels.shape[0]), spilit_ratio * labels.shape[0] * 2)
         # from IPython import embed; embed()
         while q2_cluster_num < level2_range[0] or -q2.queue[0][0] > spilit_size:
             score, label = q2.get()

@@ -1557,6 +1557,193 @@ class GridLayout(object):
                     item['size'] = child1['size'] + child2['size']
             partition_info['part_way'] = all_tree
 
+        # ----------------------------------START EVALUATION----------------------------------------
+        #
+        # # -------------------------------  proximity  -----------------------------
+        #
+        # def testNeighbor(a, b, maxk=50, labels=None, type='all'):
+        #     start = time.time()
+        #     order = np.arange(a.shape[0], dtype='int')
+        #     np.random.seed(5)
+        #     np.random.shuffle(order)
+        #     dist_a = cdist(a, a[order], "euclidean")
+        #     dist_b = cdist(b, b[order], "euclidean")
+        #     arg_a = order[np.argsort(dist_a, axis=1)]
+        #     arg_b = order[np.argsort(dist_b, axis=1)]
+        #
+        #     # print("dist time", time.time()-start)
+        #     nn = len(a)
+        #     p1 = np.zeros(maxk)
+        #     p2 = np.zeros(maxk)
+        #     if type == 'cross':
+        #         for k in range(maxk):
+        #             for i in range(nn):
+        #                 diff = labels[arg_a[i]] != labels[i]
+        #                 diff2 = labels[arg_b[i]] != labels[i]
+        #                 # p1[k] += len(set(arg_a[i][diff][:k+1]).intersection(set(arg_b[i][diff2][:k+1])))
+        #                 p1[k] += (labels[np.array(list(set(arg_a[i][:k + 2]).intersection(set(arg_b[i][:k + 2]))))] !=
+        #                           labels[i]).sum()
+        #                 p2[k] += 1
+        #     else:
+        #         for k in range(maxk):
+        #             for i in range(nn):
+        #                 p1[k] += len(set(arg_a[i][:k + 2]).intersection(set(arg_b[i][:k + 2]))) - 1
+        #                 p2[k] += 1
+        #     ret = p1 / p2
+        #
+        #     if labels is not None:
+        #         cnt = 0
+        #         for i in range(nn):
+        #             cnt += (labels[arg_a[i][:maxk]] == labels[i]).sum()
+        #         print(cnt, maxk * nn - cnt)
+        #
+        #     return ret
+        #
+        # def AUC(y):
+        #     cnt = 0
+        #     a_20 = 0
+        #     a_full = 0
+        #     for i in range(len(y)):
+        #         cnt += y[i]
+        #         if i == 19:
+        #             a_20 = cnt
+        #     a_full = cnt
+        #     return a_full, a_20
+        #
+        # grid_new = get_layout_embedded(grid_asses, square_len)
+        #
+        # # avg_knnp3 = 0
+        # # for label in range(labels.max() + 1):
+        # #     idx = np.arange(len(labels))[labels == label]
+        # #     grids3 = grid_new[idx]
+        # #     knnp3 = testNeighbor(X_feature[idx], grids3)
+        # #     avg_knnp3 += knnp3 * len(idx)
+        # # avg_knnp3 /= len(labels)
+        #
+        # # avg_knnp3 = testNeighbor(X_feature, grid_new)
+        # #
+        # # x = (np.arange(avg_knnp3.shape[0], dtype='int') + 1)
+        # # plt.clf()
+        # # auc50, auc20 = AUC(avg_knnp3)
+        # auc50 = auc20 = 0
+        # print("auc20", auc20, "auc50", auc50)
+        # # plt.plot(x, avg_knnp3, label='qap' + ", auc20=%d" % auc20 + ", auc50=%d" % auc50, linewidth=0.5)
+        # # plt.legend()
+        # # plt.ylim(0, 40)
+        # # if info_before is None:
+        # #     plt.savefig("qap_knn_top.png", dpi=300)
+        # # else:
+        # #     plt.savefig("qap_knn_zoom.png", dpi=300)
+        # # np.save("qap_knnp_"+str(alpha), avg_knnp3)
+        #
+        # # -------------------------------  stability  -----------------------------
+        #
+        # if info_before is not None:
+        #
+        #     N2 = info_before['grid_asses'].shape[0]
+        #     tmp_embedded2 = get_layout_embedded(info_before['grid_asses'], round(np.sqrt(N2)))
+        #     square_len2 = round(np.sqrt(N2))
+        #
+        #     tmp_min = tmp_embedded2[info_before['selected_bf']].min(axis=0)
+        #     tmp_max = tmp_embedded2[info_before['selected_bf']].max(axis=0) + 1 / np.sqrt(N2)
+        #     tmp_labels2 = np.ones(N2, dtype='int') * (-1)
+        #     tmp_labels2[info_before['selected_bf']] = top_partition[label_partition[labels[info_before['selected']]]]
+        #     is_selected = np.zeros(N2, dtype='bool')
+        #     is_selected[info_before['selected_bf']] = True
+        #
+        #     tmp_min = np.array([1, 1])
+        #     tmp_max = np.array([0, 0])
+        #     major_coords = gridlayoutOpt.getConnectShape(info_before['grid_asses'], tmp_labels2, is_selected)
+        #     for i in range(len(major_coords)):
+        #         for j in range(len(major_coords[i])):
+        #             tmp_min = np.minimum(tmp_min, np.array(major_coords[i][j]).min(axis=0))
+        #             tmp_max = np.maximum(tmp_max, np.array(major_coords[i][j]).max(axis=0))
+        #     for i in range(len(major_coords)):
+        #         for j in range(len(major_coords[i])):
+        #             major_coords[i][j] = (np.array(major_coords[i][j]) - tmp_min) / (tmp_max - tmp_min)
+        #
+        #     zoom_partition_map = {}
+        #     for p in top_partition:
+        #         idx = (top_partition[label_partition[labels[info_before['selected']]]]==p)
+        #         if idx.sum() > 0:
+        #             count = Counter(partition_labels_bf[np.array(info_before['selected_bf'])[idx]])
+        #             zoom_partition_map[p] = max(count, key=lambda x:count[x])
+        #     tmp_min2 = np.array([square_len2, square_len2])
+        #     tmp_max2 = np.array([0, 0])
+        #     major_points = {}
+        #     for i in range(len(info_before['grid_asses'])):
+        #         id = info_before['grid_asses'][i]
+        #         if is_selected[id]:
+        #             lb = tmp_labels2[id]
+        #             if zoom_partition_map[lb] != partition_labels_bf[id]:
+        #                 continue
+        #             if lb not in major_points:
+        #                 major_points[lb] = []
+        #             tmp_min2 = np.minimum(tmp_min2, [i // square_len2, i % square_len2])
+        #             tmp_max2 = np.maximum(tmp_max2, [i // square_len2 + 0.5, i % square_len2 + 0.5])
+        #             major_points[lb].append([i // square_len2, i % square_len2])
+        #             major_points[lb].append([i // square_len2, i % square_len2 + 0.5])
+        #             major_points[lb].append([i // square_len2 + 0.5, i % square_len2])
+        #             major_points[lb].append([i // square_len2 + 0.5, i % square_len2 + 0.5])
+        #     for lb in major_points:
+        #         major_points[lb] = (np.array(major_points[lb]) - tmp_min2) / (tmp_max2 - tmp_min2)
+        #
+        #     from .PowerDiagram import get_graph_from_coords
+        #     from .testMeasure import checkShape, checkShapeAndPosition, checkPosition2
+        #     if use_HV and self.Ctrler.scenario == "ans":
+        #         shapes = get_graph_from_coords(major_coords, graph_type="origin")
+        #     else:
+        #         shapes = get_graph_from_coords(major_coords, graph_type="hull", major_points=major_points)
+        #
+        #     IoU_ours, _ = checkShapeAndPosition(grid_asses, top_partition[label_partition[labels]], square_len, shapes)
+        #     print("IoU", IoU_ours)
+        #     # dist_ours = checkShape(grid_asses, top_partition[label_partition[labels]], square_len, shapes, "dist")
+        #     # print("dist", dist_ours)
+        #     relative = checkPosition2(grid_asses, label_partition[labels], square_len, info_before)
+        #     print('relative', relative)
+        #
+        #     from.testMeasure import checkXYOrder
+        #     order_score, order_cnt = checkXYOrder(get_layout_embedded(grid_asses, square_len), labels, grid_asses_bf=info_before['grid_asses'], selected=info_before['selected'], selected_bf=info_before['selected_bf'], if_confuse=if_confuse)
+        #     print("order score", order_score, order_score/(order_cnt+1e-12))
+        #
+        # # -------------------------------  ambiguity  -----------------------------
+        #
+        # if confusion is not None:
+        #     from .testMeasure import checkConfusion
+        #     confusion_score = checkConfusion(get_layout_embedded(grid_asses, square_len), label_partition[labels], confusion)
+        #     print("confusion score", confusion_score)
+        #
+        # # -------------------------------  compactness convexity  -----------------------------
+        #
+        # from .testMeasure import check_cost_type
+        # consider = np.zeros(grid_asses.shape[0], dtype='bool')
+        # for i in range(len(grid_asses)):
+        #     if grid_asses[i] < len(labels):
+        #         consider[i] = True
+        # # if use_HV:
+        # #     cost = check_cost_type(np.zeros((len(grid_asses), 2)), grid_asses, label_partition[labels], "PerimeterRatio", consider)
+        # # else:
+        # #     cost = check_cost_type(np.zeros((len(grid_asses), 2)), grid_asses, label_partition[labels], "Triple", consider)
+        # cost = [0, 0, 0, 0]
+        # compactness = np.exp(-cost[1]/len(grid_asses))
+        # convexity = 1-cost[2]/len(grid_asses)
+        # print('comp', compactness, 'conv', convexity)
+        #
+        # # -------------------------------  all measures  -----------------------------
+        #
+        # score_dict = {'auc20': auc20, 'auc50': auc50}
+        #
+        # score_dict['time'] = end-start
+        #
+        # score_dict.update({'comp': compactness, 'conv': convexity})
+        #
+        # if info_before is not None:
+        #     score_dict.update({'IoU': IoU_ours, 'relative': relative, 'order_score': order_score, 'order_ratio': order_score/(order_cnt+1e-12)})
+        # if confusion is not None:
+        #     score_dict.update({'conf_score': confusion_score})
+        #
+        # ----------------------------------END EVALUATION----------------------------------------
+
         return grid_asses, square_len, partition_labels, partition_info, top_partition, confusion
 
     # X_feature: [num X f]

@@ -1742,6 +1742,33 @@ class GridLayout(object):
         # if confusion is not None:
         #     score_dict.update({'conf_score': confusion_score})
         #
+        # name = "qap" + "_" + self.Ctrler.scenario + "_" + self.Ctrler.dataset
+        # if self.Ctrler.scenario == "ans":
+        #     name = name + "_" + str(self.Ctrler.sample_num)
+        # if self.Ctrler.select_method != "square":
+        #     name = name + "_" + self.Ctrler.select_method
+        # if use_HV:
+        #     name = name + "_HV"
+        #
+        # if self.Ctrler.scenario == "dendroans":
+        #     name = name + "_" + str(self.Ctrler.px)+"px.pkl"
+        # else:
+        #     name = name + ".pkl"
+        #
+        # if self.Ctrler.scenario == "ans":
+        #     name = str(self.Ctrler.sample_num) + "/" + name
+        #
+        # if os.path.exists(name):
+        #     ans = load_pickle(name)
+        # else:
+        #     ans = {'top': [], 'zoom': []}
+        # if info_before is None:
+        #     ans['top'].append(score_dict)
+        # else:
+        #     ans['zoom'].append(score_dict)
+        # save_pickle(ans, name)
+        # print("save", name, N)
+        #
         # ----------------------------------END EVALUATION----------------------------------------
 
         return grid_asses, square_len, partition_labels, partition_info, top_partition, confusion

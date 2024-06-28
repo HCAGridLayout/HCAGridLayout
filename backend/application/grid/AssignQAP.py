@@ -282,7 +282,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
             sparse = True
 
         maxit = 20
-        if n >= 250:
+        if info["N"] >= 3000:
             maxit = 15
         ans2 = quadratic_assignment_faq(F, D, addition_AB, C, P0=P0, addition_sparse=sparse, maxiter=maxit, tol=0)
         solution2 = ans2["col_ind"]
@@ -553,7 +553,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         # np.random.shuffle(solution0)
         P0 = np.eye(n)[solution0]
 
-        FD_dict[label] = {"F": F, "D": D, "addition_AB": addition_AB, "C": C, "P0": P0, "solution0": solution0, "n": n,
+        FD_dict[label] = {"F": F, "D": D, "addition_AB": addition_AB, "C": C, "P0": P0, "solution0": solution0, "n": n, "N": N,
                           "idx": idx, "grids": grid_embedded[idx], "sta_grids": sta_grids,
                           "selected_list": selected_list, "father": father,
                           "feature": feature[idx], "confuse_id": confuse_id}
@@ -586,13 +586,16 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         avg_cscore /= maxLabel
         return result, avg_score, avg_cscore
 
+    # ---------------use fixed weight parameter------------------
     if best_w is None:
         best_w = 0.15
         if confusion is not None and maxLabel > 1 and near_conf > N/10:
             best_w = 0.65
     # print("best w", best_w)
     result, result_score, result_cscore = getQAP(best_w)
+    # -----------------------------------------------------------
 
+    # # -------------use multi-task weight parameter------------------
     # goal = 2
     # pro_result, best_score, worst_cscore = getQAP(1)
     # conf_result, worst_score, best_cscore = getQAP(0.001)
@@ -617,6 +620,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
     # #     print("multitask", mid, d1, d2)
     #
     # result = best_solution
+    # -----------------------------------------------------------
 
     for label in range(maxLabel):
         idx = np.arange(len(labels))[labels == label]

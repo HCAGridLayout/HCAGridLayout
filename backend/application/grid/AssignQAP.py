@@ -282,6 +282,8 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
             sparse = True
 
         maxit = 20
+        if n >= 250:
+            maxit = 15
         ans2 = quadratic_assignment_faq(F, D, addition_AB, C, P0=P0, addition_sparse=sparse, maxiter=maxit, tol=0)
         solution2 = ans2["col_ind"]
         # print(ans2)
@@ -562,7 +564,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         for label in range(maxLabel):
             FD_dict[label]["alpha"] = alpha
 
-        pool = ThreadPool(maxLabel)
+        pool = ThreadPool(min(32, maxLabel))
         work_list = []
         for label in range(maxLabel):
             work_list.append((label, FD_dict[label]))

@@ -1,29 +1,3 @@
-Hierarchical Cluster-Aware Grid Layout Algorithm
-===========================
-
-https://github.com/HCAGridLayout/HCAGridLayout/assets/163884706/7cc3d650-5704-4337-8f38-1f137cbe62ef
-
-=======================================
-
-Codes for grid layout algorithm described in our paper ["Hierarchical Cluster-Aware Grid Layout for Large-Scale Data"](https://xxxx) (xxxx).
-
-Note
-----------
-Tested on python 3.8.
-
-This method is best used in a Windows or Mac environment; otherwise, the parallelism of QAP solver may not lead to efficiency improvements, resulting in longer runtime.
-
-Setup Environment
-----------
-You can use pip or other tools to setup environment.
-
-For Example:
-```
-pip install -r requirements.txt
-```
-
-
-
 Compile
 ----------
 There are several packages that need to be compiled or installed manually.
@@ -56,6 +30,14 @@ python setup.py build_ext --inplace    (For MSVC environment in Windows, please 
 ```
 Then move the compiled files (such as .pyd or .so) to backend/application/grid/.
 
+\
+Incremental T-SNE Package:
+
+Please come to backend/application/data/incremental_tsne/ to compile packages with cmake.
+
+Then move the compiled files (such as .dll or .so) to backend/application/data/.
+
+\
 If you encounter issues while compiling, please try adjusting the line endings to LF or CRLF according to your system environment.
 
 Datasets
@@ -67,33 +49,40 @@ For example, backend/datasets/cifar100/.
 Then unzip the .zip files in the folder, and run calc_conf.py and multiload.py (if they exist) to preprocess.
 
 For your dataset, please:
-1. prepare the xxx.json, xxx_features.npy, xxx_labels.npy, xxx_labels_gt.npy, xxx_predict_confs.npy and xxx_images folder, xxx can be the name of your dataset. The details of these files can be seen in README.md in [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/8g3bf/?view_only=61ca168eccb8417ca776eef2f56902ba). 
+1. prepare the xxx.json, xxx_features.npy, xxx_labels.npy, xxx_labels_gt.npy, xxx_predict_confs.npy and xxx_images folder, xxx can be the name of your dataset. The details of these files can be seen in README.md in [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/8g3bf/?view_only=61ca168eccb8417ca776eef2f56902ba).
 2. Then run calc_conf.py to preprocess confidence like existing datasets.
 3. For large dataset, please run multiload.py to preprocess incremental loading.
 4. Add your dataset to function "load" of LabelHierarchy in backend/application/data/LabelHierarchy.py.
 5. Add your dataset to data "options", "options2" and "DatasetModels" in vis/src/components/ControlView.vue.
 
-Run
-----------
-For Backend:
+If you want to evaluate with dendromap, please download exploration traces traces.zip in [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/8g3bf/?view_only=61ca168eccb8417ca776eef2f56902ba) which are generated in dendromap system by manual zoom-in operations, and then unzip it in the backend folder. For example, backend/dendromap_step_cifar100_16px.json.
 
-Modify the "port = Port(xxx)" and "port.load_dataset(xxx)" statements in \backend\server.py according to your requirements.
+Run Evaluation
+----------
+Run eva.py to start evaluation.
 ```
 cd backend
-bash run.sh    (or directly runing server.py)
+python eva.py
 ```
 
-For Frontend:
-Modify the "BACKEND_BASE_URL" to localhost or your ip and port in \vis\build\webpack.base.conf.js according to your requirements.
+Then run eva2.py to calculate average scores.
 ```
-cd vis
-yarn
-yarn start
+python eva2.py
 ```
 
-Evaluation
+Run Evaluation With DendroMap
 ----------
-Please come to \evaluation and follow the README.md in subfolders to setup and run evaluation code (for example, eva.py).
+To evaluate our method compared with dendromap, run new_eva_from_dendromap.py
+```
+cd backend
+python new_eva_from_dendromap.py
+```
+
+Then run new_eva_from_dendromap2.py to calculate average scores.
+```
+python new_eva_from_dendromap2.py
+```
+
 
 ## Contact
 If you have any problem about our code, feel free to contact

@@ -37,6 +37,30 @@ from sklearn_extra.cluster import KMedoids
 from sklearn.cluster import KMeans
 import networkx as nx
 
+
+# def get_init_pca(feature):
+#     # print("start pca")
+#     pca = PCA(
+#         n_components=2,
+#         svd_solver="randomized",
+#     )
+#     # Always output a numpy array, no matter what is configured globally
+#     pca.set_output(transform="default")
+#     X_embedded = pca.fit_transform(feature).astype(np.float32, copy=False)
+#
+#     father = np.arange(len(feature))
+#     return X_embedded, father
+
+
+# def get_init_pca_with_noisy(feature):
+#     X_embedded, _ = get_init_pca(feature)
+#     X_embedded = X_embedded / (X_embedded.max(axis=0) - X_embedded.min(axis=0))
+#
+#     X_embedded += np.random.randn(*X_embedded.shape) / 5
+#     father = np.arange(len(feature))
+#     return X_embedded, father
+
+
 def get_init_kmedoids(feature, c, grids):
     from .utils import kamada_kawai_layout
     n = len(feature)
@@ -141,7 +165,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         if_selected[selected] = np.arange(len(selected), dtype='int')
 
     full_D = cdist(grid_embedded, grid_embedded, "euclidean")
-    # print("time dist", time.time() - start0)
+    print("time dist", time.time() - start0)
 
     def get_P(lb, feature):
         perplexity = 30
@@ -240,7 +264,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
 
         old_C, old_D = C, D
 
-        # print("pre time 1", lb, n, time.time() - start)
+        print("pre time 1", lb, n, time.time() - start)
 
         D = D * alpha
         C = C * (1 - alpha)
@@ -275,7 +299,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
                                 addition_AB[0][0][np.ix_(s_idx[slabel], s_idx[slabel2])] = 0
                                 addition_AB[1][0][np.ix_(s_idx[slabel], s_idx[slabel2])] = 0
 
-        # print("pre time 2", lb, n, time.time() - start)
+        print("pre time 2", lb, n, time.time() - start)
 
         sparse = False
         if (len(addition_AB) > 0) and (addition_AB[0][0].sum() + addition_AB[1][0].sum() < 4 * (n / 20) ** 2):
@@ -293,7 +317,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         info["score"] = np.sum(F * old_D[solution2][:, solution2])
         info["cscore"] = np.sum(old_C[np.arange(n), solution2])
 
-        # print("qap time", lb, n, time.time() - start)
+        print("qap time", lb, n, time.time() - start)
 
         # print(ans2)
         return solution2
@@ -319,7 +343,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         for lb in range(maxLabel):
             confuse_dist[lb] = full_D[labels_idx[lb]].min(axis=0)
 
-        # print(time.time() - start0)
+        print(time.time() - start0)
 
         near = np.zeros((maxLabel, maxLabel), dtype='bool')
 
@@ -381,12 +405,12 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
                     near_conf += conf[id][t_lb]
                 if near[label][t_lb2]:
                     near_conf += conf[id][t_lb2]
-        # print("conf", near_conf, full_conf, near_conf/(full_conf+1e-12))
+        print("conf", near_conf, full_conf, near_conf/(full_conf+1e-12))
         # full_conf = N
         use_full = False
         if full_conf<N/100 or (grid_asses_bf is None and full_conf<N*0.03):
             use_full = True
-        # print(use_full)
+        print(use_full)
 
 
     for label in range(maxLabel):
@@ -556,7 +580,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
                           "selected_list": selected_list, "father": father,
                           "feature": feature[idx], "confuse_id": confuse_id}
 
-    # print("pre time", time.time() - start0, time0, time1, time2, time3, time4)
+    print("pre time", time.time() - start0, time0, time1, time2, time3, time4)
 
     def getQAP(alpha=0.5):
         for label in range(maxLabel):
@@ -584,16 +608,13 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         avg_cscore /= maxLabel
         return result, avg_score, avg_cscore
 
-    # ---------------use fixed weight parameter------------------
     if best_w is None:
-        best_w = 0.15
+        best_w = 0.35
         if confusion is not None and maxLabel > 1 and near_conf > N/10:
             best_w = 0.65
-    # print("best w", best_w)
+    print("best w", best_w)
     result, result_score, result_cscore = getQAP(best_w)
-    # -----------------------------------------------------------
 
-    # # -------------use multi-task weight parameter------------------
     # goal = 2
     # pro_result, best_score, worst_cscore = getQAP(1)
     # conf_result, worst_score, best_cscore = getQAP(0.001)
@@ -615,18 +636,34 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
     #         best_solution = new_result.copy()
     #         result_score, result_cscore = new_score, new_cscore
     #
-    # #     print("multitask", mid, d1, d2)
+    #     print("multitask", mid, d1, d2)
     #
     # result = best_solution
-    # -----------------------------------------------------------
 
     for label in range(maxLabel):
         idx = np.arange(len(labels))[labels == label]
         solution2 = result[label]
         new_grid_asses[ele_asses[idx][solution2]] = idx
 
+        # if grid_asses_bf is not None:
+        #     plt.clf()
+        #     for i in range(len(idx)):
+        #         ii = idx[i]
+        #         if if_selected[ii] >= 0:
+        #             grid = grid_embedded_bf[selected_bf[if_selected[ii]]]
+        #             plt.text(grid[1], grid[0], str(ii), color="b")
+        #     plt.savefig("order/"+str(label)+"_bf.png")
+        #     plt.clf()
+        #     for i in range(len(idx)):
+        #         ii = idx[i]
+        #         if if_selected[ii] >= 0:
+        #             grid = grid_embedded[idx][solution2[i]]
+        #             plt.text(grid[1], grid[0], str(ii), color="b")
+        #     plt.savefig("order/"+str(label)+".png")
+
     new_grid_embedded, _ = get_layout_embedded_and_asses(new_grid_asses, square_len)
 
     if with_score:
         return new_grid_asses, new_grid_embedded, (result_score, result_cscore)
     return new_grid_asses, new_grid_embedded
+

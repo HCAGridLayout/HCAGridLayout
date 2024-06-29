@@ -90,7 +90,18 @@ class LabelHierarchy(object):
     def load(self, dataset='imagenet'):
 
         path = os.path.join(self.root_path, dataset)
-        if dataset == 'cifar100':
+        if dataset == 'imagenet':
+            self.features = np.load(os.path.join(path, 'imagenet_features.npy'))
+            self.labels = np.load(os.path.join(path, 'imagenet_labels.npy'))
+            self.gt_labels = np.load(os.path.join(path, 'imagenet_labels.npy'))
+            self.label_hierarchy = self._load_json(os.path.join(path, 'imagenet.json'))
+        elif dataset == 'cifar100_for_dendromap':
+            self.features = np.load(os.path.join(path, 'cifar100_features.npy'))
+            self.labels = np.load(os.path.join(path, 'cifar100_labels.npy'))
+            self.gt_labels = np.load(os.path.join(path, 'cifar100_labels.npy'))
+            self.label_hierarchy = self._load_json(os.path.join(path, 'cifar.json'))
+            self.confs_hierarchy = load_pickle(os.path.join(path, 'cifar100_confs_h.pkl'))
+        elif dataset == 'cifar100':
             # # without using multi-level incremental loading
             # self.features = np.load(os.path.join(path, 'cifar100_features.npy'))
             # self.labels = np.load(os.path.join(path, 'cifar100_labels.npy'))
@@ -107,6 +118,30 @@ class LabelHierarchy(object):
             self.full_confs_hierarchy = load_pickle(os.path.join(path, 'cifar100_confs_h.pkl'))
 
             self.multilevel_load_samples = load_pickle(os.path.join(path, 'cifar100_multilevel.pkl'))
+            self.levels = len(self.multilevel_load_samples)
+            self.load_samples = self.multilevel_load_samples[0]['samples']
+            self.features = self.full_features[self.load_samples]
+            self.labels = self.full_labels[self.load_samples]
+            self.gt_labels = self.full_gt_labels[self.load_samples]
+            self.confs_hierarchy = {'id_map': self.full_confs_hierarchy['id_map'], 'confs': self.full_confs_hierarchy['confs'][self.load_samples]}
+        elif dataset == 'imagenet1k':
+            # # without using multi-level incremental loading
+            # self.features = np.load(os.path.join(path, 'imagenet1k_features.npy'))
+            # self.labels = np.load(os.path.join(path, 'imagenet1k_labels.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'imagenet1k_labels_gt.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'imagenet1k_1.json'))
+            # self.confs_hierarchy = load_pickle(os.path.join(path, 'imagenet1k_confs_h_1.pkl'))
+
+            # using multi-level incremental loading
+            self.multilevel_load = True
+            self.full_features = np.load(os.path.join(path, 'imagenet1k_features.npy'))
+            self.full_labels = np.load(os.path.join(path, 'imagenet1k_labels.npy'))
+            self.full_gt_labels = np.load(os.path.join(path, 'imagenet1k_labels_gt.npy'))
+            self.label_hierarchy = self._load_json(os.path.join(path, 'imagenet1k_1.json'))
+            self.full_confs_hierarchy = None
+            self.full_confs_hierarchy = load_pickle(os.path.join(path, 'imagenet1k_confs_h_1.pkl'))
+
+            self.multilevel_load_samples = load_pickle(os.path.join(path, 'imagenet1k_multilevel.pkl'))
             self.levels = len(self.multilevel_load_samples)
             self.load_samples = self.multilevel_load_samples[0]['samples']
             self.features = self.full_features[self.load_samples]
@@ -131,6 +166,30 @@ class LabelHierarchy(object):
             self.full_confs_hierarchy = load_pickle(os.path.join(path, 'imagenet1k_animals_confs_h.pkl'))
 
             self.multilevel_load_samples = load_pickle(os.path.join(path, 'imagenet1k_animals_multilevel.pkl'))
+            self.levels = len(self.multilevel_load_samples)
+            self.load_samples = self.multilevel_load_samples[0]['samples']
+            self.features = self.full_features[self.load_samples]
+            self.labels = self.full_labels[self.load_samples]
+            self.gt_labels = self.full_gt_labels[self.load_samples]
+            self.confs_hierarchy = {'id_map': self.full_confs_hierarchy['id_map'], 'confs': self.full_confs_hierarchy['confs'][self.load_samples]}
+        elif dataset == 'inat2021':
+            # # without using multi-level incremental loading
+            # self.features = np.load(os.path.join(path, 'inat2021_features.npy'))
+            # self.labels = np.load(os.path.join(path, 'inat2021_labels.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'inat2021_labels_gt.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'inat2021_2.json'))
+            # self.confs_hierarchy = load_pickle(os.path.join(path, 'inat2021_confs_h_2.pkl'))
+
+            # using multi-level incremental loading
+            self.multilevel_load = True
+            self.full_features = np.load(os.path.join(path, 'inat2021_features.npy'))
+            self.full_labels = np.load(os.path.join(path, 'inat2021_labels.npy'))
+            self.full_gt_labels = np.load(os.path.join(path, 'inat2021_labels_gt.npy'))
+            self.label_hierarchy = self._load_json(os.path.join(path, 'inat2021_2.json'))
+            self.full_confs_hierarchy = None
+            self.full_confs_hierarchy = load_pickle(os.path.join(path, 'inat2021_confs_h_2.pkl'))
+
+            self.multilevel_load_samples = load_pickle(os.path.join(path, 'inat2021_multilevel.pkl'))
             self.levels = len(self.multilevel_load_samples)
             self.load_samples = self.multilevel_load_samples[0]['samples']
             self.features = self.full_features[self.load_samples]

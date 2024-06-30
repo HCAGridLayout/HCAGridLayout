@@ -42,20 +42,20 @@ If you encounter issues while compiling, please try adjusting the line endings t
 
 Datasets
 ----------
-Please download datasets from [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/8g3bf/?view_only=61ca168eccb8417ca776eef2f56902ba) and move the directory to backend/datasets/.
+Please download datasets from [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/a8epu/?view_only=fac7bd5cbfc149fbb373df3e0eb5810f) and move the directory to backend/datasets/.
 
 For example, backend/datasets/cifar100/.
 
 Then unzip the .zip files in the folder, and run calc_conf.py and multiload.py (if they exist) to preprocess.
 
 For your dataset, please:
-1. prepare the xxx.json, xxx_features.npy, xxx_labels.npy, xxx_labels_gt.npy, xxx_predict_confs.npy and xxx_images folder, xxx can be the name of your dataset. The details of these files can be seen in README.md in [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/8g3bf/?view_only=61ca168eccb8417ca776eef2f56902ba). 
+1. prepare the xxx.json, xxx_features.npy, xxx_labels.npy, xxx_labels_gt.npy, xxx_predict_confs.npy and xxx_images folder, xxx can be the name of your dataset. The details of these files can be seen in README.md in [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/a8epu/?view_only=fac7bd5cbfc149fbb373df3e0eb5810f). 
 2. Then run calc_conf.py to preprocess confidence like existing datasets.
 3. For large dataset, please run multiload.py to preprocess incremental loading.
 4. Add your dataset to function "load" of LabelHierarchy in backend/application/data/LabelHierarchy.py.
 5. Add your dataset to data "options", "options2" and "DatasetModels" in vis/src/components/ControlView.vue.
 
-If you want to evaluate with dendromap, please download exploration traces traces.zip in [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/8g3bf/?view_only=61ca168eccb8417ca776eef2f56902ba) which are generated in dendromap system by manual zoom-in operations, and then unzip it in the backend folder. For example, backend/dendromap_step_cifar100_16px.json.
+If you want to evaluate with dendromap, please download exploration traces traces.zip in [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/a8epu/?view_only=fac7bd5cbfc149fbb373df3e0eb5810f) which are generated in dendromap system by manual zoom-in operations, and then unzip it in the backend folder. For example, backend/dendromap_step_cifar100_16px.json.
 
 
 Run Evaluation of DendroMap

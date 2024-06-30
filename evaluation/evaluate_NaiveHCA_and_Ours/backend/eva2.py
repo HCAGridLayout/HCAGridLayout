@@ -19,7 +19,10 @@ for dataset in ["cifar100", "imagenet1k", "inat2021"]:
                 method_name = "Ours"
                 if method == "tsne":
                     method_name = "NaiveHCA"
-                print(dataset, size, method_name)
+                convex_name = "TripleRatio"
+                if ctype == "_HV":
+                    convex_name = "PerimeterRatio"
+                print(dataset, size, method_name, convex_name)
                 ans = load_pickle(size + '/' + method + '_ans_' + dataset + '_' + size + select + ctype + '.pkl')
                 for key in ["zoom"]:
                     mean = {}

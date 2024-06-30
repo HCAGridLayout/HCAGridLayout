@@ -1529,12 +1529,12 @@ class GridLayout(object):
             else:
                 shapes = get_graph_from_coords(major_coords, graph_type="hull", major_points=major_points)
 
-            IoU_ours, relative = checkShapeAndPosition(grid_asses, top_partition[label_partition[labels]], square_len, shapes)
+            IoU_ours, _ = checkShapeAndPosition(grid_asses, top_partition[label_partition[labels]], square_len, shapes)
             print("IoU", IoU_ours)
-            print('relative', relative)
             # dist_ours = checkShape(grid_asses, top_partition[label_partition[labels]], square_len, shapes, "dist")
             # print("dist", dist_ours)
-            relative2 = checkPosition2(grid_asses, label_partition[labels], square_len, info_before)
+            relative = checkPosition2(grid_asses, label_partition[labels], square_len, info_before)
+            print('relative', relative)
 
             from.testMeasure import checkXYOrder
             order_score, order_cnt = checkXYOrder(get_layout_embedded(grid_asses, square_len), labels, grid_asses_bf=info_before['grid_asses'], selected=info_before['selected'], selected_bf=info_before['selected_bf'], if_confuse=if_confuse)
@@ -1572,7 +1572,7 @@ class GridLayout(object):
         score_dict.update({'comp': compactness, 'conv': convexity})
 
         if info_before is not None:
-            score_dict.update({'IoU': IoU_ours, 'relative': relative, 'relative2': relative2, 'order_score': order_score, 'order_ratio': order_score/order_cnt})
+            score_dict.update({'IoU': IoU_ours, 'relative': relative, 'order_score': order_score, 'order_ratio': order_score/order_cnt})
         if confusion is not None:
             score_dict.update({'conf_score': confusion_score})
 

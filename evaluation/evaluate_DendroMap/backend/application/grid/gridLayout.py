@@ -2021,7 +2021,7 @@ class GridLayout(object):
         #     # dist_ours = checkShape(grid_asses, top_partition[label_partition[labels]], square_len, shapes, "dist")
         #     # print("dist", dist_ours)
         #     relative = checkPosition2(grid_asses, label_partition[labels], square_len, info_before)
-        #     print('relative', relative)
+        #     print('stab-position', relative)
         #
         #     from.testMeasure import checkXYOrder
         #     order_score, order_cnt = checkXYOrder(get_layout_embedded(grid_asses, square_len), labels, grid_asses_bf=info_before['grid_asses'], selected=info_before['selected'], selected_bf=info_before['selected_bf'], if_confuse=if_confuse)
@@ -2051,16 +2051,16 @@ class GridLayout(object):
         #
         # # -------------------------------  all measures  -----------------------------
         #
-        # score_dict = {'auc20': auc20, 'auc50': auc50}
+        # score_dict = {'prox-auc20': auc20, 'prox-auc50': auc50}
         #
         # score_dict['time'] = end-start
         #
         # score_dict.update({'comp': compactness, 'conv': convexity})
         #
         # if info_before is not None:
-        #     score_dict.update({'IoU': IoU_ours, 'relative': relative, 'order_score': order_score, 'order_ratio': order_score/(order_cnt+1e-12)})
+        #     score_dict.update({'stab-shape': IoU_ours, 'stab-position': relative, 'stab-order': order_score, 'order_ratio': order_score/(order_cnt+1e-12)})
         # if confusion is not None:
-        #     score_dict.update({'conf_score': confusion_score})
+        #     score_dict.update({'ambi': confusion_score})
         #
         # score_dict.update({"layout": {"asses": grid_asses, "part_labels": label_partition[labels], "confusion": confusion, "labels": labels, "info_before": info_before, "top_labels": top_partition[label_partition[labels]]}})
         #

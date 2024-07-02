@@ -243,7 +243,7 @@ def checkBetweenClusterStability(dendro_embedded, top_part, part_labels, dendro_
 
     IoU_ours, relative = checkShapeAndPositionFree(dendro_embedded, top_part[part_labels], shapes, width)
     print("IoU", IoU_ours)
-    print('relative', relative)
+    print('stab-position', relative)
 
     tmp_embedded2 = np.array(dendro_before['embedded']).astype('float64')
     tmp_embedded2[info_before['selected_bf']] -= tmp_embedded2[info_before['selected_bf']].min(axis=0) - 1 / 2 * width
@@ -487,10 +487,10 @@ for dataset_name in ["cifar100", "imagenet1k", "inat2021"]:
                                         'part_labels': new_gridlayout['part_labels'], "top_part": new_gridlayout['top_part'],
                                         'info_before': new_gridlayout['info_before']})
 
-                score_dict = {'auc20': auc20, 'auc50': auc50}
+                score_dict = {'prox-auc20': auc20, 'prox-auc50': auc50}
                 score_dict.update({'comp': compactness, 'conv': convexity})
                 if new_gridlayout["confusion"] is not None:
-                    score_dict.update({'conf_score': confusion_score})
+                    score_dict.update({'ambi': confusion_score})
                 if os.path.exists("dendromap_dendroans_"+dataset+"_"+str(image_size)+"px.pkl"):
                     ans = load_pickle("dendromap_dendroans_"+dataset+"_"+str(image_size)+"px.pkl")
                 else:
@@ -553,11 +553,11 @@ for dataset_name in ["cifar100", "imagenet1k", "inat2021"]:
                                         'part_labels': new_gridlayout['part_labels'], "top_part": new_gridlayout['top_part'],
                                         'info_before': new_gridlayout['info_before']})
 
-                score_dict = {'auc20': auc20, 'auc50': auc50}
+                score_dict = {'prox-auc20': auc20, 'prox-auc50': auc50}
                 score_dict.update({'comp': compactness, 'conv': convexity})
-                score_dict.update({'IoU': IoU, 'relative': rela, 'order_score': order_score, 'order_ratio': order_score/order_cnt})
+                score_dict.update({'stab-shape': IoU, 'stab-position': rela, 'stab-order': order_score, 'order_ratio': order_score/order_cnt})
                 if new_gridlayout["confusion"] is not None:
-                    score_dict.update({'conf_score': confusion_score})
+                    score_dict.update({'ambi': confusion_score})
                 if os.path.exists("dendromap_dendroans_"+dataset+"_"+str(image_size)+"px.pkl"):
                     ans = load_pickle("dendromap_dendroans_"+dataset+"_"+str(image_size)+"px.pkl")
                 else:

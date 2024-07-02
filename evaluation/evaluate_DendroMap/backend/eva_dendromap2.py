@@ -26,18 +26,18 @@ for dataset in ["cifar100_for_dendromap", "imagenet1k", "inat2021"]:
                     # print(len(ans[key]))
                     len2 = 0
                     for item in ans[key]:
-                        if 'relative' in item and item['relative'] > 0:
+                        if 'stab-position' in item and item['stab-position'] > 0:
                             len2 += 1
                         for key2 in item:
                             if key2 == "layout":
                                 continue
                             if key2 not in mean:
                                 mean[key2] = 0
-                            if (key2 == 'relative' or key2 == 'IoU') and item['relative'] == 0:
+                            if (key2 == 'stab-position' or key2 == 'stab-shape') and item['stab-position'] == 0:
                                 continue
                             mean[key2] += item[key2]
                     for key2 in mean:
-                        if key2 == 'relative' or key2 == 'IoU':
+                        if key2 == 'stab-position' or key2 == 'stab-shape':
                             mean[key2] /= len2+1e-12
                             continue
                         mean[key2] /= len(ans[key])

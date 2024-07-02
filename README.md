@@ -84,6 +84,7 @@ bash run.sh    (or directly runing server.py)
 ```
 
 For Frontend:
+
 Modify the "BACKEND_BASE_URL" to localhost or your ip and port in \vis\build\webpack.base.conf.js according to your requirements.
 ```
 cd vis
@@ -94,6 +95,8 @@ yarn start
 Evaluation
 ----------
 Please come to \evaluation and follow the README.md in subfolders to setup and run evaluation code (for example, eva.py).
+
+Note: Because of the randomness and difference of the operations, samples, and layouts, the results of the evaluation may slightly differ from the results shown in the paper.
 
 ## Contact
 If you have any problem about our code, feel free to contact

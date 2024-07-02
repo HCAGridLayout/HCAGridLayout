@@ -584,14 +584,14 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         avg_cscore /= maxLabel
         return result, avg_score, avg_cscore
 
-    # ---------------use fixed weight parameter------------------
+    # ---------------use fixed weight parameter for faster layout------------------
     if best_w is None:
         best_w = 0.15
         if confusion is not None and maxLabel > 1 and near_conf > N/10:
             best_w = 0.65
     # print("best w", best_w)
     result, result_score, result_cscore = getQAP(best_w)
-    # -----------------------------------------------------------
+    # ---------------------------------------------------------------
 
     # # -------------use multi-task weight parameter------------------
     # goal = 2
@@ -618,7 +618,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
     # #     print("multitask", mid, d1, d2)
     #
     # result = best_solution
-    # -----------------------------------------------------------
+    # # -----------------------------------------------------------
 
     for label in range(maxLabel):
         idx = np.arange(len(labels))[labels == label]

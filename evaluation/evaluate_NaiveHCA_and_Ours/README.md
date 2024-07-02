@@ -72,6 +72,8 @@ Then run eva2.py to calculate average scores.
 python eva2.py
 ```
 
+Note: Because of the randomness and difference of the operations, samples, and layouts, the results of the evaluation may slightly differ from the results shown in the paper.
+
 Run Evaluation With DendroMap
 ----------
 To evaluate our method compared with dendromap, run new_eva_from_dendromap.py
@@ -84,6 +86,8 @@ Then run new_eva_from_dendromap2.py to calculate average scores.
 ```
 python new_eva_from_dendromap2.py
 ```
+
+Note: Because of the randomness and difference of the operations, samples, and layouts, the results of the evaluation may slightly differ from the results shown in the paper.
 
 
 ## Contact

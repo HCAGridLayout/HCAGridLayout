@@ -431,9 +431,9 @@ for dataset_name in ["cifar100", "imagenet1k", "inat2021"]:
         if dataset_name == "cifar100":
             mini_samples = None
         elif dataset_name == "imagenet1k":
-            mini_samples = np.load("../../../backend/datasets/imagenet1k/imagenet1k_minisamples.npy")
+            mini_samples = np.load("datasets/imagenet1k/imagenet1k_minisamples.npy")
         elif dataset_name == "inat2021":
-            mini_samples = np.load("../../../backend/datasets/inat2021/inat2021_minisamples.npy")
+            mini_samples = np.load("datasets/inat2021/inat2021_minisamples.npy")
 
         with open("dendromap_step_"+dataset_name+"_"+str(image_size)+"px.json", 'r') as f:
             dendromap_step = json.load(f)
@@ -442,7 +442,7 @@ for dataset_name in ["cifar100", "imagenet1k", "inat2021"]:
 
         gridlayout_stack = []
         dendromap_stack = []
-        for i in range(1, len(dendromap_step)):
+        for i in range(len(dendromap_step)):
             dendro = dendromap_step[i]
             if dendro["method"] == "top":
                 gridlayout_stack = []

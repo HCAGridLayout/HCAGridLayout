@@ -60,17 +60,8 @@ for dataset_name in ["cifar100", 'imagenet1k', 'inat2021']:
         port = None
         gridlayout_stack = []
         dendromap_stack = []
-        # start = -1
-        # for i in range(1, len(dendromap_step)):
-        #     dendro = dendromap_step[i]
-        #     if dendro["method"] == "top":
-        #         if start == -1:
-        #             start = i
-        #         else:
-        #             start = i
-        #             break
-        # print('start', start)
-        for i in range(1, len(dendromap_step)):
+
+        for i in range(len(dendromap_step)):
             dendro = dendromap_step[i]
             if dendro["method"] == "top":
                 folder_path = "cache/" + dataset

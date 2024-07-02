@@ -73,6 +73,8 @@ Then run eva_dendromap2.py to calculate average scores.
 python eva_dendromap2.py
 ```
 
+Note: Because of the randomness and difference of the operations, samples, and layouts, the results of the evaluation may slightly differ from the results shown in the paper.
+
 
 ## Contact
 If you have any problem about our code, feel free to contact

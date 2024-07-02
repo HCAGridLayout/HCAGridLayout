@@ -57,7 +57,7 @@ For your dataset, please:
 
 For the evaluation with dendromap, we use mini subsets of each dataset because dendromap cannot support datasets that are too large.
 
-If you want to evaluate with dendromap, please also download exploration traces traces.zip in [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/a8epu/?view_only=fac7bd5cbfc149fbb373df3e0eb5810f) which are generated in dendromap system by manual zoom-in operations, and then unzip it in the backend folder. For example, backend/dendromap_step_cifar100_16px.json.
+If you want to evaluate with dendromap, please also download exploration traces "traces/traces1.zip" or "traces/traces2.zip" in [google drive](https://drive.google.com/drive/folders/15R0ghoW9YkYbnDaU8NXQy6IqdnKPoLYm) or [osf](https://osf.io/a8epu/?view_only=fac7bd5cbfc149fbb373df3e0eb5810f) which are generated in dendromap system by manual zoom-in operations, and then unzip it in the backend folder. For example, backend/dendromap_step_cifar100_16px.json.
 
 Run Evaluation
 ----------

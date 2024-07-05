@@ -7,7 +7,7 @@ https://github.com/HCAGridLayout/HCAGridLayout/assets/163884706/7cc3d650-5704-43
 
 Codes for grid layout algorithm described in our paper ["Hierarchical Cluster-Aware Grid Layout for Large-Scale Data"](https://xxxx) (xxxx).
 
-Also see in [GitHub]("https://github.com/HCAGridLayout/HCAGridLayout") and [OSF]("https://osf.io/a8epu/?view_only=fac7bd5cbfc149fbb373df3e0eb5810f").
+Also see in [GitHub](https://github.com/HCAGridLayout/HCAGridLayout) and [OSF](https://osf.io/a8epu/?view_only=fac7bd5cbfc149fbb373df3e0eb5810f).
 
 Note
 ----------

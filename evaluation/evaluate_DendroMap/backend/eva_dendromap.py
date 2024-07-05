@@ -456,6 +456,7 @@ for dataset_name in ["cifar100", "imagenet1k", "inat2021"]:
                     dendro_embedded_map[id] = [int(item["x"]), int(item["y"])]
                 sampled_id = np.array(sampled_id)
 
+                # use the system to get the information (hierarchical labels, features, membership, etc.) of samples in the dendromap layout
                 new_gridlayout = port.top_gridlayout(pre_sampled_id=sampled_id)
                 gridlayout_stack.append(new_gridlayout)
 
@@ -519,6 +520,7 @@ for dataset_name in ["cifar100", "imagenet1k", "inat2021"]:
                 sampled_id = np.array(sampled_id)
                 selected = np.array(selected)
 
+                # use the system to get the information (hierarchical labels, features, membership, etc.) of samples in the dendromap layout
                 new_gridlayout = port.layer_gridlayout(gridlayout_bf['index'], selected, pre_sampled_id=sampled_id)
                 gridlayout_stack.append(new_gridlayout)
 

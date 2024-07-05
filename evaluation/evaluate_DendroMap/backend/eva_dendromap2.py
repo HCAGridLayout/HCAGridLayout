@@ -11,9 +11,13 @@ def load_pickle(file):
     with open(file, 'rb') as f:
         return pickle.load(f)
 
+avg = {"": {"qap": {}, "dendromap": {}}, "_HV": {"qap": {}, "tsne": {}}}
+avg_cnt = 0
+
 for dataset in ["cifar100_for_dendromap", "imagenet1k", "inat2021"]:
     for size in ["30px", "20px", "16px"]:
         select = ''
+        avg_cnt += 1
         for ctype in [""]:
             for method in ["dendromap"]:
                 method_name = "Ours"
@@ -42,3 +46,21 @@ for dataset in ["cifar100_for_dendromap", "imagenet1k", "inat2021"]:
                             continue
                         mean[key2] /= len(ans[key])
                     print(key, mean)
+
+                    for key2 in mean:
+                        if key2 not in avg[ctype][method]:
+                            avg[ctype][method][key2] = 0+mean[key2]
+                        else:
+                            avg[ctype][method][key2] += mean[key2]
+print()
+print("------------avg-------------")
+for ctype in [""]:
+    for method in ["dendromap"]:
+        method_name = "Ours"
+        if method == "dendromap":
+            method_name = "DendroMap"
+        print("Compare with Dendromap:", method_name)
+        mean = avg[ctype][method].copy()
+        for key2 in mean:
+            mean[key2] /= avg_cnt
+        print(mean)

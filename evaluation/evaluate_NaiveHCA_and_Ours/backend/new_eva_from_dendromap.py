@@ -76,6 +76,7 @@ for dataset_name in ["cifar100", 'imagenet1k', 'inat2021']:
 
                 num = math.ceil(np.sqrt(len(dendro["samples"]))) ** 2
 
+                # use approximately same grid size of layout with the dendromap layout
                 np.save("next_num", [num])
                 port = Port(num, {"use_HV": True, "use_conf": True, "scenario": "dendroans", "select_method": "square", "method": "qap", "px": image_size})
                 port.load_dataset(dataset)
@@ -107,8 +108,10 @@ for dataset_name in ["cifar100", 'imagenet1k', 'inat2021']:
                         selected.append(id)
 
                 num = round(np.sqrt(len(dendro["samples"]))) ** 2
+                # use approximately same grid size of layout with the dendromap layout
                 np.save("next_num", [num])
 
+                # randomly select five areas with the approximately same grid size with the dendromap zoom-in operation
                 for tt in range(5):
                     random.seed(int(time.time()))
                     print("selected", len(selected), len(dendromap_stack[-1]['ids']))

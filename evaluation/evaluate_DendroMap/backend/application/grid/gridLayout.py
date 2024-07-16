@@ -2045,7 +2045,7 @@ class GridLayout(object):
         #     cost = check_cost_type(np.zeros((len(grid_asses), 2)), grid_asses, label_partition[labels], "PerimeterRatio", consider)
         # else:
         #     cost = check_cost_type(np.zeros((len(grid_asses), 2)), grid_asses, label_partition[labels], "Triple", consider)
-        # compactness = np.exp(-cost[1]/len(grid_asses))
+        # compactness = cost[1]/len(grid_asses)
         # convexity = 1-cost[2]/len(grid_asses)
         # print('comp', compactness, 'conv', convexity)
         #

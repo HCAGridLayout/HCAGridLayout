@@ -557,7 +557,7 @@ for dataset_name in ["cifar100", "imagenet1k", "inat2021"]:
 
                 score_dict = {'prox-auc20': auc20, 'prox-auc50': auc50}
                 score_dict.update({'comp': compactness, 'conv': convexity})
-                score_dict.update({'stab-shape': IoU, 'stab-position': rela, 'stab-order': order_score, 'order_ratio': order_score/order_cnt})
+                score_dict.update({'stab-shape': IoU, 'stab-position': rela, 'stab-sample': order_score, 'order_ratio': order_score/order_cnt})
                 if new_gridlayout["confusion"] is not None:
                     score_dict.update({'ambi': confusion_score})
                 if os.path.exists("dendromap_dendroans_"+dataset+"_"+str(image_size)+"px.pkl"):

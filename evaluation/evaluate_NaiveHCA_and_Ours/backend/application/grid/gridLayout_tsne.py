@@ -1572,7 +1572,7 @@ class GridLayout(object):
         score_dict.update({'comp': compactness, 'conv': convexity})
 
         if info_before is not None:
-            score_dict.update({'stab-shape': IoU_ours, 'stab-position': relative, 'stab-order': order_score, 'order_ratio': order_score/order_cnt})
+            score_dict.update({'stab-shape': IoU_ours, 'stab-position': relative, 'stab-sample': order_score, 'order_ratio': order_score/order_cnt})
         if confusion is not None:
             score_dict.update({'ambi': confusion_score})
 

@@ -16,6 +16,7 @@ export default new Vuex.Store({
     evaluations: {},
     eval_mode: "top",
     thresholdValue: 0.8,
+    imageSizeThresholdValue: 60,
     on_loading_flag: 0,
     grid_loading_flag: 0,
     setting_loading_flag: 0,
@@ -57,6 +58,9 @@ export default new Vuex.Store({
     mutSetThresholdValue(state, thresholdValue) {
       state.thresholdValue = thresholdValue;
     },
+    mutSetImageSizeThresholdValue(state, thresholdValue) {
+      state.imageSizeThresholdValue = thresholdValue;
+    },
     mutAddOnLoadingFlag(state) {
       state.on_loading_flag += 1;
     },
@@ -82,6 +86,9 @@ export default new Vuex.Store({
   actions: {
     setThresholdValue({ commit, state }, [thresholdValue]) {
       commit("mutSetThresholdValue", thresholdValue);
+    },
+    setImageSizeThresholdValue({ commit, state }, [thresholdValue]) {
+      commit("mutSetImageSizeThresholdValue", thresholdValue);
     },
     addOnLoadingFlag({ commit, state }) {
       commit("mutAddOnLoadingFlag");
@@ -263,6 +270,15 @@ export default new Vuex.Store({
         commit("stackPop");
       }
       commit("stackPush", gridlayout.data.index);
+      dispatch('decOnLoadingFlag');
+      dispatch('decGridLoadingFlag');
+      dispatch('decSettingLoadingFlag');
+    },
+    async rerenderGridLayout({dispatch, commit, state }) {
+      dispatch('addOnLoadingFlag');
+      dispatch('addGridLoadingFlag');
+      dispatch('addSettingLoadingFlag');
+      commit("setGridLayout", {"data": {...state.gridlayout}});
       dispatch('decOnLoadingFlag');
       dispatch('decGridLoadingFlag');
       dispatch('decSettingLoadingFlag');

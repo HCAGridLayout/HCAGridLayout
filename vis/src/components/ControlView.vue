@@ -36,11 +36,11 @@
           <use xlink:href="#animate-update-icon" x="0" y="0" width="40px" height="40px"></use>
         </svg>
         <v-container style="height: 100%;">
-          <v-row justify="center" align="center" style="height: 25%;">
+          <v-row justify="center" align="center" style="height: 20%;">
             <v-col cols="3" class="V-centered" style="height: 100%;">
               <span class="label-text">Dataset:</span>
             </v-col>
-            <v-col cols="6" style="height: 100%;">
+            <v-col cols="6" style="height: 100%; padding: 4px;">
               <v-select
                 v-model="selectedOption"
                 :items="options"
@@ -55,11 +55,11 @@
               </el-tooltip>
             </v-col>
           </v-row>
-          <v-row justify="center" align="center" style="height: 25%;">
+          <v-row justify="center" align="center" style="height: 20%;">
             <v-col cols="3" class="V-centered" style="height: 100%;">
               <span class="label-text">Model:</span>
             </v-col>
-            <v-col cols="6" style="height: 100%;">
+            <v-col cols="6" style="height: 100%; padding: 4px;">
               <v-select
                 v-model="selectedOption2"
                 :items="options2"
@@ -67,11 +67,11 @@
                 dense
               ></v-select>
             </v-col>
-            <v-col cols="3" style="height: 100%;" class="H-centered">
+            <v-col cols="3" style="height: 100%;" class="V-centered H-centered">
               <v-btn color="#aaaaaa" style="text-transform: none; color: white; width: 100%; !important" @click="loadButtonClicked">Load</v-btn>
             </v-col>
           </v-row>
-          <v-row class="mt-4" justify="center" align="center" style="height: 15%;">
+          <v-row class="mt-4" justify="center" align="center" style="height: 12%;">
             <v-col cols="9" style="height: 100%;">
               <div style="display: inline-block;" class="V-centered"> <span class="label-text">Ambiguity threshold:</span> </div>
             </v-col>
@@ -79,7 +79,7 @@
               <!-- <div style="display: inline-block;" id="threshold-value-text" class="label-text V-centered">0.8</div> -->
             </v-col>
           </v-row>
-          <v-row justify="center" align="center" style="height: 20%;">
+          <v-row justify="center" align="center" style="height: 16%;">
             <v-col cols="9" style="height: 100%;">
               <v-slider
                 v-model="sliderValue"
@@ -101,6 +101,39 @@
             </v-col>
             <v-col cols="3" class="H-centered" style="height: 100%;">
               <v-btn color="#aaaaaa" style="text-transform: none; color: white; width: 100%; !important" @click="layoutButtonClicked">Layout</v-btn>
+            </v-col>
+          </v-row>
+
+          <v-row class="mt-4" justify="center" align="center" style="height: 12%;">
+            <v-col cols="9" style="height: 100%;">
+              <div style="display: inline-block;" class="V-centered"> <span class="label-text">Image size threshold:</span> </div>
+            </v-col>
+            <v-col cols="3" style="height: 100%;">
+              <!-- <div style="display: inline-block;" id="image-size-threshold-value-text" class="label-text V-centered">60</div> -->
+            </v-col>
+          </v-row>
+          <v-row justify="center" align="center" style="height: 16%;">
+            <v-col cols="9" style="height: 100%;">
+              <v-slider
+                v-model="imageSizeSliderValue"
+                color="#aaaaaa"
+                track-color="#aaaaaa"
+                min="20"
+                max="100"
+                thumb-label
+                thumb-color="#505050"
+                @change="handleImageSizeSliderChange">
+                <template v-slot:thumb-label>
+                  <v-row justify="center">
+                    <v-col cols="auto">
+                      <span>{{ imageSizeSelectedLabel }}</span>
+                    </v-col>
+                  </v-row>
+                </template>
+              </v-slider>
+            </v-col>
+            <v-col cols="3" class="H-centered" style="height: 100%;">
+              <v-btn color="#aaaaaa" style="text-transform: none; color: white; width: 100%; !important" @click="renderButtonClicked">Render</v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -166,6 +199,9 @@ export default {
     },
     selectedLabel() {
       return this.slider_values_threshold_str[this.sliderValue];
+    },
+    imageSizeSelectedLabel() {
+      return String(this.imageSizeSliderValue);
     }
   },
   name: 'ControlView',
@@ -178,7 +214,7 @@ export default {
       options2: ['VITb'],
       DatasetModels: {
         'Cifar100': {'model_name2': "cifar100"},
-        'ImageNet1k Animals': {'VITb': "imagenet1k_animals"}
+        'ImageNet1k Animals': {'VITb': "imagenet1k_animals"},
       },
       use_HV: false,
       layout_type : "Power Diagram Layout",
@@ -188,6 +224,7 @@ export default {
       // slider_values_alpha_str: ["2", "1", "1/2", "1/4", "1/6", "1/8", "1/12", "1/16", "1/24", "1/32"],
       slider_values_threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
       slider_values_threshold_str: ["0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1"],
+      imageSizeSliderValue: 60,
     }
   },
   watch: {
@@ -222,7 +259,7 @@ export default {
     document.getElementById('loading-svg-setting').style.visibility = 'hidden';
   },
   methods: {
-    ...mapActions(['resetGridLayout', 'setThresholdValue', 'addOnLoadingFlag', 'decOnLoadingFlag']),
+    ...mapActions(['resetGridLayout', 'setThresholdValue', 'addOnLoadingFlag', 'decOnLoadingFlag', 'setImageSizeThresholdValue', 'rerenderGridLayout']),
     render_class: function(grid_info) {
       // for test
       // console.log(grid_info);
@@ -454,6 +491,12 @@ export default {
     handleSliderChange(value) {
       this.setThresholdValue([this.slider_values_threshold[value]]);
       // document.getElementById("threshold-value-text").innerHTML = this.slider_values_threshold_str[value];
+    },
+    renderButtonClicked() {
+      this.rerenderGridLayout();
+    },
+    handleImageSizeSliderChange(value) {
+      this.setImageSizeThresholdValue([value]);
     }
   }
 }

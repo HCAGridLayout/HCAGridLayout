@@ -112,8 +112,8 @@ const GridLayout = function(parent) {
     console.assert(grid_info.grid.length === that.size[0] * that.size[1]);
     let x = 0;
     let y = 0;
-    let colors = color_set ? color_set["colormap"] : grid_info.colors;
-    let pcolors = color_set ? color_set["partitionmap"] : grid_info.pcolors;
+    let colors = color_set ? color_set["colormap"] : {...grid_info.colors};
+    let pcolors = color_set ? color_set["partitionmap"] : {...grid_info.pcolors};
     that.colors = colors;
     that.pcolors = pcolors;
     // console.log('color_set', color_set, colors, pcolors);

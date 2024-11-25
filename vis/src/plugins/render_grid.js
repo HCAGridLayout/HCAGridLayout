@@ -19,8 +19,8 @@ const GridRender = function(parent) {
   that.pboundary_stroke_width = 1;
   that.one_partition = false;
   that.hide_opacity = 0.4;
-  that.min_image_size = 44;
-  that.min_image_size2 = 80;
+//  that.min_image_size = 44;
+//  that.min_image_size2 = 80;
 
   that.current_hover = -1;
 
@@ -43,6 +43,9 @@ const GridRender = function(parent) {
     that.svg_width = that.parent.svg_width;
     that.svg_height = that.parent.svg_height;
     that.gridstack = that.parent.gridstack;
+
+    that.min_image_size = that.parent.min_image_size;
+    that.min_image_size2 = that.parent.min_image_size2;
   };
 
   that.update_info_from_parent();

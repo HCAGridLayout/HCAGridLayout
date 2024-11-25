@@ -124,11 +124,13 @@ export default {
       data_driven_type: 'similar', // 'discri' // 'similar'
       color_part: 'backend', // 'backend' // 'frontend'
       test: false,
-      zoom_without_expand: false
+      zoom_without_expand: false,
+      min_image_size: 60,
+      min_image_size2: 80
     };
   },
   computed: {
-    ...mapState(['gridlayout', 'images', 'chosen_ids', 'gridstack', 'colorstack', 'evaluations', 'eval_mode', 'thresholdValue', 'on_loading_flag', 'grid_loading_flag', 'setting_loading_flag']),
+    ...mapState(['gridlayout', 'images', 'chosen_ids', 'gridstack', 'colorstack', 'evaluations', 'eval_mode', 'thresholdValue', 'on_loading_flag', 'grid_loading_flag', 'setting_loading_flag', 'imageSizeThresholdValue']),
     svg: function () {
       return d3.select('.grid-svg');
     },
@@ -298,6 +300,9 @@ export default {
       }
     },
     gridlayout: async function (grid_info) {
+      this.min_image_size = this.imageSizeThresholdValue;
+      this.min_image_size2 = Math.round(this.imageSizeThresholdValue * 4 / 3);
+
       if (this.in_overview) this.exitOverview();
 
       if (this.color_part === 'backend') {

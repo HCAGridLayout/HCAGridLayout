@@ -1653,7 +1653,7 @@ class GridLayout(object):
         auc50, auc20 = AUC(avg_knnp3)
 
 
-        auc50 = auc20 = 0
+        # auc50 = auc20 = 0
 
         print("auc20", auc20, "auc50", auc50)
 

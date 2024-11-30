@@ -11,7 +11,7 @@ def load_pickle(file):
     with open(file, 'rb') as f:
         return pickle.load(f)
 
-avg = {"": {"qap": {}, "tsne": {}}, "_HV": {"qap": {}, "tsne": {}}}
+avg = {"": {"qap": {}, "tsne": {}, "las": {}, "oursp": {}}, "_HV": {"qap": {}, "tsne": {}}}
 avg_cnt = 0
 
 for dataset in ["cifar100", "imagenet1k", "inat2021"]:
@@ -19,10 +19,18 @@ for dataset in ["cifar100", "imagenet1k", "inat2021"]:
         select = ''
         avg_cnt += 1
         for ctype in ["", "_HV"]:
-            for method in ["qap", "tsne"]:
+            for method in ["qap", "tsne", "las", "oursp"]:
+                if method == "las" and ctype == "_HV":
+                    continue
+                if method == "oursp" and ctype == "_HV":
+                    continue
                 method_name = "Ours"
                 if method == "tsne":
                     method_name = "NaiveHCA"
+                if method == "las":
+                    method_name = "LAS"
+                if method == "oursp":
+                    method_name = "Ours Only Proximity"
                 convex_name = "TripleRatio"
                 if ctype == "_HV":
                     convex_name = "PerimeterRatio"
@@ -58,10 +66,18 @@ for dataset in ["cifar100", "imagenet1k", "inat2021"]:
 print()
 print("------------avg-------------")
 for ctype in ["", "_HV"]:
-    for method in ["qap", "tsne"]:
+    for method in ["qap", "tsne", "las", "oursp"]:
+        if method == "las" and ctype == "_HV":
+            continue
+        if method == "oursp" and ctype == "_HV":
+            continue
         method_name = "Ours"
         if method == "tsne":
             method_name = "NaiveHCA"
+        if method == "las":
+            method_name = "LAS"
+        if method == "oursp":
+            method_name = "Ours Only Proximity"
         convex_name = "TripleRatio"
         if ctype == "_HV":
             convex_name = "PerimeterRatio"

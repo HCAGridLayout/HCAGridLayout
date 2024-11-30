@@ -38,7 +38,11 @@ for dataset in ["cifar100", "imagenet1k", "inat2021"]:
         select_ratio = 0.35
         for select_method in ["square"]:
             for use_HV in [False, True]:
-                for method in ["qap", "tsne"]:
+                for method in ["qap", "tsne", "las", "oursp"]:
+                    if method == "las" and use_HV:
+                        continue
+                    if method == "oursp" and use_HV:
+                        continue
                     ctype = ""
                     if use_HV:
                         ctype = "_HV"

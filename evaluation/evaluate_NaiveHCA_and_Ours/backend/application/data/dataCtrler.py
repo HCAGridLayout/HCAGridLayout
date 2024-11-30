@@ -2,6 +2,8 @@ from .dataSampler import DataSampler
 from .LabelHierarchy import LabelHierarchy
 from application.grid.gridLayout_tsne import GridLayout as GridLayout_tsne
 from application.grid.gridLayout import GridLayout as GridLayout_qap
+from application.grid.gridLayout_las import GridLayout as GridLayout_las
+from application.grid.gridLayout_oursp import GridLayout as GridLayout_oursp
 from sklearn.cluster import DBSCAN, SpectralClustering
 import numpy as np
 import os, time
@@ -55,6 +57,13 @@ class DataCtrler(object):
         if "method" in info_dict and info_dict["method"] == "tsne":
             self.method = "tsne"
             self.grider = GridLayout_tsne(self)
+        elif "method" in info_dict and info_dict["method"] == "las":
+            self.method = "las"
+            self.grider = GridLayout_las(self)
+            self.grider2 = GridLayout_oursp(self)
+        elif "method" in info_dict and info_dict["method"] == "oursp":
+            self.method = "oursp"
+            self.grider = GridLayout_oursp(self)
         else:
             self.method = "qap"
             self.grider = GridLayout_qap(self)
@@ -454,7 +463,14 @@ class DataCtrler(object):
         self.sample_stack[-1][1] = self.sampler.getNearestHangIndex(self.features, old_sampled_id, old_hang_id, getNowlabels=self.get_now_labels)
 
         self.grider_input_stack.append([data.copy(), labels.copy(), sampled_id.copy(), None, None, top_labels.copy(), [filter_labels[0].copy(), filter_labels[1].copy()], self.confs_hierarchy])
-        X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
+        if hasattr(self, 'grider_top'):
+            X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider_top.fit(data, labels, sampled_id, self.hierarchy, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
+        elif hasattr(self, 'grider2'):
+            X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
+            self.grider2.fit(data, labels, sampled_id, self.hierarchy, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
+        else:
+            X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
+        # X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
         similarity_info = self.get_label_similar(data, labels)
         self.grid_stack.append([X_embedded, grid_asses, partition, similarity_info, part_info, data, top_part, None, confusion])
         return grid_asses, labels, top_labels, gt_labels, partition, sampled_id, similarity_info, data, top_part, None, confusion
@@ -540,7 +556,12 @@ class DataCtrler(object):
                        "sampled_id": self.sample_stack[-2][0]}
 
         self.grider_input_stack.append([data.copy(), labels.copy(), sampled_id.copy(), None, info_before, top_labels.copy(), [filter_labels[0].copy(), filter_labels[1].copy()], self.confs_hierarchy])
-        X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, info_before, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
+        if hasattr(self, 'grider2'):
+            X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, info_before, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
+            self.grider2.fit(data, labels, sampled_id, self.hierarchy, info_before, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
+        else:
+            X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, info_before, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
+        # X_embedded, grid_asses, grid_size, partition, part_info, top_part, confusion = self.grider.fit(data, labels, sampled_id, self.hierarchy, info_before, top_labels=top_labels, filter_labels=filter_labels, confs_hierarchy=self.confs_hierarchy, scale=self.scale_alpha, shres=self.ambiguity_threshold)
         
         similarity_info = self.get_label_similar(data, labels)
         self.grid_stack.append([X_embedded, grid_asses, partition, similarity_info, part_info, data, top_part, info_before, confusion])

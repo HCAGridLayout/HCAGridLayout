@@ -64,7 +64,7 @@ import networkx as nx
 def get_init_kmedoids(feature, c, grids):
     from .utils import kamada_kawai_layout
     n = len(feature)
-    m = min(20, len(feature))
+    m = max(min(20, len(feature)), int(len(feature)/30))
 
     dist = cdist(feature, feature, "eu") + ((1 - np.eye(n)) * 1e-5)
     kmedoids = KMedoids(n_clusters=m, random_state=42, metric='precomputed')
@@ -119,7 +119,7 @@ def get_init_kmedoids(feature, c, grids):
 
 
 def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=None, selected=None, selected_bf=None,
-              feature=None, confusion=None, with_score=False, best_w=None, small_labels=None, use_HV=False):
+              feature=None, confusion=None, with_score=False, best_w=None, small_labels=None, use_HV=False, _maxit=20):
     random.seed(42)
     np.random.seed(42)
 
@@ -305,7 +305,7 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
         if (len(addition_AB) > 0) and (addition_AB[0][0].sum() + addition_AB[1][0].sum() < 4 * (n / 20) ** 2):
             sparse = True
 
-        maxit = 20
+        maxit = _maxit
         ans2 = quadratic_assignment_faq(F, D, addition_AB, C, P0=P0, addition_sparse=sparse, maxiter=maxit, tol=0)
         solution2 = ans2["col_ind"]
         # print(ans2)
@@ -618,7 +618,6 @@ def AssignQAP(grid_asses, labels, p=None, scale=20, grids=None, grid_asses_bf=No
     # ---------------------------------------------------------------
 
     # # -------------use multi-task weight parameter------------------
-
     # goal = 2
     # pro_result, best_score, worst_cscore = getQAP(1)
     # conf_result, worst_score, best_cscore = getQAP(0.001)

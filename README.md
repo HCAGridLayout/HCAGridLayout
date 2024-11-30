@@ -1,7 +1,7 @@
 Hierarchical Fuzzy-Cluster-Aware Grid Layout Algorithm
 ===========================
 
-https://github.com/HCAGridLayout/HCAGridLayout/assets/163884706/7cc3d650-5704-4337-8f38-1f137cbe62ef
+https://github.com/user-attachments/assets/1b3b539c-022a-42d7-aa20-d64cac83e086
 
 =======================================
 

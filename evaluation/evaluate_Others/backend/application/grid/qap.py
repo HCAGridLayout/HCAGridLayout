@@ -5,7 +5,6 @@ from scipy.optimize import (linear_sum_assignment, OptimizeResult)
 from scipy._lib._util import check_random_state
 import itertools
 from scipy.optimize._qap import _common_input_validation, _split_matrix, _doubly_stochastic
-from fastlapjv import fastlapjv as lsa2
 from lsa import linear_sum_assignment as lsa
 from scipy.sparse import csr_matrix
 

@@ -33,12 +33,15 @@ def gridlayout():
         # fetch layer grid layout
         samples = request.json["samples"]
         zoom_without_expand = False
+        zoom_balance = False
         if "zoom_without_expand" in request.json:
             zoom_without_expand = request.json["zoom_without_expand"]
+        if "zoom_balance" in request.json:
+            zoom_balance = request.json["zoom_balance"]
         if samples == -1: # zoom out
             gridlayout = port.zoom_out_gridlayout(node_id)
         else:
-            gridlayout = port.layer_gridlayout(node_id, samples, zoom_without_expand=zoom_without_expand)
+            gridlayout = port.layer_gridlayout(node_id, samples, zoom_without_expand=zoom_without_expand, zoom_balance=zoom_balance)
 
     import numpy as np
     for key in gridlayout:

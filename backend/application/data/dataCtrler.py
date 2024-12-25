@@ -464,7 +464,7 @@ class DataCtrler(object):
         self.grid_stack.append([X_embedded, grid_asses, partition, similarity_info, part_info, data, top_part, None, confusion])
         return grid_asses, labels, top_labels, gt_labels, partition, sampled_id, similarity_info, data, top_part, None, confusion
 
-    def processZoomSampling(self, selected, usebflabels=True, new_range=None, pre_sampled_id=None):
+    def processZoomSampling(self, selected, usebflabels=True, new_range=None, pre_sampled_id=None, zoom_balance=False):
         data = self.features
         labels = self.labels
         bflabels = None
@@ -483,10 +483,17 @@ class DataCtrler(object):
         else:
             # self.sampler.default_sample_num = int(np.load("application/data/use_case.npy")[4])
 
-            sampled_id, sampled_addition = self.sampler.zoomSampling2(data, labels,
-                                                                 old_sampled_id, old_sampled_addition,
-                                                                 self.grid_stack[-1][1], self.grid_stack[-1][0],
-                                                                 selected, bflabels, limit=1)
+            if not zoom_balance:
+                sampled_id, sampled_addition = self.sampler.zoomSampling2(data, labels,
+                                                                     old_sampled_id, old_sampled_addition,
+                                                                     self.grid_stack[-1][1], self.grid_stack[-1][0],
+                                                                     selected, bflabels, limit=1)
+            else:
+                sampled_id, sampled_addition = self.sampler.zoomSampling3(data, labels,
+                                                                     old_sampled_id, old_sampled_addition,
+                                                                     self.grid_stack[-1][1], self.grid_stack[-1][0],
+                                                                     selected, bflabels, limit=1)
+
         # sampled_id, sampled_addition = self.sampler.zoomSampling(data, labels,
         #                                                          old_sampled_id, old_sampled_addition,
         #                                                          self.grid_stack[-1][1], self.grid_stack[-1][0],
@@ -504,7 +511,7 @@ class DataCtrler(object):
         self.sample_stack.append([sampled_id, sampled_addition])
         return data[sampled_id], labels[sampled_id], sampled_id
 
-    def gridZoomIn(self, selected, pre_sampled_id=None, zoom_without_expand=False):
+    def gridZoomIn(self, selected, pre_sampled_id=None, zoom_without_expand=False, zoom_balance=False):
         time1 = time.time()
 
         new_range = None
@@ -513,7 +520,7 @@ class DataCtrler(object):
                         'labels': self.load_stack[-1]['labels'], 'gt_labels': self.load_stack[-1]['gt_labels'], 'confs': self.load_stack[-1]['confs'],
                         'level': self.load_stack[-1]['level']}
             sample_range = self.sampler.getSampleRange(self.sample_stack[-1][0], self.sample_stack[-1][1], selected)
-            while len(sample_range) < max(self.sample_num, min(self.sample_num*2, 10000)) and new_load['level'] < self.label_hierarchy.levels-1:
+            while len(sample_range) < max(self.sample_num, min(self.sample_num*5, 10000)) and new_load['level'] < self.label_hierarchy.levels-1:
                 new_load, new_range = self.label_hierarchy.extendLoad(new_load, sample_range)
                 sample_range = new_range
             self.features = new_load['features']
@@ -523,7 +530,7 @@ class DataCtrler(object):
             self.load_samples = new_load['load_samples']
             self.load_stack.append(new_load)
 
-        data, labels, sampled_id = self.processZoomSampling(selected, new_range=new_range, pre_sampled_id=pre_sampled_id)
+        data, labels, sampled_id = self.processZoomSampling(selected, new_range=new_range, pre_sampled_id=pre_sampled_id, zoom_balance=zoom_balance)
         time2 = time.time()
         print("zoom sampling time: ", time2 - time1)
         top_labels, labels, filter_labels = self.reduce_labels(labels, self.hierarchy, zoom_without_expand=zoom_without_expand)

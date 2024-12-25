@@ -42,13 +42,19 @@
         <g class='confirm-group'></g>
       </svg>
       <div id='buttons'>
-        <div id='cropping' title='Zoom in' @click='onCrop1Click' v-ripple class='button'>
+        <div id='cropping' title='Zoom-in' @click='onCrop1Click' v-ripple class='button'>
           <svg class='icon' width='30px' height='30px' transform='translate(5, 5)' viewBox='0 0 1024 1024'>
             <path d="M477.663 848v64h-177v-64h177z m-235 0v64h-39.858C153.759 912 114 872.24 114 823.195v-48.044h64v48.044c0 13.7 11.105 24.805 24.805 24.805h39.858zM178 717.15h-64v-177h64v177z m0-235h-64v-177h64v177z m0-235h-64v-43.345C114 154.759 153.76 115 202.805 115h44.556v64h-44.556c-13.7 0-24.805 11.105-24.805 24.805v43.346zM305.36 179v-64h177v64h-177z m235 0v-64h177v64h-177z m235 0v-64h46.835C871.241 115 911 154.76 911 203.805v41.068h-64v-41.068c0-13.7-11.105-24.805-24.805-24.805h-46.834zM847 302.873h64v174.962h-64V302.873z m-57.059 439.485l112.271 112.271c12.497 12.497 12.497 32.758 0 45.255l-2.828 2.828c-12.497 12.497-32.758 12.497-45.255 0l-113-113L692.01 912.3 571.095 573.595 909.8 694.51l-119.858 47.848z" fill="white" p-id="1479"></path>
           </svg>
         </div>
         <div class='gap' v-show="!in_overview"></div>
-        <div id='cropping2' title='Zoom in without expansion' @click='onCrop2Click' v-ripple class='button' v-show="!in_overview">
+        <div id='cropping3' title='Zoom-in with balance' @click='onCrop3Click' v-ripple class='button' v-show="!in_overview">
+          <svg class='icon' width='30px' height='30px' transform='translate(5, 5)' viewBox='0 0 1024 1024'>
+            <path d="M477.663 848v64h-177v-64h177z m-235 0v64h-39.858C153.759 912 114 872.24 114 823.195v-48.044h64v48.044c0 13.7 11.105 24.805 24.805 24.805h39.858zM178 717.15h-64v-177h64v177z m0-235h-64v-177h64v177z m0-235h-64v-43.345C114 154.759 153.76 115 202.805 115h44.556v64h-44.556c-13.7 0-24.805 11.105-24.805 24.805v43.346zM305.36 179v-64h177v64h-177z m235 0v-64h177v64h-177z m235 0v-64h46.835C871.241 115 911 154.76 911 203.805v41.068h-64v-41.068c0-13.7-11.105-24.805-24.805-24.805h-46.834zM847 302.873h64v174.962h-64V302.873z m-57.059 439.485l112.271 112.271c12.497 12.497 12.497 32.758 0 45.255l-2.828 2.828c-12.497 12.497-32.758 12.497-45.255 0l-113-113L692.01 912.3 571.095 573.595 909.8 694.51l-119.858 47.848z" fill="white" p-id="1479"></path>
+          </svg>
+        </div>
+        <div class='gap' v-show="!in_overview"></div>
+        <div id='cropping2' title='Zoom-in without expansion' @click='onCrop2Click' v-ripple class='button' v-show="!in_overview">
           <svg class='icon' width='30px' height='30px' transform='translate(5, 5)' viewBox='0 0 200 200'>
             <path d="M93.3,165.6v12.5H47.4v-12.5H93.3z M47.4,165.6v12.5h-7.8c-9.6,0-17.3-7.8-17.3-17.3v-9.4h12.5v9.4c0,2.7,2.2,4.8,4.8,4.8H47.4z M34.8,151.4H22.3v-45.9h12.5V151.4z M34.8,105.5H22.3V48.3l12.5,0V105.5z M34.8,48.3H22.3v-8.5c0-9.6,7.8-17.3,17.3-17.3h8.7V35h-8.7c-2.7,0-4.8,2.2-4.8,4.8V48.3L34.8,48.3z M48.3,35V22.5h57.2V35H48.3z M105.5,35V22.5h45.9l0,12.5H105.5z M151.4,35V22.5h9.1c9.6,0,17.3,7.8,17.3,17.3v8h-12.5v-8c0-2.7-2.2-4.8-4.8-4.8H151.4L151.4,35z M165.4,47.8h12.5v45.5h-12.5V47.8z M154.3,145l21.9,21.9c2.4,2.4,2.4,6.4,0,8.8l-0.6,0.6c-2.4,2.4-6.4,2.4-8.8,0l-22.1-22.1l-9.6,23.9L111.5,112l66.2,23.6L154.3,145L154.3,145z" fill="white" p-id="1479"></path>
           </svg>
@@ -125,6 +131,7 @@ export default {
       color_part: 'backend', // 'backend' // 'frontend'
       test: false,
       zoom_without_expand: false,
+      zoom_balance: false,
       min_image_size: 60,
       min_image_size2: 80
     };
@@ -522,10 +529,17 @@ export default {
     },
     onCrop1Click: function () {
       this.zoom_without_expand = false;
+      this.zoom_balance = false;
+      this.onCropClick();
+    },
+    onCrop3Click: function () {
+      this.zoom_without_expand = false;
+      this.zoom_balance = true;
       this.onCropClick();
     },
     onCrop2Click: function () {
       this.zoom_without_expand = true;
+      this.zoom_balance = false;
       this.onCropClick();
     },
     onZoomInClick: function () {
@@ -533,7 +547,8 @@ export default {
       this.grid_render.in_update = true;
       let args = {
         samples: this.sample_nodes,
-        zoom_without_expand: this.zoom_without_expand
+        zoom_without_expand: this.zoom_without_expand,
+        zoom_balance: this.zoom_balance
       };
       this.fetchGridLayout(args);
     },

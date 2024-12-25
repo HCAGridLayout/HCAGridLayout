@@ -75,7 +75,7 @@ class DataSampler(object):
         hang_items = []
         for i in selected:
             hang_items.extend(sampled_addition_before[i])
-        sample_range = np.concatenate([selected_id, np.array(hang_items)], axis=0)
+        sample_range = np.concatenate([selected_id, np.array(hang_items).astype('int')], axis=0)
         return sample_range
 
     def zoomSampling(self, X_feature, labels, sampled_id_before, sampled_addition_before, layout_before, embedded_before, selected, bflabels=None, cache=False):
@@ -215,6 +215,90 @@ class DataSampler(object):
         # from IPython import embed; embed()
         return sampled_ids, sample_addition
 
+    def zoomSampling3(self, X_feature, labels, sampled_id_before, sampled_addition_before, layout_before, embedded_before, selected, bflabels=None, limit=0.8):
+        # use bflabels to get more balanced samples
+        # limit: 保持比例允许限制的最小节点比例
+        # 1. get selected samples
+        selected_id = sampled_id_before[selected]
+        label_hang_items = {}
+        label_ratio = {}
+        for i in selected:
+            bflabel = bflabels[i]
+            if bflabel not in label_hang_items:
+                label_hang_items[bflabel] = []
+                label_ratio[bflabel] = 0
+            label_hang_items[bflabel].extend(sampled_addition_before[i])
+            label_ratio[bflabel] += 1
+
+        hang_num = 0
+        for key in label_hang_items:
+            hang_num += len(label_hang_items[key])
+            label_ratio[key] = 1/len(label_hang_items)
+
+        # 2. calculate sample total num
+        cur_total = len(selected) + hang_num
+        if cur_total < self.default_sample_num:
+            start = round(math.sqrt(self.default_sample_num))
+            while cur_total < start * start:
+                start -= 1
+            start += 1
+            cur_total = min(start * start, cur_total)
+        else:
+            cur_total = self.default_sample_num
+        limit_total = min(round(cur_total * limit), cur_total)
+
+        for key in label_hang_items:
+            ratio_total = round(len(label_hang_items[key]) / label_ratio[key]) + len(selected)
+            if ratio_total < limit_total:
+                cur_total = limit_total
+                break
+            if ratio_total < cur_total:
+                cur_total = ratio_total
+        cur_total = max(cur_total, len(selected))
+        res_num = cur_total - len(selected)
+
+        label_ratio2 = {}
+        for key in label_hang_items:
+            if len(label_hang_items[key]) == 0:
+                label_ratio2[key] = 1
+            else:
+                label_ratio2[key] = res_num * label_ratio[key] / len(label_hang_items[key])
+        # print("label ratio", label_ratio)
+
+        # 3. get samples based on ratio
+        other_sample_ids = []
+        other_res_ids = []
+        if res_num >= 0:
+            for key in label_hang_items:
+                if len(label_hang_items[key]) == 0:
+                    continue
+                items = np.array(label_hang_items[key])
+                self.sampler.set_data(X_feature[items], self.normalizeLabels(labels[items]))
+                rs_args = {'sampling_rate': min(label_ratio2[key], 1)}
+                self.sampler.set_sampling_method(self.sampling_method, **rs_args)
+                sample_idxs = items[self.sampler.get_samples_idx()]
+                res_idxs = np.setdiff1d(items, sample_idxs)
+                # print("key", key, len(sample_idxs))
+                other_sample_ids.extend(sample_idxs)
+                other_res_ids.extend(res_idxs)
+            if len(other_sample_ids) >= res_num:
+                resample_ids = random.sample(other_sample_ids, res_num)
+                other_res_ids.extend(np.setdiff1d(other_sample_ids, resample_ids))
+                other_sample_ids = resample_ids
+            else:
+                addition_ids = random.sample(other_res_ids, res_num - len(other_sample_ids))
+                other_sample_ids.extend(addition_ids)
+                other_res_ids = np.setdiff1d(other_res_ids, addition_ids)
+        other_sample_ids = np.array(other_sample_ids)
+        other_res_ids = np.array(other_res_ids)
+
+        # 4. get additions: nearest items
+        sampled_ids = np.concatenate([selected_id, other_sample_ids], axis=0).astype(np.int32)
+        hang_index = other_res_ids
+        # sample_addition = self.getNearestHangIndex(X_feature, sampled_ids, hang_index)
+        sample_addition = hang_index
+        # from IPython import embed; embed()
+        return sampled_ids, sample_addition
 
     def getNearestHangIndex(self, X, sampled_index, hang_index, selected=None, getNowlabels=None):
 

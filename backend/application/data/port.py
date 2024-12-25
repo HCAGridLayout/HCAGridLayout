@@ -173,9 +173,9 @@ class Port(object):
         self.stack.append(0)        
         return self.package_gridlayout(-1, 0, grid, labels, top_labels, gt_labels, part_labels, samples, similar, feature, top_part, info_before, confusion)
     
-    def layer_gridlayout(self, node_id, samples, pre_sampled_id=None, zoom_without_expand=False) -> dict:
+    def layer_gridlayout(self, node_id, samples, pre_sampled_id=None, zoom_without_expand=False, zoom_balance=False) -> dict:
         self.cur_idx += 1
-        grid, labels, top_labels, gt_labels, part_labels, samples, similar, feature, top_part, info_before, confusion = self.data_ctrler.gridZoomIn(samples, pre_sampled_id=pre_sampled_id, zoom_without_expand=zoom_without_expand)
+        grid, labels, top_labels, gt_labels, part_labels, samples, similar, feature, top_part, info_before, confusion = self.data_ctrler.gridZoomIn(samples, pre_sampled_id=pre_sampled_id, zoom_without_expand=zoom_without_expand, zoom_balance=zoom_balance)
         self.stack.append(self.cur_idx)
         return self.package_gridlayout(node_id, self.cur_idx, grid, labels, top_labels, gt_labels, part_labels, samples, similar, feature, top_part, info_before, confusion)
     

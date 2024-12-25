@@ -127,7 +127,8 @@ export default new Vuex.Store({
       let key = {
         node_id: state.cur_node,
         samples: args.samples,
-        zoom_without_expand: args.zoom_without_expand
+        zoom_without_expand: args.zoom_without_expand,
+        zoom_balance: args.zoom_balance,
       };
       const gridlayout = await axios.post(
         `${state.server_url}/api/gridlayout`,

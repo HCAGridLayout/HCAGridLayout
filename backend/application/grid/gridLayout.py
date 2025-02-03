@@ -1338,6 +1338,14 @@ class GridLayout(object):
             for j in labelmap:
                 conf_vis["confs"][:, labelmap[j]] = tmp_conf[:, confs_hierarchy['id_map'][j]]
             conf_vis["confs"] = conf_vis["confs"].tolist()
+        else:
+            labelmap = norm_labels(original_labels)
+            tmp_labels = np.array(list(map(lambda x: labelmap[x], original_labels))).astype(np.int32)
+            conf_vis = {"labelmap": labelmap}
+            conf_vis["confs"] = np.zeros((num, tmp_labels.max()+1))
+            for i in range(num):
+                conf_vis["confs"][i][tmp_labels[i]] = 1
+            conf_vis["confs"] = conf_vis["confs"].tolist()
 
         #----------------------------------END CONF CALCULATE----------------------------------------
 

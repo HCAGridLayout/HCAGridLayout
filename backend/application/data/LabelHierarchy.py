@@ -60,6 +60,7 @@ class LabelHierarchy(object):
         self.multilevel_load_samples = None
         self.load_samples = None
         self.levels = 1
+        self.dist_matrix = None
 
     def transform(self, dataset='food101'):
         tree = self._load_json(os.path.join(self.root_path, dataset, '{}_total_cluster_rgb.json'.format(dataset)))
@@ -90,7 +91,81 @@ class LabelHierarchy(object):
     def load(self, dataset='imagenet'):
 
         path = os.path.join(self.root_path, dataset)
-        if dataset == 'cifar100':
+        if dataset == "infographic":
+            self.features = np.load(os.path.join(path, 'tree_features_3.npy'))
+            self.labels = np.load(os.path.join(path, 'tree_labels_3.npy'))
+            self.gt_labels = np.load(os.path.join(path, 'tree_labels_3.npy'))
+            self.label_hierarchy = self._load_json(os.path.join(path, 'tree_3.json'))
+            self.dist_matrix = np.load(os.path.join(path, 'tree_dist_full.npy'))
+        elif dataset == "infographic_1028":
+            self.features = np.load(os.path.join(path, 'tree_features_3.npy'))
+            self.labels = np.load(os.path.join(path, 'tree_labels_3.npy'))
+            self.gt_labels = np.load(os.path.join(path, 'tree_labels_3.npy'))
+            self.label_hierarchy = self._load_json(os.path.join(path, 'tree_3.json'))
+            self.dist_matrix = np.load(os.path.join(path, 'tree_dist_full.npy'))
+        elif dataset == "infographic_1028_annotated":
+            # self.features = np.load(os.path.join(path, 'tree_features_3.npy'))
+            # self.labels = np.load(os.path.join(path, 'tree_labels_3.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'tree_labels_3.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'tree_3.json'))
+            # self.dist_matrix = np.load(os.path.join(path, 'tree_dist_full.npy'))
+
+            # self.features = np.load(os.path.join(path, 'tree_features_lstm.npy'))
+            # self.labels = np.load(os.path.join(path, 'tree_labels_lstm.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'tree_labels_lstm.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'tree_lstm.json'))
+
+            # self.features = np.load(os.path.join(path, 'tree_features_lstm_mse.npy'))
+            # self.labels = np.load(os.path.join(path, 'tree_labels_lstm_mse.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'tree_labels_lstm_mse.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'tree_lstm_mse.json'))
+
+            # self.features = np.load(os.path.join(path, 'IoU_features_3.npy'))
+            # self.labels = np.load(os.path.join(path, 'IoU_labels_3.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'IoU_labels_3.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'IoU_3.json'))
+            # self.dist_matrix = np.load(os.path.join(path, 'IoU_dist_full.npy'))
+
+            # self.features = np.load(os.path.join(path, 'tree_features_lstm_IoU_mse.npy'))
+            # self.labels = np.load(os.path.join(path, 'tree_labels_lstm_IoU_mse.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'tree_labels_lstm_IoU_mse.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'tree_lstm_IoU_mse.json'))
+
+            # self.features = np.load(os.path.join(path, 'tree_features_lstm_IoU_mse_0.4_0.1.npy'))
+            # self.labels = np.load(os.path.join(path, 'tree_labels_lstm_IoU_mse_0.4_0.1.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'tree_labels_lstm_IoU_mse_0.4_0.1.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'tree_lstm_IoU_mse_0.4_0.1.json'))
+
+            self.features = np.load(os.path.join(path, 'tree_features_lstm_IoU_mse_0.4_0.1_64.npy'))
+            self.labels = np.load(os.path.join(path, 'tree_labels_lstm_IoU_mse_0.4_0.1_64.npy'))
+            self.gt_labels = np.load(os.path.join(path, 'tree_labels_lstm_IoU_mse_0.4_0.1_64.npy'))
+            self.label_hierarchy = self._load_json(os.path.join(path, 'tree_lstm_IoU_mse_0.4_0.1_64.json'))
+            self.confs_hierarchy = load_pickle(os.path.join(path, 'tree_confs_lstm_IoU_mse_0.4_0.1_64_h.pkl'))
+
+            # self.features = np.load(os.path.join(path, 'tree_features_lstm_IoU_mse_0.8_0.2.npy'))
+            # self.labels = np.load(os.path.join(path, 'tree_labels_lstm_IoU_mse_0.8_0.2.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'tree_labels_lstm_IoU_mse_0.8_0.2.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'tree_lstm_IoU_mse_0.8_0.2.json'))
+            # self.confs_hierarchy = load_pickle(os.path.join(path, 'tree_confs_lstm_IoU_mse_0.8_0.2_h.pkl'))
+
+            # self.features = np.load(os.path.join(path, 'tree_features_gcn-cnn.npy'))
+            # self.labels = np.load(os.path.join(path, 'tree_labels_gcn-cnn.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'tree_labels_gcn-cnn.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'tree_gcn-cnn.json'))
+            # self.confs_hierarchy = load_pickle(os.path.join(path, 'tree_confs_gcn-cnn_h.pkl'))
+
+            # self.features = np.load(os.path.join(path, 'tree_features_gcn-cnn_lambda0.0_185.npy'))
+            # self.labels = np.load(os.path.join(path, 'tree_labels_gcn-cnn_lambda0.0_185.npy'))
+            # self.gt_labels = np.load(os.path.join(path, 'tree_labels_gcn-cnn_lambda0.0_185.npy'))
+            # self.label_hierarchy = self._load_json(os.path.join(path, 'tree_gcn-cnn_lambda0.0_185.json'))
+            # self.confs_hierarchy = load_pickle(os.path.join(path, 'tree_confs_gcn-cnn_lambda0.0_185_h.pkl'))
+        elif dataset == "test":
+            self.features = np.load(os.path.join(path, 'test_features.npy'))
+            self.labels = np.load(os.path.join(path, 'test_labels.npy'))
+            self.gt_labels = np.load(os.path.join(path, 'test_labels.npy'))
+            self.label_hierarchy = self._load_json(os.path.join(path, 'test.json'))
+            self.confs_hierarchy = load_pickle(os.path.join(path, 'test_confs_h.pkl'))
+        elif dataset == 'cifar100':
             # # without using multi-level incremental loading
             # self.features = np.load(os.path.join(path, 'cifar100_features.npy'))
             # self.labels = np.load(os.path.join(path, 'cifar100_labels.npy'))

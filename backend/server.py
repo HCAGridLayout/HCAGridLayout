@@ -6,8 +6,9 @@ import os
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-port = Port(400, {"method": "qap"})
-port.load_dataset('imagenet1k_animals') #'MNIST''cifar'
+port = Port(900, {"method": "qap", "use_HV": True})
+# port.load_dataset('infographic_1028_annotated') #'MNIST''cifar'
+port.load_dataset('test') #'MNIST''cifar'
 
 @app.route("/api/metadata", methods=["POST"])
 def get_metadata():
@@ -69,6 +70,9 @@ def gridlayout():
     ret["ambiguity_threshold"] = port.data_ctrler.ambiguity_threshold
     ret["info_dict"] = port.info_dict
     print("full backend time: ", time.time()-start)
+
+    ret["image_ratio"] = port.get_image_ratio(gridlayout["sample_ids"])
+
     return jsonify(ret)
 
 @app.route('/api/instances', methods=["POST"])

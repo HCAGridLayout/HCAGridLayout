@@ -16,7 +16,7 @@ class DataSampler(object):
         self.max_sample_num = 100000
         self.test_without_sample = False
         self.sampler = Sampler()
-        self.sampling_method = RandomSampling # MultiClassBlueNoiseSamplingFAISS
+        self.sampling_method = OutlierBiasedDensityBasedSampling # MultiClassBlueNoiseSamplingFAISS
         self.cache_root = './cache'
         if not os.path.exists(self.cache_root):
             os.makedirs(self.cache_root)

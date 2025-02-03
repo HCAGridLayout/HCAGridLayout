@@ -165,7 +165,34 @@ class Port(object):
                 image.save(output, format="JPEG")
                 base64Imgs.append(base64.b64encode(output.getvalue()).decode())
         return base64Imgs
-    
+
+    def get_image_ratio(self, sample_ids):
+        ret = []
+        for sample_id in sample_ids:
+            if not self.use_image:
+                ret.append([1.0, 1.0])
+                continue
+            ratio = [1.0, 1.0]
+            if self.data_ctrler.label_hierarchy.multilevel_load:
+                sample_id = self.data_ctrler.load_samples[sample_id]
+            if isinstance(self.images, str):
+                image_path = os.path.join(self.images, str(sample_id) + ".jpeg")
+                if not os.path.exists(image_path):
+                    image_path = os.path.join(self.images, str(sample_id) + ".png")
+                    if not os.path.exists(image_path):
+                        image_path = os.path.join(self.images, str(sample_id) + ".jpg")
+                img = Image.open(image_path)
+                width, height = img.size
+            else:
+                image = self.images[sample_id]
+                height, width = np.uint8(image).shape[0], np.uint8(image).shape[1]
+            if height > width:
+                ratio[0] = width / height
+            else:
+                ratio[1] = height / width
+            ret.append(ratio)
+        return ret
+
     def top_gridlayout(self, pre_sampled_id=None) -> dict:
         self.stack = [-1]
         self.color_stack = [None]

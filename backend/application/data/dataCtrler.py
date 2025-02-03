@@ -71,7 +71,7 @@ class DataCtrler(object):
         self.grider_input_stack = []
 
         self.scale_alpha = 1/2
-        self.ambiguity_threshold = 0.8
+        self.ambiguity_threshold = 0.6
 
     def preprocess(self, filename='xxx.xxx'):
         self.dataset = filename

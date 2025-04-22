@@ -6,6 +6,7 @@ datasets/
 *code-workspace
 .idea/
 build
+!vis/build
 gridlayoutOpt.cpython-38-x86_64-linux-gnu.so
 test/
 cache/

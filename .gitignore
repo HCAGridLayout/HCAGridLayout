@@ -15,6 +15,7 @@ port_cache/
 *.npz
 *.tar.gz
 *.png
+!small.png
 cosin_difference.bin
 save_records
 *.pyd
